@@ -1,0 +1,26 @@
+1) Incontro 31/09/2020 con Alessandro dal Palù.
+	* Proposta di tirocinio.
+
+2) Incontro 12/10/2020 con Alessandro dal Palù.
+	* Spiegazione dettagliata del problema.
+	* Introduzione ed accenni di anatomia e TAC.
+	* Accenni programma C per estrapolazione dati.
+	* Introduzione ad ASP e Clingo.
+	* Materiale didattico per un'infarinatura generale.
+
+3) Incontro 21/10/2020 con Alessandro dal Palù e Francesco Fabiano.
+	* Incontro correlatore.
+	* Approfodinementi su ASP e Clingo.
+	* Esempio di utilizzo del programma C per estrapolazione dati dalla TAC.
+	* Esempio di utilizzo classificatore ASP.
+	* Descrizione della pipeline operativa.
+	* Concept iniziale di un parser python per interfacciarsi coi medici e viceversa.
+	* Materiale didattico classificatore e scan data ASP.
+
+4) Incontro 26/10/2020 con Francesco Fabiano.
+	* Ripasso generale della sintassi ASP e uso di Clingo.
+	* Spiegazione completa del classificatore ASP e dello scan data in input ad esso.
+	* Inizio progettazione del parser python, con le prime specifiche.
+	* Spiegazione risultato finale del parser da conseguire per step.
+	* Inizio sviluppo first concept del parser python.
+	* Inizio progettazione della possibile pipeline.

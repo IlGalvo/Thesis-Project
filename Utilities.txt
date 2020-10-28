@@ -1,0 +1,13 @@
+1) Links:
+	* Human Biodigital: https://human.biodigital.com/login?returnUrl=/explore
+	* Regex: https://regex101.com/
+
+2) Keywords:
+	* DICOM, Total Variation.
+	* Modelli stabili ASP.
+	* ASP contraint (negative).
+	* Mappe di densità.
+	* Increase base knowledge ASP.
+	* Confidence rules ASP.
+	* Confidence rules + weights ASP (in futuro).
+	* Voxel.
