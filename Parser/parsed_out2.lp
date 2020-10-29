@@ -1,7 +1,7 @@
 Found artery with id: 0 and name: celiac_trunk.
 Found artery with id: 1 and name: sup_mesenteric.
 Found artery with id: 2 and name: gastricL.
-Found artery with id: 3 and name: dorsal_pancreatic).
+Found artery with id: 3 and name: dorsal_pancreatic.
 Found artery with id: 9 and name: renalR_mysterious.
 Found artery with id: 11 and name: hepatic.
 Found artery with id: 13 and name: splenic.

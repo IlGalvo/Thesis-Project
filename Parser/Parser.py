@@ -51,7 +51,7 @@ while True:
 
 print("Optimization value:", optimization_value)
 
-content_values = content.replace("\n", "").split(") ")
+content_values = content.replace("\n", "").replace(")", "").split(" ")
 print("Content values:", content_values, "\n")
 
 dictionary = {}
