@@ -1,12 +1,49 @@
 import sys
 import os
 import re
-from collections import OrderedDict
+
+class ConfidenceRule:
+    def __init__(self, id, name):
+        self._id = id
+        self._name = name
+    
+    def get_id(self):
+        return self._id
+    
+    def get_name(self):
+        return self._name
+    
+    def __str__(self):
+        return "\tConfidence Rule with ID: [" + str(self._id) + "] and Name: [" + self._name + "].\n"
+
+class Artery:
+    def __init__(self, id, name):
+        self._id = id
+        self._name = name
+        self._confidence_rules = []
+
+    def get_id(self):
+        return self._id
+    
+    def get_name(self):
+        return self._name
+    
+    def get_confidence_rules(self):
+        return self._confidence_rules
+    
+    def __str__(self):
+        message = "Artery with ID: [" + str(self._id) + "] and Name: [" + self._name + "].\n"  
+        
+        for confidence_rule in self._confidence_rules:
+            message += str(confidence_rule)
+
+        return (message + "\n")
+
 
 os.chdir(os.path.dirname(__file__))
 
-sys.argv.append("out2.lp")
-sys.argv.append("parsed_out2.lp")
+sys.argv.append("out1.lp")
+sys.argv.append("parsed_out1.lp")
 
 print("Number of arguments:", len(sys.argv), "arguments.")
 print("Arguments List:", sys.argv, "\n")
@@ -22,53 +59,38 @@ if not os.path.isfile(sys.argv[1]):
 with open(sys.argv[1], "r") as in_file:
     file_content = in_file.read()
 
-answer_regex = r"Answer: -?\d+"
-optimization_regex = r"Optimization: -?\d+"
-number_regex = r"-?\d+"
+facts_content = ""
+
+number_regex = re.compile(r"-?\d+")
+splitted_file_content = file_content.split("Answer: ")
 
 optimization_value = 0
-content=""
 
-while True:
-    start_regex = re.search(answer_regex, file_content)
+for i in range(1, len(splitted_file_content)):
+    splitted_results = splitted_file_content[i].splitlines()
 
-    if not start_regex:
-        break
-
-    start_regex = start_regex.group(0)
-    start_index = file_content.index(start_regex) + len(start_regex)
-
-    end_regex = re.search(optimization_regex, file_content).group(0)
-    end_index = file_content.index(end_regex)
-
-    tmp_optimization_value = int(re.search(number_regex, end_regex).group(0))
+    tmp_optimization_value = int(number_regex.search(splitted_results[2]).group(0))
 
     if tmp_optimization_value <= optimization_value:
         optimization_value = tmp_optimization_value
-        content = file_content[start_index : end_index]
-    
-    file_content = file_content[end_index + len(end_regex) + 1 :]
+        facts_content = splitted_results[1]
 
-print("Optimization value:", optimization_value)
+artery_list = []
 
-content_values = content.replace("\n", "").replace(")", "").split(" ")
-print("Content values:", content_values, "\n")
+for fact_content in facts_content.split(' '):
+    splitted_fact = fact_content.replace("(", ",").replace(")", "").split(",")
 
-dictionary = {}
+    if splitted_fact[0] == "artery":
+        artery_list.append(Artery(int(splitted_fact[1]), splitted_fact[2]))
+    else:
+        artery = next(x for x in artery_list if x.get_name() == splitted_fact[1])
 
-for content_value in content_values:
-    values = content_value.split(",")
+        artery.get_confidence_rules().append(ConfidenceRule(int(splitted_fact[2]), splitted_fact[1]))
 
-    id = int(re.search(number_regex, values[0]).group(0))
-    name = values[1] 
-    
-    dictionary[id] = name
-
-dictionary = OrderedDict(sorted(dictionary.items()))
+artery_list.sort(key=lambda artery: artery.get_id())
 
 with open(sys.argv[2], "w") as out_file:
-    for entry in dictionary:
-        output = "Found artery with id: " + str(entry) + " and name: " + dictionary[entry] + "."
-        print(output)
+    for artery in artery_list:
+        out_file.write(str(artery))
 
-        out_file.write(output + "\n")
+        print(artery)
