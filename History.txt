@@ -1,7 +1,7 @@
 1) Incontro 31/09/2020 con Alessandro dal Palù.
 	* Proposta di tirocinio.
 
-2) Incontro 12/10/2020 con Alessandro dal Palù.
+2) Incontro 1210/10/2020 con Alessandro dal Palù.
 	* Spiegazione dettagliata del problema.
 	* Introduzione ed accenni di anatomia e TAC.
 	* Accenni programma C per estrapolazione dati.
@@ -24,3 +24,11 @@
 	* Spiegazione risultato finale del parser da conseguire per step.
 	* Inizio sviluppo first concept del parser python.
 	* Inizio progettazione della possibile pipeline.
+
+5) Incontro 29/10/2020 con Francesco Fabiano
+	* Definizione step successivo del parser python.
+	* Progettazione supervisionata delle nuove funzionalità del parser.
+	* Spiegazione di una possibile e futura implementazione della pipeline.
+	* Alcune nozioni anatomiche.
+	* Possibilità di migliorare il classificatore ASP.
+	* Programma di anatomia umana 3D.
