@@ -1,7 +1,7 @@
 # This file parses the ASP output to natural language.
 #
 # Usage: python Parser.py in_file.lp out_file.lp,
-# where: in_file.lp out_file.lp must be valid ASP *.lp files.
+# where: in_file.lp must be valid ASP file.
 import sys
 import os
 import re
