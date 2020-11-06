@@ -2,11 +2,9 @@
 #
 # Usage: python Parser.py in_file.lp out_file.lp,
 # where: in_file.lp out_file.lp must be valid ASP *.lp files.
-
 import sys
 import os
 import re
-
 
 class ConfidenceRule:
     def __init__(self, id, name):
@@ -96,11 +94,9 @@ for fact_content in facts_content.split(' '):
 
         artery_list.append(artery)
     else:
-        confidence_rule = ConfidenceRule(
-            int(splitted_fact[2]), splitted_fact[1])
+        confidence_rule = ConfidenceRule(int(splitted_fact[2]), splitted_fact[1])
 
-        artery = next(
-            artery for artery in artery_list if artery.get_name() == splitted_fact[1])
+        artery = next(artery for artery in artery_list if artery.get_name() == splitted_fact[1])
         artery.get_confidence_rules().append(confidence_rule)
 
 # Sort for artery.id
