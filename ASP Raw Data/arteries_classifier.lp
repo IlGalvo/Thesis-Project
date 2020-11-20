@@ -82,9 +82,7 @@ artery(ID,N) :- main_artery(ID,_,_,_,N), id(ID), name(N).
 artery(ID,N) :- bif_artery(ID,_,N), id(ID), name(N).
 
 %Relazioni di ordine tra ranges (z < z1+e)
-
 %****Arteries exiting directly from (descending) Aorta.****%
-
 %%CELIAC TRUNK (Examples of various confidence_rules)
 main_artery(ID,Z,A,R,N) :- artery_gen(ID,N), name(N), param_main_artery(ID,Z,A,R),
                            N = celiac_trunk, quadrant_1(A), radius_l(R).
@@ -105,8 +103,6 @@ confidence_rule(N,11) :-  N = celiac_trunk, main_artery(_,Z1,_,_,N), main_artery
 confidence_rule(N,12) :-  N = celiac_trunk, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,renalR), height_greater(Z1,Z2).
 confidence_rule(N,13) :-  N = celiac_trunk, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,inf_mesenteric), height_greater(Z1,Z2+30).
 
-
-
 %%LEFT GASTRIC
 bif_artery(ID,R,N) :- artery_gen(ID,N), name(N), param_bif_artery(ID,R),
                       N = gastricL, radius_l(R).
@@ -114,16 +110,12 @@ bif_artery(ID,R,N) :- artery_gen(ID,N), name(N), param_bif_artery(ID,R),
 confidence_rule(N,0) :-  N = gastricL, bif_artery(_,R,N), radius_7(R).
 confidence_rule(N,1) :-  N = gastricL, bif_artery(ID2,_,N), main_artery(ID1,_,_,_,celiac_trunk), edge(ID1,ID2).
 
-
-
 %%SPLENIC
 bif_artery(ID,R,N) :- artery_gen(ID,N), name(N), param_bif_artery(ID,R),
                       N = splenic, radius_l(R).
 
 confidence_rule(N,0) :- N = splenic, bif_artery(_,R,N), radius_7(R).
 %confidence_rule(N,1) :- N = splenic, bif_artery(ID2,_,N), main_artery(ID1,_,_,_,celiac_trunk), edge(ID1,ID2).
-
-
 
 %%HEPATIC
 bif_artery(ID,R,N) :- artery_gen(ID,N), name(N), param_bif_artery(ID,R),
@@ -133,8 +125,6 @@ confidence_rule(N,0) :- N = hepatic, bif_artery(_,R,N), radius_7(R).
 %confidence_rule(N,1) :- N = hepatic, bif_artery(ID2,_,N), main_artery(ID1,_,_,_,celiac_trunk), edge(ID1,ID2).
 confidence_rule(N,2) :- N = hepatic, bif_artery(ID2,_,N), main_artery(ID1,_,_,_,sup_mesenteric), edge(ID1,ID2).
 
-
-
 %%DORSAL PANCREATIC
 bif_artery(ID,R,N) :- artery_gen(ID,N), name(N), param_bif_artery(ID,R),
                       N = dorsal_pancreatic, radius_l(R).
@@ -143,8 +133,6 @@ confidence_rule(N,0) :- N = dorsal_pancreatic, bif_artery(_,R,N), radius_7(R).
 %confidence_rule(N,..) :-  N = hepatic, bif_artery(ID2,_,N), main_artery(ID1,_,_,_,celiac_trunk), edge(ID1,ID2).
 %An example of verification of 0 exiting edges (can be done also for entering ones)
 confidence_rule(N,1) :- N = dorsal_pancreatic, K = #count {ID2: edge(ID1,ID2)}, K = 0, bif_artery(ID1,_,N).
-
-
 
 %%SUPERIOR MESENTERIC
 main_artery(ID,Z,A,R,N) :- artery_gen(ID,N), name(N), param_main_artery(ID,Z,A,R),
@@ -160,8 +148,6 @@ confidence_rule(N,7) :-  N = sup_mesenteric, main_artery(_,Z1,_,_,N), main_arter
 confidence_rule(N,8) :-  N = sup_mesenteric, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,renalR), height_greater(Z1,Z2).
 confidence_rule(N,9) :-  N = sup_mesenteric, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,inf_mesenteric), height_greater(Z1,Z2+20).
 
-
-
 %%LEFT RENAL
 main_artery(ID,Z,A,R,N) :- artery_gen(ID,N), name(N), param_main_artery(ID,Z,A,R),
                            N = renalL, quadrant_4(A), radius_l(R).
@@ -174,8 +160,6 @@ confidence_rule(N,4) :-  N = renalL, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_
 confidence_rule(N,5) :-  N = renalL, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,sup_mesenteric), height_less(Z1,Z2).
 confidence_rule(N,6) :-  N = renalL, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,inf_mesenteric), height_greater(Z1,Z2+10).
 confidence_rule(N,7) :-  N = renalL, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,renalR), height_less(Z1,Z2+10).
-
-
 
 %%RIGHT RENAL
 main_artery(ID,Z,A,R,N) :- artery_gen(ID,N), name(N), param_main_artery(ID,Z,A,R),
@@ -190,8 +174,6 @@ confidence_rule(N,7) :-  N = renalR, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_
 confidence_rule(N,9) :-  N = renalR, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,inf_mesenteric), height_greater(Z1,Z2+10).
 confidence_rule(N,7) :-  N = renalR, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,renalL), height_greater(Z1+10,Z2).
 
-
-
 %%LEFT RENAL MYSTERIOUS
 main_artery(ID,Z,A,R,N) :- artery_gen(ID,N), name(N), param_main_artery(ID,Z,A,R),
                            N = renalL_mysterious, quadrant_4(A), radius_m(R).
@@ -202,8 +184,6 @@ confidence_rule(N,2) :-  N = renalL_mysterious, main_artery(ID,_,_,_,N), edge(ao
 confidence_rule(N,3) :-  N = renalL_mysterious, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,celiac_trunk), height_less(Z1,Z2).
 confidence_rule(N,4) :-  N = renalL_mysterious, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,inf_mesenteric), height_greater(Z1,Z2).
 confidence_rule(N,5) :-  N = renalL_mysterious, K = #count {ID2: edge(ID1,ID2)}, K = 0, artery(ID1,N).
-
-
 
 %%RIGHT RENAL MYSTERIOUS
 main_artery(ID,Z,A,R,N) :- artery_gen(ID,N), name(N), param_main_artery(ID,Z,A,R),
@@ -216,8 +196,6 @@ confidence_rule(N,3) :-  N = renalR_mysterious, main_artery(ID,_,_,_,N), edge(ao
 confidence_rule(N,4) :-  N = renalR_mysterious, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,celiac_trunk), height_less(Z1,Z2).
 confidence_rule(N,5) :-  N = renalR_mysterious, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,inf_mesenteric), height_greater(Z1,Z2).
 confidence_rule(N,6) :-  N = renalR_mysterious, K = #count {ID2: edge(ID1,ID2)}, K = 0, artery(ID1,N).
-
-
 
 %%INFERIOR MESENTERIC
 main_artery(ID,Z,A,R,N) :- artery_gen(ID,N), name(N), param_main_artery(ID,Z,A,R),
@@ -232,8 +210,6 @@ confidence_rule(N,5) :-  N = inf_mesenteric, main_artery(_,Z1,_,_,N), main_arter
 confidence_rule(N,6) :-  N = inf_mesenteric, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,renalR), height_less(Z1,Z2).
 confidence_rule(N,7) :-  N = inf_mesenteric, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,sup_mesenteric), height_less(Z1,Z2+50).
 confidence_rule(N,8) :-  N = inf_mesenteric, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,sup_mesenteric), height_less(Z1,Z2+20).
-
-
 
 %%1st LEFT LUMBAR
 main_artery(ID,Z,A,R,N) :- artery_gen(ID,N), name(N), param_main_artery(ID,Z,A,R),
@@ -255,8 +231,6 @@ confidence_rule(N,12) :-  N = lumbarL1, main_artery(_,Z1,_,_,N), main_artery(_,Z
 confidence_rule(N,13) :-  N = lumbarL1, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,lumbarR1), height_less(Z1,Z2+5).
 confidence_rule(N,14) :-  N = lumbarL1, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,lumbarR1), height_greater(Z1+5,Z2).
 
-
-
 %%1st RIGHT LUMBAR
 main_artery(ID,Z,A,R,N) :- artery_gen(ID,N), name(N), param_main_artery(ID,Z,A,R),
                            N = lumbarR1, quadrant_3(A), radius_big(R).
@@ -277,8 +251,6 @@ confidence_rule(N,12) :-  N = lumbarR1, main_artery(_,Z1,_,_,N), main_artery(_,Z
 confidence_rule(N,13) :-  N = lumbarR1, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,lumbarL1), height_less(Z1,Z2+5).
 confidence_rule(N,14) :-  N = lumbarR1, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,lumbarL1), height_greater(Z1+5,Z2).
 
-
-
 %%2nd LEFT LUMBAR
 main_artery(ID,Z,A,R,N) :- artery_gen(ID,N), name(N), param_main_artery(ID,Z,A,R),
                            N = lumbarL2, quadrant_4(A), radius_big(R).
@@ -298,8 +270,6 @@ confidence_rule(N,11) :-  N = lumbarL2, main_artery(_,Z1,_,_,N), main_artery(_,Z
 confidence_rule(N,12) :-  N = lumbarL2, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,celiac_trunk), height_less(Z1,Z2).
 confidence_rule(N,13) :-  N = lumbarL2, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,lumbarR2), height_less(Z1,Z2+5).
 confidence_rule(N,14) :-  N = lumbarL2, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,lumbarR2), height_greater(Z1+5,Z2).
-
-
 
 %%2nd RIGHT LUMBAR
 main_artery(ID,Z,A,R,N) :- artery_gen(ID,N), name(N), param_main_artery(ID,Z,A,R),
@@ -321,8 +291,6 @@ confidence_rule(N,12) :-  N = lumbarR2, main_artery(_,Z1,_,_,N), main_artery(_,Z
 confidence_rule(N,13) :-  N = lumbarR2, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,lumbarL2), height_less(Z1,Z2+5).
 confidence_rule(N,14) :-  N = lumbarR2, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,lumbarL2), height_greater(Z1+5,Z2).
 
-
-
 %%2nd LEFT LUMBAR
 main_artery(ID,Z,A,R,N) :- artery_gen(ID,N), name(N), param_main_artery(ID,Z,A,R),
                            N = lumbarL2, quadrant_4(A), radius_big(R).
@@ -342,8 +310,6 @@ confidence_rule(N,11) :-  N = lumbarL2, main_artery(_,Z1,_,_,N), main_artery(_,Z
 confidence_rule(N,12) :-  N = lumbarL2, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,celiac_trunk), height_less(Z1,Z2).
 confidence_rule(N,13) :-  N = lumbarL2, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,lumbarR2), height_less(Z1,Z2+5).
 confidence_rule(N,14) :-  N = lumbarL2, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,lumbarR2), height_greater(Z1+5,Z2).
-
-
 
 %%3rd RIGHT LUMBAR
 main_artery(ID,Z,A,R,N) :- artery_gen(ID,N), name(N), param_main_artery(ID,Z,A,R),
@@ -365,8 +331,6 @@ confidence_rule(N,12) :-  N = lumbarR3, main_artery(_,Z1,_,_,N), main_artery(_,Z
 confidence_rule(N,13) :-  N = lumbarR3, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,lumbarL3), height_less(Z1,Z2+5).
 confidence_rule(N,14) :-  N = lumbarR3, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,lumbarL3), height_greater(Z1+5,Z2).
 
-
-
 %%3rd LEFT LUMBAR
 main_artery(ID,Z,A,R,N) :- artery_gen(ID,N), name(N), param_main_artery(ID,Z,A,R),
                            N = lumbarL3, quadrant_4(A), radius_big(R).
@@ -386,8 +350,6 @@ confidence_rule(N,11) :-  N = lumbarL3, main_artery(_,Z1,_,_,N), main_artery(_,Z
 confidence_rule(N,12) :-  N = lumbarL3, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,celiac_trunk), height_less(Z1,Z2).
 confidence_rule(N,13) :-  N = lumbarL3, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,lumbarR3), height_less(Z1,Z2+5).
 confidence_rule(N,14) :-  N = lumbarL3, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,lumbarR3), height_greater(Z1+5,Z2).
-
-
 
 %%4th RIGHT LUMBAR
 main_artery(ID,Z,A,R,N) :- artery_gen(ID,N), name(N), param_main_artery(ID,Z,A,R),
@@ -409,8 +371,6 @@ confidence_rule(N,12) :-  N = lumbarR4, main_artery(_,Z1,_,_,N), main_artery(_,Z
 confidence_rule(N,13) :-  N = lumbarR4, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,lumbarL4), height_less(Z1,Z2+5).
 confidence_rule(N,14) :-  N = lumbarR4, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,lumbarL4), height_greater(Z1+5,Z2).
 
-
-
 %%3rd LEFT LUMBAR
 main_artery(ID,Z,A,R,N) :- artery_gen(ID,N), name(N), param_main_artery(ID,Z,A,R),
                            N = lumbarL3, quadrant_4(A), radius_big(R).
@@ -431,9 +391,7 @@ confidence_rule(N,12) :-  N = lumbarL3, main_artery(_,Z1,_,_,N), main_artery(_,Z
 confidence_rule(N,13) :-  N = lumbarL3, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,lumbarR3), height_less(Z1,Z2+5).
 confidence_rule(N,14) :-  N = lumbarL3, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,lumbarR3), height_greater(Z1+5,Z2).
 
-
 %%%Constraints
-
 %Structural
 :- main_artery(ID1,_,_,_,N1), main_artery(ID2,_,_,_,N2), ID1 != ID2, N1 == N2.
 :- main_artery(ID1,_,_,_,N1), main_artery(ID2,_,_,_,N2), ID1 == ID2, N1 != N2.
@@ -514,7 +472,6 @@ confidence_rule(N,14) :-  N = lumbarL3, main_artery(_,Z1,_,_,N), main_artery(_,Z
 :- bif_artery(_,_,lumbarR4).
 :- bif_artery(_,_,lumbarL4).
 
-
 %%%Solution Generation
 0 {artery_gen(ID,N) : name(N)} 1 :- id(ID).
 
@@ -525,12 +482,10 @@ rule_count(K) :- K = #count {N,R: confidence_rule(N,R)}.
 %Satisfiability (just to get unsatisfiable when 0 arteries are found -- remove for optimization)
 :- J = #count {ID: artery(ID,_)}, J == 0.
 
-
-
 %#show main_artery_in/4.
 %#show main_artery/5.
 %#show bif_artery/3.
 %#show param_bif_artery/2.
 
 #show artery/2.
-#show confidence_rule/2.
+#show confidence_rule/2. 
