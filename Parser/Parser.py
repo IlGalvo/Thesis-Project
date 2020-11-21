@@ -1,7 +1,7 @@
 # This file parses the ASP output to natural language.
 #
-# Usage: python Parser.py in_file.lp out_file.lp,
-# where: in_file.lp must be valid ASP file.
+# Usage: python Parser.py in_arteries_classifier.lp in_arteries_classified.lpout_arteries_parsed.txt
+# where: in_arteries_classifier.lp and in_arteries_classified.lp must be valid ASP file.
 import sys
 import os
 import re
@@ -190,27 +190,14 @@ class OutputArtery:
 
         return (text + "\n")
 
-def main():
-    # To simplify debug
-    debug = True
+# To find integers number
+number_regex = re.compile(r"-?\d+")
+another_regex = re.compile(r"[+-]\d+")
 
-    if debug:
-        os.chdir(os.path.dirname(__file__))
-
-        sys.argv.append("arteries_classifier.lp")
-        sys.argv.append("out1.lp")
-        sys.argv.append("parsed_out1.lp")
-    elif (len(sys.argv) < 3) or (not os.path.isfile(sys.argv[1])) or (not os.path.isfile(sys.argv[2])):
-        print("Usage: python Parser.py in_file1.lp in_file2.lp out_file.lp")
-        exit()
-
-    # To find integers number
-    number_regex = re.compile(r"-?\d+")
-    another_regex = re.compile(r"[+-]\d+")
-
+def parse_arteries_classifier(file_name: str) -> list:
     confidence_rules = []
 
-    with open(sys.argv[1], "r") as in_file:
+    with open(file_name, "r") as in_file:
         file_content_lines = in_file.readlines()
 
     for file_content_line in file_content_lines:
@@ -289,9 +276,14 @@ def main():
 
                         break
 
-            confidence_rules.append(confidence_rule)    
-            
-    with open(sys.argv[2], "r") as in_file:
+            confidence_rules.append(confidence_rule)
+
+    return confidence_rules
+
+def parse_artery_classified(file_name: str, confidence_rules: list) -> list:
+    arteries = []
+
+    with open(file_name, "r") as in_file:
         file_content = in_file.read()
 
     # Support variable to find best entry
@@ -313,8 +305,6 @@ def main():
             optimization_value = tmp_optimization_value
             facts_content = splitted_results[1]
 
-    arteries = []
-
     # Can be: artery(id, name) or confidence_rule(name, id)
     for fact_content in facts_content.split(' '):
         splitted_fact = fact_content.replace("(", ",").replace(")", "").split(",")
@@ -332,12 +322,35 @@ def main():
     # Sort for artery.id
     arteries.sort(key=lambda artery: artery.get_id())
 
-    with open(sys.argv[3], "w") as out_file:
+    return arteries
+
+def write_arteries_parsed(file_name: str, arteries: list, is_debug: bool):
+    with open(file_name, "w") as out_file:
         for artery in arteries:
             out_file.write(str(artery))
 
-            if debug:
-                print(artery, end=None)
+            if is_debug:
+                print(artery)
+
+def main():
+    # To simplify debug
+    is_debug = True
+
+    if is_debug:
+        os.chdir(os.path.dirname(__file__))
+
+        sys.argv.append("arteries_classifier.lp")
+        sys.argv.append("out1.lp")
+        sys.argv.append("parsed_out1.lp")
+    elif (len(sys.argv) < 3) or (not os.path.isfile(sys.argv[1])) or (not os.path.isfile(sys.argv[2])):
+        print("Usage: python Parser.py in_arteries_classifier.lp in_arteries_classified.lp out_arteries_parsed.txt")
+        exit()   
+
+    confidence_rules = parse_arteries_classifier(sys.argv[1])
+            
+    arteries = parse_artery_classified(sys.argv[2], confidence_rules)
+
+    write_arteries_parsed(sys.argv[3], arteries, is_debug)
 
 if __name__ == "__main__":
     main()
