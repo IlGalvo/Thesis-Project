@@ -15,7 +15,9 @@ class ArteryType(Enum):
 
 
 class InputArtery:
-    def __init__(self, artery_type: ArteryType, is_primary: bool, name: str, id: str, heigth: str, angle: str, radius: str):
+    def __init__(self, artery_type: ArteryType,
+                 is_primary: bool, name: str,
+                 id: str = None, heigth: str = None, angle: str = None, radius: str = None):
         self._arteryType = artery_type
 
         self._is_primary = is_primary
@@ -66,7 +68,7 @@ class Edge(IRule):
         self._artery2 = artery2
 
     def to_text(self) -> str:
-        return self.__str__
+        return self.__str__()
 
     def __str__(self) -> str:
         return (self._artery1.get_name() + " is connected to " + self._artery2.get_name())
@@ -78,7 +80,9 @@ class HeigthType(Enum):
 
 
 class Heigth(IRule):
-    def __init__(self, heigth_type: HeigthType, artery1: InputArtery, offset1: str, artery2: InputArtery, offset2: str):
+    def __init__(self, heigth_type: HeigthType,
+                 artery1: InputArtery, offset1: str,
+                 artery2: InputArtery, offset2: str):
         self._heigth_type = heigth_type
 
         self._artery1 = artery1
@@ -88,7 +92,7 @@ class Heigth(IRule):
         self._offset2 = offset2
 
     def to_text(self) -> str:
-        return self.__str__
+        return self.__str__()
 
     def __str__(self) -> str:
         text = (self._artery1.get_name() + " heigth" + self._offset1 + " is ")
@@ -105,12 +109,12 @@ class Heigth(IRule):
 
 
 class General(IRule):
-    def __init__(self, artery: InputArtery, rule_text: str):
-        self._artery = artery
+    def __init__(self, rule_text: str, artery: InputArtery = None):
         self._rule_text = rule_text
+        self._artery = artery
 
     def to_text(self) -> str:
-        return self.__str__
+        return self.__str__()
 
     def __str__(self) -> str:
         if self._artery != None:
@@ -119,7 +123,7 @@ class General(IRule):
             return self._rule_text
 
 
-general_dictionary = {
+general_rule_dictionary = {
     "radius_small": "radius between 0 and 20 voxels.",
     "radius_big": "radius greater than 20 voxels.",
 
@@ -164,8 +168,8 @@ class ConfidenceRule:
         self._id = id
         self._name = name
 
-        self._arteries = [InputArtery]
-        self._rules = [IRule]
+        self._arteries = []
+        self._rules = []
 
     def get_id(self) -> int:
         return self._id
@@ -173,10 +177,10 @@ class ConfidenceRule:
     def get_name(self) -> str:
         return self._name
 
-    def get_arteries(self) -> list[InputArtery]:
+    def get_arteries(self) -> list:
         return self._arteries
 
-    def get_rules(self) -> list[IRule]:
+    def get_rules(self) -> list:
         return self._rules
 
     def __str__(self) -> str:
@@ -197,7 +201,7 @@ class OutputArtery:
         self._id = id
         self._name = name
 
-        self._confidence_rules = [ConfidenceRule]
+        self._confidence_rules = []
 
     def get_id(self) -> int:
         return self._id
@@ -205,7 +209,7 @@ class OutputArtery:
     def get_name(self) -> str:
         return self._name
 
-    def get_confidence_rules(self) -> list[ConfidenceRule]:
+    def get_confidence_rules(self) -> list:
         return self._confidence_rules
 
     def __str__(self) -> str:
@@ -223,97 +227,135 @@ number_regex1 = re.compile(r"-?\d+")
 number_regex2 = re.compile(r"[+-]\d+")
 
 
-def parse_arteries_classifier(file_name: str) -> list[ConfidenceRule]:
-    confidence_rules = [ConfidenceRule]
+# Parses in_arteries_classifier.lp file
+# and returns a list of all confidence rules found
+def parse_arteries_classifier(file_name: str) -> list:
+    confidence_rules = []
 
     with open(file_name, "r") as in_file:
         lines = in_file.readlines()
 
     for line in lines:
         if line.startswith("confidence_rule"):
+            # [0] = confidence rule info, [1...N] = rules
             rules = line.replace("\n", "").split(", ")
 
-            name = rules[0].split("= ")
-            id = number_regex1.search(name[0]).group(0)
+           # Extract confidence rule info
+            cr_text = rules[0].split("= ")
 
-            confidence_rule = ConfidenceRule(id, name[1])
+            id = number_regex1.search(cr_text[0]).group(0)
+            name = cr_text[1]
 
+            confidence_rule = ConfidenceRule(id, name)
+
+            # Skip [0] because it's confidence rule info
             for i in range(1, len(rules)):
+                # [0] = rule name, [1...N] = args
                 rule = rules[i].replace("(", ",").replace(")", ",").split(",")
 
                 if rule[0] == "main_artery":
+                    # main_artery(ID,Z,A,R,N)
+                    # If args are not equal to "_", they're valid
+                    # If name is equal to "N", it refers to confidence rule principal artery
+                    # If name is equal to "N", it refers to confidence rule name
                     id = rule[1] if rule[1] != "_" else None
                     heigth = rule[2] if rule[2] != "_" else None
                     angle = rule[3] if rule[3] != "_" else None
                     radius = rule[4] if rule[4] != "_" else None
 
-                    is_primary = rule[5] != "_"
+                    is_primary = rule[5] == "N"
                     name = rule[5] if rule[5] != "N" else confidence_rule.get_name()
 
-                    artery = InputArtery(
-                        ArteryType.MainArtery, is_primary, name, id, heigth, angle, radius)
+                    artery = InputArtery(ArteryType.MainArtery,
+                                         is_primary, name,
+                                         id, heigth, angle, radius)
                     confidence_rule.get_arteries().append(artery)
                 elif rule[0] == "bif_artery":
+                    # bif_artery(ID,R,N)
+                    # If args are not equal to "_", they're valid
+                    # If name is equal to "N", it refers to confidence rule principal artery
+                    # If name is equal to "N", it refers to confidence rule name
                     id = rule[1] if rule[1] != "_" else None
                     radius = rule[2] if rule[2] != "_" else None
 
                     is_primary = rule[3] != "_"
                     name = rule[3] if rule[3] != "N" else confidence_rule.get_name()
 
-                    artery = InputArtery(
-                        ArteryType.BiforcationArtery, is_primary, name, id, None, None, radius)
+                    artery = InputArtery(ArteryType.BiforcationArtery,
+                                         is_primary, name,
+                                         id, radius=radius)
                     confidence_rule.get_arteries().append(artery)
                 elif rule[0] == "edge":
-                    artery1 = next((artery for artery in confidence_rule.get_arteries(
-                    ) if artery.get_id() == rule[1]), None)
-                    artery2 = next(artery for artery in confidence_rule.get_arteries(
-                    ) if artery.get_id() == rule[2])
+                    # edge(ID1,ID2) or edge(name,ID)
 
+                    # Find arteries for ID
+                    artery1 = next((artery for artery in confidence_rule.get_arteries()
+                                    if artery.get_id() == rule[1]), None)
+                    artery2 = next(artery for artery in confidence_rule.get_arteries()
+                                   if artery.get_id() == rule[2])
+
+                    # It's edge(name,ID)
                     if artery1 == None:
-                        artery1 = InputArtery(
-                            ArteryType.MainArtery, False, rule[1], None, None, None, None)
+                        # In this case we only that:
+                        # It's a main artery,
+                        # Doesn't refer to confidence rule principal artery
+                        is_primary = False
+                        name = rule[1]
+
+                        artery1 = InputArtery(ArteryType.MainArtery,
+                                              is_primary, name)
                         confidence_rule.get_arteries().append(artery1)
 
                     edge_rule = Edge(artery1, artery2)
                     confidence_rule.get_rules().append(edge_rule)
                 elif rule[0] == "height_greater" or rule[0] == "height_less":
+                    # height_greater/height_less(Z1+X1,Z2+X2), with +X1 and +X2 optional
+
                     heigth_type = HeigthType.Greater if rule[0] == "height_greater" else HeigthType.Less
 
+                    # Check if there are +X1 and +X2
                     offset_regex1 = number_regex2.search(rule[1])
                     offset_regex2 = number_regex2.search(rule[2])
 
+                    # If success, get the value
                     offset1 = offset_regex1.group(
-                        0) if offset_regex1 != None else ""
+                        0)if offset_regex1 != None else ""
                     offset2 = offset_regex2.group(
                         0) if offset_regex2 != None else ""
 
+                    # Substring to get the Z
                     heigth1 = rule[1][0: offset_regex1.start(
                     )] if offset_regex1 != None else rule[1]
                     heigth2 = rule[1][0: offset_regex2.start(
                     )] if offset_regex2 != None else rule[2]
 
-                    artery1 = next(artery for artery in confidence_rule.get_arteries(
-                    ) if artery.get_heigth() == heigth1)
-                    artery2 = next(artery for artery in confidence_rule.get_arteries(
-                    ) if artery.get_heigth() == heigth2)
+                    # Find arteries for Z
+                    artery1 = next(artery for artery in confidence_rule.get_arteries()
+                                   if artery.get_heigth() == heigth1)
+                    artery2 = next(artery for artery in confidence_rule.get_arteries()
+                                   if artery.get_heigth() == heigth2)
 
-                    heigth_rule = Heigth(
-                        heigth_type, artery1, offset1, artery2, offset2)
+                    heigth_rule = Heigth(heigth_type,
+                                         artery1, offset1,
+                                         artery2, offset2)
                     confidence_rule.get_rules().append(heigth_rule)
                 else:
-                    rule_text = general_dictionary.get(rule[0], None)
+                    # Check if it's a general rule contained in general rule dictionary
+                    rule_text = general_rule_dictionary.get(rule[0], None)
 
                     if rule_text != None:
-                        artery = next(
-                            artery for artery in confidence_rule.get_arteries() if artery.get_is_primary)
+                        # Find primary artery
+                        artery = next(artery for artery in confidence_rule.get_arteries()
+                                      if artery.get_is_primary)
 
-                        general_rule = General(artery, rule_text)
+                        general_rule = General(rule_text, artery)
                         confidence_rule.get_rules().append(general_rule)
                     else:
+                        # Parse as generic text rule
                         rules[0] = confidence_rule.get_name() + " has: "
                         rule_text = " ".join(rules)
 
-                        general_rule = General(None, rule_text)
+                        general_rule = General(rule_text)
                         confidence_rule.get_rules().append(general_rule)
 
                         break
@@ -323,53 +365,66 @@ def parse_arteries_classifier(file_name: str) -> list[ConfidenceRule]:
     return confidence_rules
 
 
+# Parses in_artery_classified.lp file with confidence rules
+# and returns a list of all arteries found
 def parse_artery_classified(file_name: str, confidence_rules: list) -> list:
-    arteries = [OutputArtery]
+    arteries = []
 
     with open(file_name, "r") as in_file:
         file_content = in_file.read()
 
-    # Support variable to find best entry
+    answers = file_content.split("Answer: ")
+
+    # Support variable to find best answer
     facts_text = ""
     optimization_value = 0
-
-    answers = file_content.split("Answer: ")
 
     # Skip [0] because of ASP verbose info
     for i in range(1, len(answers)):
         # [0] = answer number (skip), [1] = facts, [2] = optimizazion_value
         answer = answers[i].splitlines()
 
-        tmp_optimization_value = number_regex1.search(answer[2]).group(0)
-        tmp_optimization_value = int(tmp_optimization_value)
+        tmp_opt_value = number_regex1.search(answer[2]).group(0)
+        tmp_opt_value = int(tmp_opt_value)
 
         # Lower is best
-        if tmp_optimization_value <= optimization_value:
-            optimization_value = tmp_optimization_value
+        if tmp_opt_value <= optimization_value:
+            optimization_value = tmp_opt_value
             facts_text = answer[1]
 
-    # Can be: artery(id, name) or confidence_rule(name, id)
+    # Can be: artery(id,name) or confidence_rule(name,id)
     for facts in facts_text.split(' '):
         fact = facts.replace("(", ",").replace(")", "").split(",")
 
         if fact[0] == "artery":
-            artery = OutputArtery(int(fact[1]), fact[2])
+            id = int(fact[1])
+            name = fact[2]
 
+            artery = OutputArtery(id, name)
             arteries.append(artery)
         else:
-            artery = next(
-                artery for artery in arteries if artery.get_name() == fact[1])
-            confidence_rule = next(confidence_rule for confidence_rule in confidence_rules if confidence_rule.get_id(
-            ) == fact[2] and confidence_rule.get_name() == fact[1])
+            id = fact[2]
+            name = fact[1]
+
+            # Find artery associated to confidence rule for name
+            artery = next(artery for artery in arteries
+                          if artery.get_name() == name)
+
+            # Find associated confidence rule for id and name
+            confidence_rule = next(confidence_rule for confidence_rule in confidence_rules
+                                   if confidence_rule.get_id() == id and
+                                   confidence_rule.get_name() == name)
 
             artery.get_confidence_rules().append(confidence_rule)
 
-    # Sort for artery.id
+    # Sort for artery id
     arteries.sort(key=lambda artery: artery.get_id())
 
     return arteries
 
 
+# Write out_arteries_parsed.txt as text
+# and print on terminal if is debug
 def write_arteries_parsed(file_name: str, arteries: list, is_debug: bool):
     with open(file_name, "w") as out_file:
         for artery in arteries:
