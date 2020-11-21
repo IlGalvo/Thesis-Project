@@ -9,11 +9,16 @@ import re
 from enum import Enum
 
 
+# InputArtery can be main or biforcation
 class ArteryType(Enum):
-    MainArtery = 0,
-    BiforcationArtery = 1
+    Main = 0,
+    Biforcation = 1
 
 
+# InputArtery has type,
+# is primary if it refers to confidence rule,
+# has a name
+# and id, heigth, angle and radius are optional
 class InputArtery:
     def __init__(self, artery_type: ArteryType,
                  is_primary: bool, name: str,
@@ -49,7 +54,7 @@ class InputArtery:
     def __str__(self) -> str:
         text = (self._name + " is a ")
 
-        if self._arteryType == ArteryType.MainArtery:
+        if self._arteryType == ArteryType.Main:
             text += "main artery."
         else:
             text += "biforcation artery."
@@ -57,11 +62,13 @@ class InputArtery:
         return text
 
 
+# Common rule interface
 class IRule:
     def to_text(self) -> str:
         pass
 
 
+# Edge rule referes to two arteries IDs
 class Edge(IRule):
     def __init__(self, artery1: InputArtery, artery2: InputArtery):
         self._artery1 = artery1
@@ -74,11 +81,13 @@ class Edge(IRule):
         return (self._artery1.get_name() + " is connected to " + self._artery2.get_name())
 
 
+# Heigth rule can be greater or less
 class HeigthType(Enum):
     Greater = 0,
     Less = 1
 
 
+# Heigth rule referes to two arteries Z and their offsets
 class Heigth(IRule):
     def __init__(self, heigth_type: HeigthType,
                  artery1: InputArtery, offset1: str,
@@ -108,6 +117,7 @@ class Heigth(IRule):
         return text
 
 
+# General rule has a text description and can refer to an artery
 class General(IRule):
     def __init__(self, rule_text: str, artery: InputArtery = None):
         self._rule_text = rule_text
@@ -123,6 +133,7 @@ class General(IRule):
             return self._rule_text
 
 
+# General rule text descriptions
 general_rule_dictionary = {
     "radius_small": "radius between 0 and 20 voxels.",
     "radius_big": "radius greater than 20 voxels.",
@@ -163,6 +174,9 @@ general_rule_dictionary = {
 }
 
 
+# ConfidenceRule has and id and name,
+# contains a list of InputArteries
+# and a list of IRules
 class ConfidenceRule:
     def __init__(self, id: int, name: str):
         self._id = id
@@ -196,6 +210,8 @@ class ConfidenceRule:
         return (text + "\n")
 
 
+# OutputArtery has and id and name,
+# and contains a list of ConfidenceRule
 class OutputArtery:
     def __init__(self, id: int, name: str):
         self._id = id
@@ -266,7 +282,7 @@ def parse_arteries_classifier(file_name: str) -> list:
                     is_primary = rule[5] == "N"
                     name = rule[5] if rule[5] != "N" else confidence_rule.get_name()
 
-                    artery = InputArtery(ArteryType.MainArtery,
+                    artery = InputArtery(ArteryType.Main,
                                          is_primary, name,
                                          id, heigth, angle, radius)
                     confidence_rule.get_arteries().append(artery)
@@ -281,7 +297,7 @@ def parse_arteries_classifier(file_name: str) -> list:
                     is_primary = rule[3] != "_"
                     name = rule[3] if rule[3] != "N" else confidence_rule.get_name()
 
-                    artery = InputArtery(ArteryType.BiforcationArtery,
+                    artery = InputArtery(ArteryType.Biforcation,
                                          is_primary, name,
                                          id, radius=radius)
                     confidence_rule.get_arteries().append(artery)
@@ -302,7 +318,7 @@ def parse_arteries_classifier(file_name: str) -> list:
                         is_primary = False
                         name = rule[1]
 
-                        artery1 = InputArtery(ArteryType.MainArtery,
+                        artery1 = InputArtery(ArteryType.Main,
                                               is_primary, name)
                         confidence_rule.get_arteries().append(artery1)
 
@@ -319,7 +335,7 @@ def parse_arteries_classifier(file_name: str) -> list:
 
                     # If success, get the value
                     offset1 = offset_regex1.group(
-                        0)if offset_regex1 != None else ""
+                        0) if offset_regex1 != None else ""
                     offset2 = offset_regex2.group(
                         0) if offset_regex2 != None else ""
 
