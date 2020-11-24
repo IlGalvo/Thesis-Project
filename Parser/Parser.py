@@ -52,14 +52,11 @@ class InputArtery:
         return self._radius
 
     def __str__(self) -> str:
-        text = (self._name + " is a ")
+        text = self._name + " is a "
 
-        if self._arteryType == ArteryType.Main:
-            text += "main artery."
-        else:
-            text += "biforcation artery."
+        text += "main" if self._arteryType == ArteryType.Main else "biforcation"
 
-        return text
+        return text + "artery."
 
 
 # Common rule interface
@@ -78,7 +75,7 @@ class Edge(IRule):
         return self.__str__()
 
     def __str__(self) -> str:
-        return (self._artery1.get_name() + " is connected to " + self._artery2.get_name())
+        return self._artery1.get_name() + " is connected to " + self._artery2.get_name()
 
 
 # Heigth rule can be greater or less
@@ -104,17 +101,11 @@ class Heigth(IRule):
         return self.__str__()
 
     def __str__(self) -> str:
-        text = (self._artery1.get_name() + " heigth" + self._offset1 + " is ")
+        text = self._artery1.get_name() + " heigth" + self._offset1 + " is "
 
-        if self._heigth_type == HeigthType.Greater:
-            text += "greater"
-        else:
-            text += "less"
+        text += "greater" if self._heigth_type == HeigthType.Greater else "less"
 
-        text += (" than " + self._artery2.get_name() +
-                 " heigth" + self._offset2 + ".")
-
-        return text
+        return text + " than " + self._artery2.get_name() + " heigth" + self._offset2 + "."
 
 
 # General rule has a text description and can refer to an artery
@@ -128,9 +119,9 @@ class General(IRule):
 
     def __str__(self) -> str:
         if self._artery != None:
-            return (self._artery.get_name() + " has " + self._rule_text)
-        else:
-            return self._rule_text
+            return self._artery.get_name() + " has " + self._rule_text
+
+        return self._rule_text
 
 
 # General rule text descriptions
@@ -198,16 +189,16 @@ class ConfidenceRule:
         return self._rules
 
     def __str__(self) -> str:
-        text = ("\tConfidence Rule with ID: [" +
-                str(self._id) + "] and Name: [" + self._name + "].\n")
+        text = "Confidence Rule with ID: [" + \
+            str(self._id) + "] and Name: [" + self._name + "].\n"
 
         for artery in self._arteries:
-            text += ("\t\tFact: " + str(artery) + "\n")
+            text += "\t\tFact: " + str(artery) + "\n"
 
         for rule in self._rules:
-            text += ("\t\tRule: " + rule.to_text() + "\n")
+            text += "\t\tRule: " + rule.to_text() + "\n"
 
-        return (text + "\n")
+        return text
 
 
 # OutputArtery has and id and name,
@@ -229,11 +220,11 @@ class OutputArtery:
         return self._confidence_rules
 
     def __str__(self) -> str:
-        text = ("Artery with ID: [" +
-                str(self._id) + "] and Name: [" + self._name + "].\n")
+        text = "Artery with ID: [" + \
+            str(self._id) + "] and Name: [" + self._name + "].\n"
 
         for confidence_rule in self._confidence_rules:
-            text += str(confidence_rule)
+            text += "\t" + str(confidence_rule) + "\n"
 
         return (text + "\n")
 
@@ -259,7 +250,7 @@ def parse_arteries_classifier(file_name: str) -> list:
            # Extract confidence rule info
             cr_text = rules[0].split("= ")
 
-            id = number_regex1.search(cr_text[0]).group(0)
+            id = int(number_regex1.search(cr_text[0]).group(0))
             name = cr_text[1]
 
             confidence_rule = ConfidenceRule(id, name)
@@ -269,8 +260,8 @@ def parse_arteries_classifier(file_name: str) -> list:
                 # [0] = rule name, [1...N] = args
                 rule = rules[i].replace("(", ",").replace(")", ",").split(",")
 
+                # main_artery(ID,Z,A,R,N)
                 if rule[0] == "main_artery":
-                    # main_artery(ID,Z,A,R,N)
                     # If args are not equal to "_", they're valid
                     # If name is equal to "N", it refers to confidence rule principal artery
                     # If name is equal to "N", it refers to confidence rule name
@@ -286,8 +277,9 @@ def parse_arteries_classifier(file_name: str) -> list:
                                          is_primary, name,
                                          id, heigth, angle, radius)
                     confidence_rule.get_arteries().append(artery)
+
+                # bif_artery(ID,R,N)
                 elif rule[0] == "bif_artery":
-                    # bif_artery(ID,R,N)
                     # If args are not equal to "_", they're valid
                     # If name is equal to "N", it refers to confidence rule principal artery
                     # If name is equal to "N", it refers to confidence rule name
@@ -301,9 +293,9 @@ def parse_arteries_classifier(file_name: str) -> list:
                                          is_primary, name,
                                          id, radius=radius)
                     confidence_rule.get_arteries().append(artery)
-                elif rule[0] == "edge":
-                    # edge(ID1,ID2) or edge(name,ID)
 
+                # edge(ID1,ID2) or edge(name,ID)
+                elif rule[0] == "edge":
                     # Find arteries for ID
                     artery1 = next((artery for artery in confidence_rule.get_arteries()
                                     if artery.get_id() == rule[1]), None)
@@ -324,9 +316,9 @@ def parse_arteries_classifier(file_name: str) -> list:
 
                     edge_rule = Edge(artery1, artery2)
                     confidence_rule.get_rules().append(edge_rule)
-                elif rule[0] == "height_greater" or rule[0] == "height_less":
-                    # height_greater/height_less(Z1+X1,Z2+X2), with +X1 and +X2 optional
 
+                # height_greater/height_less(Z1+X1,Z2+X2), with +X1 and +X2 optional
+                elif rule[0] == "height_greater" or rule[0] == "height_less":
                     heigth_type = HeigthType.Greater if rule[0] == "height_greater" else HeigthType.Less
 
                     # Check if there are +X1 and +X2
@@ -355,6 +347,8 @@ def parse_arteries_classifier(file_name: str) -> list:
                                          artery1, offset1,
                                          artery2, offset2)
                     confidence_rule.get_rules().append(heigth_rule)
+
+                # Case when it's a self meaning rule
                 else:
                     # Check if it's a general rule contained in general rule dictionary
                     rule_text = general_rule_dictionary.get(rule[0], None)
@@ -419,6 +413,7 @@ def parse_artery_classified(file_name: str, confidence_rules: list) -> list:
             artery = OutputArtery(id, name)
             arteries.append(artery)
         else:
+            # Id not casted to int because search uses strings
             id = fact[2]
             name = fact[1]
 
