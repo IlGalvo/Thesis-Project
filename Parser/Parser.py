@@ -56,7 +56,7 @@ class InputArtery:
 
         text += "main" if self._arteryType == ArteryType.Main else "biforcation"
 
-        return text + "artery."
+        return text + " artery."
 
 
 # Common rule interface
@@ -75,7 +75,7 @@ class Edge(IRule):
         return self.__str__()
 
     def __str__(self) -> str:
-        return self._artery1.get_name() + " is connected to " + self._artery2.get_name()
+        return self._artery1.get_name() + " is connected to " + self._artery2.get_name() + "."
 
 
 # Heigth rule can be greater or less
@@ -119,49 +119,49 @@ class General(IRule):
 
     def __str__(self) -> str:
         if self._artery != None:
-            return self._artery.get_name() + " has " + self._rule_text
+            return self._artery.get_name() + " has " + self._rule_text + "."
 
         return self._rule_text
 
 
 # General rule text descriptions
 general_rule_dictionary = {
-    "radius_small": "radius between 0 and 20 voxels.",
-    "radius_big": "radius greater than 20 voxels.",
+    "radius_small": "radius between 0 and 20 voxels",
+    "radius_big": "radius greater than 20 voxels",
 
-    "radius_s": "radius between 0 and 20 voxels.",
-    "radius_m": "radius between 20 and 30 voxels.",
-    "radius_l": "radius greater than 30 voxels.",
+    "radius_s": "radius between 0 and 20 voxels",
+    "radius_m": "radius between 20 and 30 voxels",
+    "radius_l": "radius greater than 30 voxels",
 
-    "radius_1": "radius between 0 and 5 voxels.",
-    "radius_2": "radius between 5 and 10 voxels.",
-    "radius_3": "radius between 10 and 15 voxels.",
-    "radius_4": "radius between 15 and 20 voxels.",
-    "radius_5": "radius between 20 and 25 voxels.",
-    "radius_6": "radius between 25 and 30 voxels.",
-    "radius_7": "radius between 30 and 35 voxels.",
-    "radius_8": "radius between 35 and 40 voxels.",
-    "radius_9": "radius greater than 40 voxels.",
+    "radius_1": "radius between 0 and 5 voxels",
+    "radius_2": "radius between 5 and 10 voxels",
+    "radius_3": "radius between 10 and 15 voxels",
+    "radius_4": "radius between 15 and 20 voxels",
+    "radius_5": "radius between 20 and 25 voxels",
+    "radius_6": "radius between 25 and 30 voxels",
+    "radius_7": "radius between 30 and 35 voxels",
+    "radius_8": "radius between 35 and 40 voxels",
+    "radius_9": "radius greater than 40 voxels",
 
 
-    "quadrant_1": "angle between 0 and 90 degrees.",
-    "quadrant_2": "angle between 90 and 180 degrees.",
-    "quadrant_3": "angle between 180 and 270 degrees.",
-    "quadrant_4": "angle between 270 and 360 degrees.",
+    "quadrant_1": "angle between 0 and 90 degrees",
+    "quadrant_2": "angle between 90 and 180 degrees",
+    "quadrant_3": "angle between 180 and 270 degrees",
+    "quadrant_4": "angle between 270 and 360 degrees",
 
-    "shiftedquadrant_1": "angle between 330 and 360, or between 0 and 60 degrees.",
-    "shiftedquadrant_2": "angle between 60 and 150 degrees.",
-    "shiftedquadrant_3": "angle between 150 and 240 degrees.",
-    "shiftedquadrant_4": "angle between 240 and 330 degrees.",
+    "shiftedquadrant_1": "angle between 330 and 360, or between 0 and 60 degrees",
+    "shiftedquadrant_2": "angle between 60 and 150 degrees",
+    "shiftedquadrant_3": "angle between 150 and 240 degrees",
+    "shiftedquadrant_4": "angle between 240 and 330 degrees",
 
-    "semiquadrant_1": "angle between 0 and 45 degrees.",
-    "semiquadrant_2": "angle between 45 and 90 degrees.",
-    "semiquadrant_3": "angle between 90 and 135 degrees.",
-    "semiquadrant_4": "angle between 130 and 180 degrees.",
-    "semiquadrant_5": "angle between 180 and 225 degrees.",
-    "semiquadrant_6": "angle between 225 and 270 degrees.",
-    "semiquadrant_7": "angle between 270 and 315 degrees.",
-    "semiquadrant_8": "angle between 315 and 360 degrees."
+    "semiquadrant_1": "angle between 0 and 45 degrees",
+    "semiquadrant_2": "angle between 45 and 90 degrees",
+    "semiquadrant_3": "angle between 90 and 135 degrees",
+    "semiquadrant_4": "angle between 130 and 180 degrees",
+    "semiquadrant_5": "angle between 180 and 225 degrees",
+    "semiquadrant_6": "angle between 225 and 270 degrees",
+    "semiquadrant_7": "angle between 270 and 315 degrees",
+    "semiquadrant_8": "angle between 315 and 360 degrees"
 }
 
 
@@ -413,8 +413,7 @@ def parse_artery_classified(file_name: str, confidence_rules: list) -> list:
             artery = OutputArtery(id, name)
             arteries.append(artery)
         else:
-            # Id not casted to int because search uses strings
-            id = fact[2]
+            id = int(fact[2])
             name = fact[1]
 
             # Find artery associated to confidence rule for name

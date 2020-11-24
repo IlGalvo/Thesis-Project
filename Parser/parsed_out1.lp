@@ -10,17 +10,17 @@ Artery with ID: [0] and Name: [celiac_trunk].
 	Confidence Rule with ID: [2] and Name: [celiac_trunk].
 		Fact: celiac_trunk is a main artery.
 		Fact: aorta is a main artery.
-		Rule: aorta is connected to celiac_trunk
+		Rule: aorta is connected to celiac_trunk.
 
 	Confidence Rule with ID: [3] and Name: [celiac_trunk].
 		Fact: celiac_trunk is a main artery.
 		Fact: gastricL is a biforcation artery.
-		Rule: celiac_trunk is connected to gastricL
+		Rule: celiac_trunk is connected to gastricL.
 
 	Confidence Rule with ID: [4] and Name: [celiac_trunk].
 		Fact: celiac_trunk is a main artery.
 		Fact: gastricL is a biforcation artery.
-		Rule: celiac_trunk is connected to gastricL
+		Rule: celiac_trunk is connected to gastricL.
 
 	Confidence Rule with ID: [7] and Name: [celiac_trunk].
 		Fact: celiac_trunk is a main artery.
@@ -45,12 +45,12 @@ Artery with ID: [1] and Name: [sup_mesenteric].
 	Confidence Rule with ID: [2] and Name: [sup_mesenteric].
 		Fact: sup_mesenteric is a main artery.
 		Fact: aorta is a main artery.
-		Rule: aorta is connected to sup_mesenteric
+		Rule: aorta is connected to sup_mesenteric.
 
 	Confidence Rule with ID: [3] and Name: [sup_mesenteric].
 		Fact: sup_mesenteric is a main artery.
 		Fact: hepatic is a biforcation artery.
-		Rule: sup_mesenteric is connected to hepatic
+		Rule: sup_mesenteric is connected to hepatic.
 
 	Confidence Rule with ID: [5] and Name: [sup_mesenteric].
 		Fact: sup_mesenteric is a main artery.
@@ -77,7 +77,7 @@ Artery with ID: [3] and Name: [gastricL].
 	Confidence Rule with ID: [1] and Name: [gastricL].
 		Fact: gastricL is a biforcation artery.
 		Fact: celiac_trunk is a main artery.
-		Rule: celiac_trunk is connected to gastricL
+		Rule: celiac_trunk is connected to gastricL.
 
 
 Artery with ID: [5] and Name: [dorsal_pancreatic].
@@ -101,7 +101,7 @@ Artery with ID: [9] and Name: [renalR_mysterious].
 	Confidence Rule with ID: [3] and Name: [renalR_mysterious].
 		Fact: renalR_mysterious is a main artery.
 		Fact: aorta is a main artery.
-		Rule: aorta is connected to renalR_mysterious
+		Rule: aorta is connected to renalR_mysterious.
 
 	Confidence Rule with ID: [4] and Name: [renalR_mysterious].
 		Fact: renalR_mysterious is a main artery.
@@ -120,7 +120,7 @@ Artery with ID: [10] and Name: [hepatic].
 	Confidence Rule with ID: [2] and Name: [hepatic].
 		Fact: hepatic is a biforcation artery.
 		Fact: sup_mesenteric is a main artery.
-		Rule: sup_mesenteric is connected to hepatic
+		Rule: sup_mesenteric is connected to hepatic.
 
 
 Artery with ID: [14] and Name: [inf_mesenteric].
@@ -135,7 +135,7 @@ Artery with ID: [14] and Name: [inf_mesenteric].
 	Confidence Rule with ID: [2] and Name: [inf_mesenteric].
 		Fact: inf_mesenteric is a main artery.
 		Fact: aorta is a main artery.
-		Rule: aorta is connected to inf_mesenteric
+		Rule: aorta is connected to inf_mesenteric.
 
 	Confidence Rule with ID: [3] and Name: [inf_mesenteric].
 		Fact: inf_mesenteric is a main artery.
@@ -171,7 +171,7 @@ Artery with ID: [26] and Name: [lumbarR4].
 	Confidence Rule with ID: [3] and Name: [lumbarR4].
 		Fact: lumbarR4 is a main artery.
 		Fact: aorta is a main artery.
-		Rule: aorta is connected to lumbarR4
+		Rule: aorta is connected to lumbarR4.
 
 
 Artery with ID: [31] and Name: [lumbarL3].
@@ -186,7 +186,7 @@ Artery with ID: [31] and Name: [lumbarL3].
 	Confidence Rule with ID: [3] and Name: [lumbarL3].
 		Fact: lumbarL3 is a main artery.
 		Fact: aorta is a main artery.
-		Rule: aorta is connected to lumbarL3
+		Rule: aorta is connected to lumbarL3.
 
 	Confidence Rule with ID: [4] and Name: [lumbarL3].
 		Fact: lumbarL3 is a main artery.
@@ -222,7 +222,7 @@ Artery with ID: [32] and Name: [lumbarL1].
 	Confidence Rule with ID: [3] and Name: [lumbarL1].
 		Fact: lumbarL1 is a main artery.
 		Fact: aorta is a main artery.
-		Rule: aorta is connected to lumbarL1
+		Rule: aorta is connected to lumbarL1.
 
 	Confidence Rule with ID: [4] and Name: [lumbarL1].
 		Fact: lumbarL1 is a main artery.
@@ -262,7 +262,7 @@ Artery with ID: [33] and Name: [renalR].
 	Confidence Rule with ID: [2] and Name: [renalR].
 		Fact: renalR is a main artery.
 		Fact: aorta is a main artery.
-		Rule: aorta is connected to renalR
+		Rule: aorta is connected to renalR.
 
 	Confidence Rule with ID: [5] and Name: [renalR].
 		Fact: renalR is a main artery.
@@ -292,7 +292,7 @@ Artery with ID: [36] and Name: [lumbarR3].
 	Confidence Rule with ID: [3] and Name: [lumbarR3].
 		Fact: lumbarR3 is a main artery.
 		Fact: aorta is a main artery.
-		Rule: aorta is connected to lumbarR3
+		Rule: aorta is connected to lumbarR3.
 
 	Confidence Rule with ID: [4] and Name: [lumbarR3].
 		Fact: lumbarR3 is a main artery.
@@ -333,7 +333,7 @@ Artery with ID: [37] and Name: [lumbarR2].
 	Confidence Rule with ID: [3] and Name: [lumbarR2].
 		Fact: lumbarR2 is a main artery.
 		Fact: aorta is a main artery.
-		Rule: aorta is connected to lumbarR2
+		Rule: aorta is connected to lumbarR2.
 
 	Confidence Rule with ID: [4] and Name: [lumbarR2].
 		Fact: lumbarR2 is a main artery.
@@ -378,7 +378,7 @@ Artery with ID: [38] and Name: [renalL].
 	Confidence Rule with ID: [2] and Name: [renalL].
 		Fact: renalL is a main artery.
 		Fact: aorta is a main artery.
-		Rule: aorta is connected to renalL
+		Rule: aorta is connected to renalL.
 
 	Confidence Rule with ID: [3] and Name: [renalL].
 		Fact: renalL is a main artery.
@@ -403,7 +403,7 @@ Artery with ID: [39] and Name: [renalL_mysterious].
 	Confidence Rule with ID: [2] and Name: [renalL_mysterious].
 		Fact: renalL_mysterious is a main artery.
 		Fact: aorta is a main artery.
-		Rule: aorta is connected to renalL_mysterious
+		Rule: aorta is connected to renalL_mysterious.
 
 	Confidence Rule with ID: [3] and Name: [renalL_mysterious].
 		Fact: renalL_mysterious is a main artery.
@@ -426,7 +426,7 @@ Artery with ID: [44] and Name: [lumbarL2].
 	Confidence Rule with ID: [3] and Name: [lumbarL2].
 		Fact: lumbarL2 is a main artery.
 		Fact: aorta is a main artery.
-		Rule: aorta is connected to lumbarL2
+		Rule: aorta is connected to lumbarL2.
 
 	Confidence Rule with ID: [4] and Name: [lumbarL2].
 		Fact: lumbarL2 is a main artery.
