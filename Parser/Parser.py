@@ -304,9 +304,9 @@ def parse_arteries_classifier(file_name: str) -> list:
 
                     # It's edge(name,ID)
                     if artery1 == None:
-                        # In this case we only that:
+                        # In this case we only know that:
                         # It's a main artery,
-                        # Doesn't refer to confidence rule principal artery
+                        # Doesn't refer to a confidence rule principal artery
                         is_primary = False
                         name = rule[1]
 
@@ -348,7 +348,7 @@ def parse_arteries_classifier(file_name: str) -> list:
                                          artery2, offset2)
                     confidence_rule.get_rules().append(heigth_rule)
 
-                # Case when it's a self meaning rule
+                # It's a self meaning rule
                 else:
                     # Check if it's a general rule contained in general rule dictionary
                     rule_text = general_rule_dictionary.get(rule[0], None)
@@ -454,7 +454,7 @@ def main():
         sys.argv.append("arteries_classifier.lp")
         sys.argv.append("out1.lp")
         sys.argv.append("parsed_out1.lp")
-    elif (len(sys.argv) < 3) or (not os.path.isfile(sys.argv[1])) or (not os.path.isfile(sys.argv[2])):
+    elif len(sys.argv) < 3 or not os.path.isfile(sys.argv[1]) or not os.path.isfile(sys.argv[2]):
         print("Usage: python Parser.py in_arteries_classifier.lp in_arteries_classified.lp out_arteries_parsed.txt")
         exit()
 
