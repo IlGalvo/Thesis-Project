@@ -452,10 +452,10 @@ def main():
         os.chdir(os.path.dirname(__file__))
 
         sys.argv.append("arteries_classifier.lp")
-        sys.argv.append("out1.lp")
-        sys.argv.append("parsed_out1.lp")
+        sys.argv.append("arteries_classified.lp")
+        sys.argv.append("arteries_parsed.lp")
     elif len(sys.argv) < 3 or not os.path.isfile(sys.argv[1]) or not os.path.isfile(sys.argv[2]):
-        print("Usage: python Parser.py in_arteries_classifier.lp in_arteries_classified.lp out_arteries_parsed.txt")
+        print("Usage: python parser.py in_arteries_classifier.lp in_arteries_classified.lp out_arteries_parsed.lp")
         exit()
 
     confidence_rules = parse_arteries_classifier(sys.argv[1])
