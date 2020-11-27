@@ -1,13 +1,22 @@
 % ********** MODEL **********
 %**KNOWLEDGE BASE**%
 
-%%%Parameters
-angle(1..360).
+
+
+%%% Parameters
+%% artery(ID,radius,density,quality,posx,posy,posz,path legth,distance from extremes,heigth,angle).
+% artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A).
+id(ID) :- artery_in(ID,_,_,_,_,_,_,_,_,_,_).
 radius(1..50).
-id(ID) :- main_artery_in(ID,_,_,_).
-id(ID) :- bif_artery_in(ID,_).
-height(Z) :- main_artery_in(_,Z,_,_).
-height(Z) :- bif_artery_in(_,Z).
+density(D) :- artery_in(_,_,D,_,_,_,_,_,_,_,_).
+quality(Q) :- artery_in(_,_,_,Q,_,_,_,_,_,_,_).
+cog_x(X) :- artery_in(_,_,_,_,X,_,_,_,_,_,_).
+cog_y(Y) :- artery_in(_,_,_,_,_,Y,_,_,_,_,_).
+cog_z(Z) :- artery_in(_,_,_,_,_,_,Z,_,_,_,_).
+path_length(PL) :- artery_in(_,_,_,_,_,PL,_,_,_,_,_).
+dfe(DE) :- artery_in(_,_,_,_,_,_,DE,_,_,_,_).
+height(H) :- artery_in(_,_,_,_,_,_,_,_,_,H,_).
+angle(1..360).
 
 %List of arteries
 name(celiac_trunk).
@@ -71,37 +80,37 @@ semiquadrant_7(A) :- angle(A), A > 270, A <= 315.
 semiquadrant_8(A) :- angle(A), A > 315, A <= 360.
 
 %Height comparators
-height_greater(Z1,Z2) :- Z1 > Z2.
-height_less(Z1,Z2) :- Z1 < Z2.
+height_greater(H1,H2) :- H1 > H2.
+height_less(H1,H2) :- H1 < H2.
 
 %ASP helper
-param_main_artery(ID,Z,A,R) :- id(ID), height(Z), angle(A), radius(R), main_artery_in(ID,Z,A,R).
-param_bif_artery(ID,R) :- id(ID), radius(R), bif_artery_in(ID,R).
+param_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A) :- id(ID), radius(R), density(D), quality(Q),
+                                        cog_x(X), cog_y(Y), cog_z(Z), path_length(PL),
+                                        dfe(DE), height(H), angle(A), artery_in(ID,R,D,Q,X,Y,Z,PL,DE,H,A).
 
-artery(ID,N) :- main_artery(ID,_,_,_,N), id(ID), name(N).
-artery(ID,N) :- bif_artery(ID,_,N), id(ID), name(N).
+artery(ID,N) :- artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N), id(ID), name(N).
 
 %Relazioni di ordine tra ranges (z < z1+e)
+% tEMP: artery(_,_,_,_,_,_,_,_,_,_,_,N)
 %****Arteries exiting directly from (descending) Aorta.****%
 %%CELIAC TRUNK (Examples of various confidence_rules)
-main_artery(ID,Z,A,R,N) :- artery_gen(ID,N), name(N), param_main_artery(ID,Z,A,R),
-                           N = celiac_trunk, quadrant_1(A), radius_l(R).
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), param_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A),
+                           N = celiac_trunk, quadrant_1(A), radius_l(R), edge(aorta, ID).
 
-confidence_rule(N,0)  :-  N = celiac_trunk, main_artery(_,_,A,_,N), semiquadrant_2(A).
-confidence_rule(N,1)  :-  N = celiac_trunk, main_artery(_,_,_,R,N), radius_7(R).
-confidence_rule(N,2)  :-  N = celiac_trunk, main_artery(ID,_,_,_,N), edge(aorta,ID).
-confidence_rule(N,3)  :-  N = celiac_trunk, main_artery(ID1,_,_,_,N), bif_artery(ID2,_,gastricL), edge(ID1,ID2).
+confidence_rule(N,0)  :-  N = celiac_trunk, artery(_,_,_,_,_,_,_,_,_,_,A,N), semiquadrant_2(A).
+confidence_rule(N,1)  :-  N = celiac_trunk, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_7(R).
+confidence_rule(N,2)  :-  N = celiac_trunk, artery(ID,_,_,_,_,_,_,_,_,_,_,N), edge(aorta,ID). % *** Si tiene?
+confidence_rule(N,3)  :-  N = celiac_trunk, artery(ID1,_,_,_,_,_,_,_,_,_,_,N), artery(ID2,_,_,_,_,_,_,_,_,_,_,gastricL), edge(ID1,ID2).
 %Less informative version              ... artery     (ID1,      N), artery    (ID2,  gastricL), ....
-confidence_rule(N,4)  :-  N = celiac_trunk, main_artery(ID1,_,_,_,N), bif_artery(ID2,_,gastricL), edge(ID1,ID2).
-%confidence_rule(N,5)  :-  N = celiac_trunk, main_artery(ID1,_,_,_,N), bif_artery(ID2,_,splenic), edge(ID1,ID2).
-%confidence_rule(N,6)  :-  N = celiac_trunk, main_artery(ID1,_,_,_,N), bif_artery(ID2,_,hepatic), edge(ID1,ID2).
-confidence_rule(N,7)  :-  N = celiac_trunk, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,sup_mesenteric), height_greater(Z1+10,Z2).
-confidence_rule(N,8)  :-  N = celiac_trunk, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,sup_mesenteric), height_greater(Z1,Z2).
-confidence_rule(N,9)  :-  N = celiac_trunk, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,renalL), height_greater(Z1,Z2+10).
-confidence_rule(N,10) :-  N = celiac_trunk, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,renalL), height_greater(Z1,Z2).
-confidence_rule(N,11) :-  N = celiac_trunk, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,renalR), height_greater(Z1,Z2+10).
-confidence_rule(N,12) :-  N = celiac_trunk, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,renalR), height_greater(Z1,Z2).
-confidence_rule(N,13) :-  N = celiac_trunk, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,inf_mesenteric), height_greater(Z1,Z2+30).
+%confidence_rule(N,4)  :-  N = celiac_trunk, main_artery(ID1,_,_,_,N), bif_artery(ID2,_,splenic), edge(ID1,ID2).
+%confidence_rule(N,5)  :-  N = celiac_trunk, main_artery(ID1,_,_,_,N), bif_artery(ID2,_,hepatic), edge(ID1,ID2).
+confidence_rule(N,6)  :-  N = celiac_trunk, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,sup_mesenteric), height_greater(H1+10,H2).
+confidence_rule(N,7)  :-  N = celiac_trunk, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,sup_mesenteric), height_greater(H1,H2).
+confidence_rule(N,8)  :-  N = celiac_trunk, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,renalL), height_greater(H1,H2+10).
+confidence_rule(N,9) :-  N = celiac_trunk,  artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,renalL), height_greater(H1,H2).
+confidence_rule(N,10) :-  N = celiac_trunk, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,renalR), height_greater(H1,H2+10).
+confidence_rule(N,11) :-  N = celiac_trunk, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,renalR), height_greater(H1,H2).
+confidence_rule(N,12) :-  N = celiac_trunk, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,sup_mesenteric), height_greater(H1,H2+30).
 
 %%LEFT GASTRIC
 bif_artery(ID,R,N) :- artery_gen(ID,N), name(N), param_bif_artery(ID,R),
@@ -393,15 +402,14 @@ confidence_rule(N,14) :-  N = lumbarL3, main_artery(_,Z1,_,_,N), main_artery(_,Z
 
 %%%Constraints
 %Structural
-:- main_artery(ID1,_,_,_,N1), main_artery(ID2,_,_,_,N2), ID1 != ID2, N1 == N2.
-:- main_artery(ID1,_,_,_,N1), main_artery(ID2,_,_,_,N2), ID1 == ID2, N1 != N2.
-:- bif_artery(ID1,_,N1), bif_artery(ID2,_,N2), ID1 != ID2, N1 == N2.
-:- bif_artery(ID1,_,N1), bif_artery(ID2,_,N2), ID1 == ID2, N1 != N2.
+:- artery(ID1,_,_,_,_,_,_,_,_,_,_,N1), artery(ID2,_,_,_,_,_,_,_,_,_,_,N2), ID1 != ID2, N1 == N2.
+:- artery(ID1,_,_,_,_,_,_,_,_,_,_,N1), artery(ID2,_,_,_,_,_,_,_,_,_,_,N2), ID1 == ID2, N1 != N2.
 :- artery(ID1,N1), artery(ID2,N2), ID1 != ID2, N1 == N2.
 :- artery(ID1,N1), artery(ID2,N2), ID1 == ID2, N1 != N2.
 
 %Anatomical
-:- edge(ID1,ID2), main_artery(ID2,_,_,_,_), ID1 != aorta.
+:- edge(ID1,ID2), artery(ID1,_,_,_,_,_,_,_,_,_,_,_),, ID1 != aorta.
+% Da sistemare coi nuovi criteri...***
 :- main_artery(_,Z1,_,_,celiac_trunk), main_artery(_,Z2,_,_,sup_mesenteric), height_less(Z1,Z2).
 :- main_artery(_,Z1,_,_,celiac_trunk), main_artery(_,Z2,_,_,inf_mesenteric), height_less(Z1,Z2).
 :- main_artery(_,Z1,_,_,celiac_trunk), main_artery(_,Z2,_,_,lumbarR1), height_less(Z1,Z2).
@@ -455,22 +463,6 @@ confidence_rule(N,14) :-  N = lumbarL3, main_artery(_,Z1,_,_,N), main_artery(_,Z
 
 :- main_artery(_,Z1,_,_,lumbarL3), main_artery(_,Z2,_,_,lumbarR4), height_less(Z1,Z2).
 :- main_artery(_,Z1,_,_,lumbarL3), main_artery(_,Z2,_,_,lumbarL4), height_less(Z1,Z2).
-
-:- bif_artery(_,_,celiac_trunk).
-:- bif_artery(_,_,sup_mesenteric).
-:- bif_artery(_,_,renalL).
-:- bif_artery(_,_,renalR).
-:- bif_artery(_,_,renalL_mysterious).
-:- bif_artery(_,_,renalR_mysterious).
-:- bif_artery(_,_,inf_mesenteric).
-:- bif_artery(_,_,lumbarR1).
-:- bif_artery(_,_,lumbarL1).
-:- bif_artery(_,_,lumbarR2).
-:- bif_artery(_,_,lumbarL2).
-:- bif_artery(_,_,lumbarR3).
-:- bif_artery(_,_,lumbarL3).
-:- bif_artery(_,_,lumbarR4).
-:- bif_artery(_,_,lumbarL4).
 
 %%%Solution Generation
 0 {artery_gen(ID,N) : name(N)} 1 :- id(ID).

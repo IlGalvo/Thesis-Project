@@ -159,7 +159,7 @@ edge(aorta,141).
 
 %% Format:
 % artery(ID,radius,density,quality,posx,posy,posz,path legth,distance from extremes,heigth,angle).
-% artery(ID,R,D,Q,BX,BY,BZ,PL,ED,Z,A).
+% artery(ID,R,D,Q,BX,BY,BZ,PL,DE,H,A).
 artery(113, 3.54, 225.2, 0.000, 274.206360, 278.145966, 82.750313, 1.542344, 3.164268, 81, 61). % range 0 2
 artery(24, 3.62, 236.6, 0.000, 274.176788, 280.888947, 85.966225, 5.829943, 2.238647, 81, 61). % range 3 5
 artery(4, 3.88, 232.3, 0.000, 272.521332, 285.069122, 90.879723, 12.374248, 8.660843, 81, 61). % range 6 12
