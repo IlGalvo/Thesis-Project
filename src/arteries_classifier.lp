@@ -1,8 +1,6 @@
 % ********** MODEL **********
 %**KNOWLEDGE BASE**%
 
-
-
 %%% Parameters
 %% artery(ID,radius,density,quality,posx,posy,posz,path legth,distance from extremes,heigth,angle).
 % artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A).
@@ -85,8 +83,8 @@ height_less(H1,H2) :- H1 < H2.
 
 %ASP helper
 param_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A) :- id(ID), radius(R), density(D), quality(Q),
-                                        cog_x(X), cog_y(Y), cog_z(Z), path_length(PL),
-                                        dfe(DE), height(H), angle(A), artery_in(ID,R,D,Q,X,Y,Z,PL,DE,H,A).
+                                          cog_x(X), cog_y(Y), cog_z(Z), path_length(PL),
+                                          dfe(DE), height(H), angle(A), artery_in(ID,R,D,Q,X,Y,Z,PL,DE,H,A).
 
 artery(ID,N) :- artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N), id(ID), name(N).
 
@@ -95,71 +93,71 @@ artery(ID,N) :- artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N), id(ID), name(N).
 %****Arteries exiting directly from (descending) Aorta.****%
 %%CELIAC TRUNK (Examples of various confidence_rules)
 artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), param_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A),
-                           N = celiac_trunk, quadrant_1(A), radius_l(R), edge(aorta, ID).
+                                      N = celiac_trunk, quadrant_1(A), radius_l(R), edge(aorta, ID).
 
 confidence_rule(N,0)  :-  N = celiac_trunk, artery(_,_,_,_,_,_,_,_,_,_,A,N), semiquadrant_2(A).
 confidence_rule(N,1)  :-  N = celiac_trunk, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_7(R).
 confidence_rule(N,2)  :-  N = celiac_trunk, artery(ID,_,_,_,_,_,_,_,_,_,_,N), edge(aorta,ID). % *** Si tiene?
 confidence_rule(N,3)  :-  N = celiac_trunk, artery(ID1,_,_,_,_,_,_,_,_,_,_,N), artery(ID2,_,_,_,_,_,_,_,_,_,_,gastricL), edge(ID1,ID2).
 %Less informative version              ... artery     (ID1,      N), artery    (ID2,  gastricL), ....
-%confidence_rule(N,4)  :-  N = celiac_trunk, main_artery(ID1,_,_,_,N), bif_artery(ID2,_,splenic), edge(ID1,ID2).
-%confidence_rule(N,5)  :-  N = celiac_trunk, main_artery(ID1,_,_,_,N), bif_artery(ID2,_,hepatic), edge(ID1,ID2).
+%confidence_rule(N,4)  :- N = celiac_trunk, main_artery(ID1,_,_,_,N), bif_artery(ID2,_,splenic), edge(ID1,ID2).
+%confidence_rule(N,5)  :- N = celiac_trunk, main_artery(ID1,_,_,_,N), bif_artery(ID2,_,hepatic), edge(ID1,ID2).
 confidence_rule(N,6)  :-  N = celiac_trunk, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,sup_mesenteric), height_greater(H1+10,H2).
 confidence_rule(N,7)  :-  N = celiac_trunk, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,sup_mesenteric), height_greater(H1,H2).
 confidence_rule(N,8)  :-  N = celiac_trunk, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,renalL), height_greater(H1,H2+10).
-confidence_rule(N,9) :-  N = celiac_trunk,  artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,renalL), height_greater(H1,H2).
+confidence_rule(N,9) :-   N = celiac_trunk, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,renalL), height_greater(H1,H2).
 confidence_rule(N,10) :-  N = celiac_trunk, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,renalR), height_greater(H1,H2+10).
 confidence_rule(N,11) :-  N = celiac_trunk, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,renalR), height_greater(H1,H2).
 confidence_rule(N,12) :-  N = celiac_trunk, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,sup_mesenteric), height_greater(H1,H2+30).
 
 %%LEFT GASTRIC
-bif_artery(ID,R,N) :- artery_gen(ID,N), name(N), param_bif_artery(ID,R),
-                      N = gastricL, radius_l(R).
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), param_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A),
+                                      N = gastricL, radius_l(R), edge(celiac_trunk,ID).
 
-confidence_rule(N,0) :-  N = gastricL, bif_artery(_,R,N), radius_7(R).
-confidence_rule(N,1) :-  N = gastricL, bif_artery(ID2,_,N), main_artery(ID1,_,_,_,celiac_trunk), edge(ID1,ID2).
+confidence_rule(N,0) :-  N = gastricL, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_7(R).
+confidence_rule(N,1) :-  N = gastricL, artery(ID2,_,_,_,_,_,_,_,_,_,_,N), artery(ID1,_,_,_,_,_,_,_,_,_,_,celiac_trunk), edge(ID1,ID2). % *** Si tiene?
 
 %%SPLENIC
-bif_artery(ID,R,N) :- artery_gen(ID,N), name(N), param_bif_artery(ID,R),
-                      N = splenic, radius_l(R).
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), param_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A),
+                                      N = splenic, radius_l(R), edge(celiac_trunk,ID).
 
-confidence_rule(N,0) :- N = splenic, bif_artery(_,R,N), radius_7(R).
-%confidence_rule(N,1) :- N = splenic, bif_artery(ID2,_,N), main_artery(ID1,_,_,_,celiac_trunk), edge(ID1,ID2).
+confidence_rule(N,0) :- N = splenic, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_7(R).
+confidence_rule(N,1) :- N = splenic, artery(ID2,_,_,_,_,_,_,_,_,_,_,N), artery(ID1,_,_,_,_,_,_,_,_,_,_,celiac_trunk), edge(ID1,ID2). % *** Si tiene?
 
 %%HEPATIC
-bif_artery(ID,R,N) :- artery_gen(ID,N), name(N), param_bif_artery(ID,R),
-                      N = hepatic, radius_l(R).
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), param_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A),
+                                      N = hepatic, radius_l(R), edge(celiac_trunk,ID).
 
-confidence_rule(N,0) :- N = hepatic, bif_artery(_,R,N), radius_7(R).
-%confidence_rule(N,1) :- N = hepatic, bif_artery(ID2,_,N), main_artery(ID1,_,_,_,celiac_trunk), edge(ID1,ID2).
-confidence_rule(N,2) :- N = hepatic, bif_artery(ID2,_,N), main_artery(ID1,_,_,_,sup_mesenteric), edge(ID1,ID2).
+confidence_rule(N,0) :- N = hepatic, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_7(R).
+confidence_rule(N,1) :- N = hepatic, artery(ID2,_,_,_,_,_,_,_,_,_,_,N), artery(ID1,_,_,_,_,_,_,_,_,_,_,celiac_trunk), edge(ID1,ID2). % *** Si tiene?
+confidence_rule(N,2) :- N = hepatic, artery(ID2,_,_,_,_,_,_,_,_,_,_,N), artery(ID2,_,_,_,_,_,_,_,_,_,_,sup_mesenteric), edge(ID1,ID2).
 
 %%DORSAL PANCREATIC
-bif_artery(ID,R,N) :- artery_gen(ID,N), name(N), param_bif_artery(ID,R),
-                      N = dorsal_pancreatic, radius_l(R).
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), param_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A),
+                                      N = dorsal_pancreatic, radius_l(R), edge(celiac_trunk,ID).
 
-confidence_rule(N,0) :- N = dorsal_pancreatic, bif_artery(_,R,N), radius_7(R).
-%confidence_rule(N,..) :-  N = hepatic, bif_artery(ID2,_,N), main_artery(ID1,_,_,_,celiac_trunk), edge(ID1,ID2).
+confidence_rule(N,0) :- N = dorsal_pancreatic, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_7(R).
+confidence_rule(N,1) :- N = dorsal_pancreatic, artery(ID2,_,_,_,_,_,_,_,_,_,_,N), artery(ID1,_,_,_,_,_,_,_,_,_,_,celiac_trunk), edge(ID1,ID2). % *** Si tiene?
 %An example of verification of 0 exiting edges (can be done also for entering ones)
-confidence_rule(N,1) :- N = dorsal_pancreatic, K = #count {ID2: edge(ID1,ID2)}, K = 0, bif_artery(ID1,_,N).
+confidence_rule(N,2) :- N = dorsal_pancreatic, K = #count {ID2: edge(ID1,ID2)}, K = 0, artery(ID1,_,_,_,_,_,_,_,_,_,_,N).
 
 %%SUPERIOR MESENTERIC
-main_artery(ID,Z,A,R,N) :- artery_gen(ID,N), name(N), param_main_artery(ID,Z,A,R),
-                           N = sup_mesenteric, quadrant_1(A), radius_l(R).
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), param_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A),
+                                      N = sup_mesenteric, quadrant_1(A), radius_l(R), edge(aorta,ID).
 
-confidence_rule(N,0) :-  N = sup_mesenteric, main_artery(_,_,A,_,N), semiquadrant_2(A).
-confidence_rule(N,1) :-  N = sup_mesenteric, main_artery(_,_,_,R,N), radius_8(R).
-confidence_rule(N,2) :-  N = sup_mesenteric, main_artery(ID,_,_,_,N), edge(aorta,ID).
-confidence_rule(N,3) :-  N = sup_mesenteric, main_artery(ID1,_,_,_,N), bif_artery(ID2,_,hepatic), edge(ID1,ID2).
-confidence_rule(N,5) :-  N = sup_mesenteric, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,celiac_trunk), height_less(Z1,Z2+10).
-confidence_rule(N,6) :-  N = sup_mesenteric, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,celiac_trunk), height_less(Z1,Z2).
-confidence_rule(N,7) :-  N = sup_mesenteric, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,renalL), height_greater(Z1,Z2).
-confidence_rule(N,8) :-  N = sup_mesenteric, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,renalR), height_greater(Z1,Z2).
-confidence_rule(N,9) :-  N = sup_mesenteric, main_artery(_,Z1,_,_,N), main_artery(_,Z2,_,_,inf_mesenteric), height_greater(Z1,Z2+20).
+confidence_rule(N,0) :-  N = sup_mesenteric, artery(_,_,_,_,_,_,_,_,_,_,A,N), semiquadrant_2(A).
+confidence_rule(N,1) :-  N = sup_mesenteric, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_8(R).
+confidence_rule(N,2) :-  N = sup_mesenteric, artery(ID,_,_,_,_,_,_,_,_,_,_,N), edge(aorta,ID). % *** Si tiene?
+confidence_rule(N,3) :-  N = sup_mesenteric, artery(ID1,_,_,_,_,_,_,_,_,_,_,N), artery(ID2,_,_,_,_,_,_,_,_,_,_,hepatic), edge(ID1,ID2).
+confidence_rule(N,5) :-  N = sup_mesenteric, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,celiac_trunk), height_less(Z1,Z2+10).
+confidence_rule(N,6) :-  N = sup_mesenteric, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,celiac_trunk), height_less(Z1,Z2).
+confidence_rule(N,7) :-  N = sup_mesenteric, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,renalL), height_greater(Z1,Z2).
+confidence_rule(N,8) :-  N = sup_mesenteric, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,renalR), height_greater(Z1,Z2).
+confidence_rule(N,9) :-  N = sup_mesenteric, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,inf_mesenteric), height_greater(Z1,Z2+20).
 
 %%LEFT RENAL
-main_artery(ID,Z,A,R,N) :- artery_gen(ID,N), name(N), param_main_artery(ID,Z,A,R),
-                           N = renalL, quadrant_4(A), radius_l(R).
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), param_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A),
+                                      N = renalL, quadrant_4(A), radius_l(R), edge(aorta,ID).
 
 confidence_rule(N,0) :-  N = renalL, main_artery(_,_,A,_,N), semiquadrant_8(A).
 confidence_rule(N,1) :-  N = renalL, main_artery(_,_,_,R,N), radius_8(R).
@@ -480,4 +478,4 @@ rule_count(K) :- K = #count {N,R: confidence_rule(N,R)}.
 %#show param_bif_artery/2.
 
 #show artery/2.
-#show confidence_rule/2. 
+#show confidence_rule/2.
