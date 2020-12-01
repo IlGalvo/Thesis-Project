@@ -87,7 +87,7 @@ param_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A) :- id(ID), radius(R), density(D), quality
                                           cog_x(X), cog_y(Y), cog_z(Z), path_length(PL),
                                           dfe(DE), height(H), angle(A), artery_in(ID,R,D,Q,X,Y,Z,PL,DE,H,A).
 
-artery(ID,N) :- artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N), id(ID), name(N).
+artery_out(ID,N) :- artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N), id(ID), name(N).
 
 % Relazioni di ordine tra ranges (z < H1+e)
 % ****Arteries exiting directly from (descending) Aorta.**** %
@@ -475,5 +475,5 @@ rule_count(K) :- K = #count {N,R: confidence_rule(N,R)}.
 %#show artery/12.
 %#show param_artery/11.
 
-#show artery/2.
+#show artery_out/2.
 #show confidence_rule/2.
