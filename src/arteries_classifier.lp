@@ -77,8 +77,8 @@ semiquadrant_7(A) :- angle(A), A > 270, A <= 315.
 semiquadrant_8(A) :- angle(A), A > 315, A <= 360.
 
 % Height comparators
-height_greater(H1,H2) :- H1 > H2.
-height_less(H1,H2) :- H1 < H2.
+height_greater(H1,H2) :- height(H1), height(H2), H1 > H2.
+height_less(H1,H2)    :- height(H1), height(H2), H1 < H2.
 
 % ASP helper
 params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A) :- id(ID), radius(R), density(D), quality(Q),
@@ -355,7 +355,7 @@ confidence_rules(N,13) :- N = lumbarR4, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery
 :- artery(ID1,N1), artery(ID2,N2), ID1 == ID2, N1 != N2.
 
 % Anatomical
-:- edge(ID1,ID2), artery(ID1,_,_,_,_,_,_,_,_,_,_,_),, ID1 != aorta.
+:- edge(ID1,ID2), artery(ID1,_,_,_,_,_,_,_,_,_,_,_), ID1 != aorta.
 :- artery(_,_,_,_,_,_,_,_,_,H1,_,celiac_trunk), artery(_,_,_,_,_,_,_,_,_,H2,_,sup_mesenteric), height_less(H1,H2).
 :- artery(_,_,_,_,_,_,_,_,_,H1,_,celiac_trunk), artery(_,_,_,_,_,_,_,_,_,H2,_,inf_mesenteric), height_less(H1,H2).
 :- artery(_,_,_,_,_,_,_,_,_,H1,_,celiac_trunk), artery(_,_,_,_,_,_,_,_,_,H2,_,lumbarR1), height_less(H1,H2).
