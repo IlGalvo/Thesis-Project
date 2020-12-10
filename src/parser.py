@@ -9,7 +9,7 @@ import re
 from enum import Enum
 
 
-continuous# InputArtery has name,
+# InputArtery has name,
 # and contains a list of ConfidenceRule
 class InputArtery:
     def __init__(self, name: str):
