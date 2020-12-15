@@ -10,8 +10,8 @@ quality(Q) :- 	   in_artery(_,_,_,Q,_,_,_,_,_,_,_).
 cog_x(X) :- 	   in_artery(_,_,_,_,X,_,_,_,_,_,_).
 cog_y(Y) :- 	   in_artery(_,_,_,_,_,Y,_,_,_,_,_).
 cog_z(Z) :- 	   in_artery(_,_,_,_,_,_,Z,_,_,_,_).
-path_length(PL) :- in_artery(_,_,_,_,_,PL,_,_,_,_,_).
-dfe(DE) :- 		   in_artery(_,_,_,_,_,_,DE,_,_,_,_).
+path_length(PL) :- in_artery(_,_,_,_,_,_,_,PL,_,_,_).
+dfe(DE) :- 		   in_artery(_,_,_,_,_,_,_,_,DE,_,_).
 height(H) :- 	   in_artery(_,_,_,_,_,_,_,_,_,H,_).
 angle(1..360).
 
@@ -92,6 +92,8 @@ out_artery(ID,N) :- artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N), id(ID), name(N).
 % artery(ID,radius,density,quality,center_of_ggravity_x,center_of_ggravity_y,center_of_ggravity_z,
 %        path_legth,distance_from_extremes,heigth,angle,name).
 artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = celiac_trunk, quadrant_1(A), radius_l(R), edge(aorta,ID).
+
+%artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = celiac_trunk, edge(aorta,ID).
 									
 artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = gastricL, radius_l(R).							
 									
@@ -134,6 +136,8 @@ artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(I
 % confidence_rules(name, ID)
 
 %% CELIAC TRUNK
+%confidence_rules(N,12) :- N = celiac_trunk, artery(ID,R,_,_,_,_,_,_,_,_,A,N), quadrant_1(A), radius_l(R), %edge(aorta,ID). temp
+
 confidence_rules(N,0)  :- N = celiac_trunk, artery(_,_,_,_,_,_,_,_,_,_,A,N), semiquadrant_2(A).
 confidence_rules(N,1)  :- N = celiac_trunk, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_7(R).
 confidence_rules(N,2)  :- N = celiac_trunk, artery(ID1,_,_,_,_,_,_,_,_,_,_,N), artery(ID2,_,_,_,_,_,_,_,_,_,_,gastricL), edge(ID1,ID2).
@@ -199,7 +203,7 @@ confidence_rules(N,0) :- N = renalL_mysterious, artery(_,_,_,_,_,_,_,_,_,_,A,N),
 confidence_rules(N,1) :- N = renalL_mysterious, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_6(R).
 confidence_rules(N,2) :- N = renalL_mysterious, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,celiac_trunk), height_less(H1,H2).
 confidence_rules(N,3) :- N = renalL_mysterious, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,inf_mesenteric), height_greater(H1,H2).
-confidence_rules(N,4) :- N = renalL_mysterious, K = #count {ID2: edge(ID1,ID2)}, K = 0, artery(ID1,N).
+confidence_rules(N,4) :- N = renalL_mysterious, K = #count {ID2: edge(ID1,ID2)}, K = 0, out_artery(ID1,N).
 
 %% RIGHT RENAL MYSTERIOUS
 confidence_rules(N,0) :- N = renalR_mysterious, artery(_,_,_,_,_,_,_,_,_,_,A,N), semiquadrant_2(A).
@@ -207,7 +211,7 @@ confidence_rules(N,1) :- N = renalR_mysterious, artery(_,_,_,_,_,_,_,_,_,_,A,N),
 confidence_rules(N,2) :- N = renalR_mysterious, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_6(R).
 confidence_rules(N,3) :- N = renalR_mysterious, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,celiac_trunk), height_less(H1,H2).
 confidence_rules(N,4) :- N = renalR_mysterious, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,inf_mesenteric), height_greater(H1,H2).
-confidence_rules(N,5) :- N = renalR_mysterious, K = #count {ID2: edge(ID1,ID2)}, K = 0, artery(ID1,N).
+confidence_rules(N,5) :- N = renalR_mysterious, K = #count {ID2: edge(ID1,ID2)}, K = 0, out_artery(ID1,N).
 
 %% INFERIOR MESENTERIC
 confidence_rules(N,0) :- N = inf_mesenteric, artery(_,_,_,_,_,_,_,_,_,_,A,N), semiquadrant_2(A).
@@ -351,8 +355,8 @@ confidence_rules(N,13) :- N = lumbarR4, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery
 % Structural
 :- artery(ID1,_,_,_,_,_,_,_,_,_,_,N1), artery(ID2,_,_,_,_,_,_,_,_,_,_,N2), ID1 != ID2, N1 == N2.
 :- artery(ID1,_,_,_,_,_,_,_,_,_,_,N1), artery(ID2,_,_,_,_,_,_,_,_,_,_,N2), ID1 == ID2, N1 != N2.
-:- artery(ID1,N1), artery(ID2,N2), ID1 != ID2, N1 == N2.
-:- artery(ID1,N1), artery(ID2,N2), ID1 == ID2, N1 != N2.
+:- out_artery(ID1,N1), out_artery(ID2,N2), ID1 != ID2, N1 == N2.
+:- out_artery(ID1,N1), out_artery(ID2,N2), ID1 == ID2, N1 != N2.
 
 % Anatomical
 :- edge(ID1,ID2), artery(ID1,_,_,_,_,_,_,_,_,_,_,_), ID1 != aorta.
@@ -418,7 +422,7 @@ rule_count(K) :- K = #count {N,R: confidence_rules(N,R)}.
 #maximize {K:rule_count(K)}.
 
 % Satisfiability (just to get unsatisfiable when 0 arteries are found -- remove for optimization)
-:- J = #count {ID: artery(ID,_)}, J == 0.
+:- J = #count {ID: out_artery(ID,_)}, J == 0.
 
 %#show in_artery/4.
 %#show artery/12.

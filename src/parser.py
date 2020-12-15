@@ -521,9 +521,9 @@ def main():
 
     arteries = parse_arteries_classifier(sys.argv[1])
 
-    arteries = parse_artery_classified(sys.argv[2], arteries)
+    #arteries = parse_artery_classified(sys.argv[2], arteries)
 
-    write_arteries_parsed(sys.argv[3], arteries, is_debug)
+    #write_arteries_parsed(sys.argv[3], arteries, is_debug)
 
 
 if __name__ == "__main__":
