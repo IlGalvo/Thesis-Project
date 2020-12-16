@@ -93,7 +93,7 @@ out_artery(ID,N) :- artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N), id(ID), name(N).
 %        path_legth,distance_from_extremes,heigth,angle,name).
 artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = celiac_trunk, edge(aorta,ID).
 									
-artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = gastricL.						
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = gastricL.
 									
 artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = splenic.
 

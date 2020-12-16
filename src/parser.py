@@ -277,7 +277,7 @@ def parse_arteries_classifier(file_name: str) -> list:
 
             # Extract artery name
             name = info[3].split("= ")
-            name = name[1]
+            name = name[1].replace(".", "")
 
             artery = InputArtery(name)
 
@@ -520,6 +520,10 @@ def main():
         exit()
 
     arteries = parse_arteries_classifier(sys.argv[1])
+
+    if is_debug:
+        for artery in arteries:
+            print(str(artery))
 
     #arteries = parse_artery_classified(sys.argv[2], arteries)
 
