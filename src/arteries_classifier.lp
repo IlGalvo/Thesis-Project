@@ -91,52 +91,50 @@ out_artery(ID,N) :- artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N), id(ID), name(N).
 %% Don't move, it's for parser efficiency
 % artery(ID,radius,density,quality,center_of_ggravity_x,center_of_ggravity_y,center_of_ggravity_z,
 %        path_legth,distance_from_extremes,heigth,angle,name).
-artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = celiac_trunk, quadrant_1(A), radius_l(R), edge(aorta,ID).
-
-%artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = celiac_trunk, edge(aorta,ID).
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = celiac_trunk, edge(aorta,ID).
 									
-artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = gastricL, radius_l(R).							
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = gastricL.						
 									
-artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = splenic, radius_l(R).
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = splenic.
 
-artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = hepatic, radius_l(R).
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = hepatic.
 
-artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = dorsal_pancreatic, radius_l(R).
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = dorsal_pancreatic.
 
-artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = sup_mesenteric, quadrant_1(A), radius_l(R), edge(aorta,ID).	
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = sup_mesenteric, edge(aorta,ID).
 
-artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = renalL, quadrant_4(A), radius_l(R), edge(aorta,ID).
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = renalL, edge(aorta,ID).
 
-artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = renalR, quadrant_2(A), radius_m(R), edge(aorta,ID).
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = renalR, edge(aorta,ID).
 
-artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = renalL_mysterious, quadrant_4(A), radius_m(R), edge(aorta,ID).
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = renalL_mysterious, edge(aorta,ID).
 
-artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = renalR_mysterious, shiftedquadrant_2(A), radius_m(R), edge(aorta,ID).
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = renalR_mysterious, edge(aorta,ID).
 
-artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = inf_mesenteric, quadrant_1(A), radius_l(R), edge(aorta,ID).
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = inf_mesenteric, edge(aorta,ID).
 
-artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = lumbarL1, quadrant_4(A), radius_big(R), edge(aorta,ID).
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = lumbarL1, edge(aorta,ID).
 									  
-artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = lumbarR1, quadrant_3(A), radius_big(R), edge(aorta,ID).
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = lumbarR1, edge(aorta,ID).
 
-artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = lumbarL2, quadrant_4(A), radius_big(R), edge(aorta,ID).
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = lumbarL2, edge(aorta,ID).
 
-artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = lumbarR2, quadrant_3(A), radius_big(R), edge(aorta,ID).
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = lumbarR2, edge(aorta,ID).
 
-artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = lumbarL3, quadrant_4(A), radius_big(R), edge(aorta,ID).
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = lumbarL3, edge(aorta,ID).
 
-artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = lumbarR3, quadrant_3(A), radius_big(R), edge(aorta,ID).
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = lumbarR3, edge(aorta,ID).
 
-artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = lumbarL4, quadrant_4(A), radius_big(R), edge(aorta,ID).
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = lumbarL4, edge(aorta,ID).
 
-artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = lumbarR4, quadrant_3(A), radius_big(R), edge(aorta,ID).
+artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N) :- artery_gen(ID,N), name(N), params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A), N = lumbarR4, edge(aorta,ID).
 
 %%% confidence_rules rules
 %% Don't move, it's for parser efficiency
 % confidence_rules(name, ID)
 
 %% CELIAC TRUNK
-%confidence_rules(N,12) :- N = celiac_trunk, artery(ID,R,_,_,_,_,_,_,_,_,A,N), quadrant_1(A), radius_l(R), %edge(aorta,ID). temp
+confidence_rules(N,12) :- N = celiac_trunk, artery(_,R,_,_,_,_,_,_,_,_,A,N), quadrant_1(A), radius_l(R).
 
 confidence_rules(N,0)  :- N = celiac_trunk, artery(_,_,_,_,_,_,_,_,_,_,A,N), semiquadrant_2(A).
 confidence_rules(N,1)  :- N = celiac_trunk, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_7(R).
@@ -152,25 +150,35 @@ confidence_rules(N,10) :- N = celiac_trunk, artery(_,_,_,_,_,_,_,_,_,H1,_,N), ar
 confidence_rules(N,11) :- N = celiac_trunk, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,sup_mesenteric), height_greater(H1,H2+30).
 
 %% LEFT GASTRIC
+confidence_rules(N,2) :-  N = gastricL, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_l(R).
+
 confidence_rules(N,0) :-  N = gastricL, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_7(R).
 confidence_rules(N,1) :-  N = gastricL, artery(ID1,_,_,_,_,_,_,_,_,_,_,N), artery(ID2,_,_,_,_,_,_,_,_,_,_,celiac_trunk), edge(ID1,ID2).
 
 %% SPLENIC
+confidence_rules(N,2) :- N = splenic, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_l(R).
+
 confidence_rules(N,0) :- N = splenic, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_7(R).
 confidence_rules(N,1) :- N = splenic, artery(ID1,_,_,_,_,_,_,_,_,_,_,N), artery(ID2,_,_,_,_,_,_,_,_,_,_,celiac_trunk), edge(ID1,ID2).
 
 %% HEPATIC
+confidence_rules(N,3)  :- N = hepatic, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_l(R).
+
 confidence_rules(N,0)  :- N = hepatic, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_7(R).
 confidence_rules(N,1) :-  N = hepatic, artery(ID1,_,_,_,_,_,_,_,_,_,_,N), artery(ID2,_,_,_,_,_,_,_,_,_,_,celiac_trunk), edge(ID1,ID2).
-%confidence_rules(N,1) :- N = hepatic, artery(ID2,_,_,_,_,_,_,_,_,_,_,N), artery(ID2,_,_,_,_,_,_,_,_,_,_,sup_mesenteric), edge(ID1,ID2). % gastricR ?
+%confidence_rules(N,2) :- N = hepatic, artery(ID2,_,_,_,_,_,_,_,_,_,_,N), artery(ID2,_,_,_,_,_,_,_,_,_,_,sup_mesenteric), edge(ID1,ID2). % gastricR ?
 
 %% DORSAL PANCREATIC
+confidence_rules(N,3) :- N = dorsal_pancreatic, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_l(R).
+
 confidence_rules(N,0) :- N = dorsal_pancreatic, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_7(R).
 confidence_rules(N,1) :- N = dorsal_pancreatic, artery(ID1,_,_,_,_,_,_,_,_,_,_,N), artery(ID2,_,_,_,_,_,_,_,_,_,_,splenic), edge(ID1,ID2).
 % An example of verification of 0 exiting edges (can be done also for entering ones)
 confidence_rules(N,2) :- N = dorsal_pancreatic, K = #count {ID2: edge(ID1,ID2)}, K = 0, artery(ID1,_,_,_,_,_,_,_,_,_,_,N).
 
 %% SUPERIOR MESENTERIC
+confidence_rules(N,8) :- N = sup_mesenteric, artery(_,R,_,_,_,_,_,_,_,_,A,N), quadrant_1(A), radius_l(R).
+
 confidence_rules(N,0) :- N = sup_mesenteric, artery(_,_,_,_,_,_,_,_,_,_,A,N), semiquadrant_2(A).
 confidence_rules(N,1) :- N = sup_mesenteric, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_8(R).
 confidence_rules(N,2) :- N = sup_mesenteric, artery(ID1,_,_,_,_,_,_,_,_,_,_,N), artery(ID2,_,_,_,_,_,_,_,_,_,_,hepatic), edge(ID1,ID2).
@@ -181,6 +189,8 @@ confidence_rules(N,6) :- N = sup_mesenteric, artery(_,_,_,_,_,_,_,_,_,H1,_,N), a
 confidence_rules(N,7) :- N = sup_mesenteric, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,inf_mesenteric), height_greater(H1,H2+20).
 
 %% LEFT RENAL
+confidence_rules(N,7) :- N = renalL, artery(_,R,_,_,_,_,_,_,_,_,A,N), quadrant_4(A), radius_l(R).
+
 confidence_rules(N,0) :- N = renalL, artery(_,_,_,_,_,_,_,_,_,_,A,N), semiquadrant_8(A).
 confidence_rules(N,1) :- N = renalL, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_8(R).
 confidence_rules(N,2) :- N = renalL, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,celiac_trunk), height_less(H1,H2+10).
@@ -190,6 +200,8 @@ confidence_rules(N,5) :- N = renalL, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,
 confidence_rules(N,6) :- N = renalL, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,renalR), height_less(H1,H2+10).
 
 %% RIGHT RENAL
+confidence_rules(N,7) :- N = renalR, artery(_,R,_,_,_,_,_,_,_,_,A,N), quadrant_2(A), radius_m(R).
+
 confidence_rules(N,0) :- N = renalR, artery(_,_,_,_,_,_,_,_,_,_,A,N), semiquadrant_4(A).
 confidence_rules(N,1) :- N = renalR, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_6(R).
 confidence_rules(N,2) :- N = renalR, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,celiac_trunk), height_less(H1,H2+10).
@@ -199,13 +211,17 @@ confidence_rules(N,5) :- N = renalR, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,
 confidence_rules(N,6) :- N = renalR, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,renalL), height_greater(H1+10,H2).
 
 %% LEFT RENAL MYSTERIOUS (Temp)
+confidence_rules(N,5) :- N = renalL_mysterious, artery(_,R,_,_,_,_,_,_,_,_,A,N), quadrant_4(A), radius_m(R).
+
 confidence_rules(N,0) :- N = renalL_mysterious, artery(_,_,_,_,_,_,_,_,_,_,A,N), semiquadrant_8(A).
 confidence_rules(N,1) :- N = renalL_mysterious, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_6(R).
 confidence_rules(N,2) :- N = renalL_mysterious, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,celiac_trunk), height_less(H1,H2).
 confidence_rules(N,3) :- N = renalL_mysterious, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,inf_mesenteric), height_greater(H1,H2).
 confidence_rules(N,4) :- N = renalL_mysterious, K = #count {ID2: edge(ID1,ID2)}, K = 0, out_artery(ID1,N).
 
-%% RIGHT RENAL MYSTERIOUS
+%% RIGHT RENAL MYSTERIOUS (Temp)
+confidence_rules(N,6) :- N = renalR_mysterious, artery(_,R,_,_,_,_,_,_,_,_,A,N), shiftedquadrant_2(A), radius_m(R).
+
 confidence_rules(N,0) :- N = renalR_mysterious, artery(_,_,_,_,_,_,_,_,_,_,A,N), semiquadrant_2(A).
 confidence_rules(N,1) :- N = renalR_mysterious, artery(_,_,_,_,_,_,_,_,_,_,A,N), semiquadrant_3(A).
 confidence_rules(N,2) :- N = renalR_mysterious, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_6(R).
@@ -214,6 +230,8 @@ confidence_rules(N,4) :- N = renalR_mysterious, artery(_,_,_,_,_,_,_,_,_,H1,_,N)
 confidence_rules(N,5) :- N = renalR_mysterious, K = #count {ID2: edge(ID1,ID2)}, K = 0, out_artery(ID1,N).
 
 %% INFERIOR MESENTERIC
+confidence_rules(N,8) :- N = inf_mesenteric, artery(_,R,_,_,_,_,_,_,_,_,A,N), quadrant_1(A), radius_l(R).
+
 confidence_rules(N,0) :- N = inf_mesenteric, artery(_,_,_,_,_,_,_,_,_,_,A,N), semiquadrant_2(A).
 confidence_rules(N,1) :- N = inf_mesenteric, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_7(R).
 confidence_rules(N,2) :- N = inf_mesenteric, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,celiac_trunk), height_less(H1,H2+50).
@@ -224,6 +242,8 @@ confidence_rules(N,6) :- N = inf_mesenteric, artery(_,_,_,_,_,_,_,_,_,H1,_,N), a
 confidence_rules(N,7) :- N = inf_mesenteric, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,sup_mesenteric), height_less(H1,H2+20).
 
 %% 1st LEFT LUMBAR
+confidence_rules(N,14)  :- N = lumbarL1, artery(_,R,_,_,_,_,_,_,_,_,A,N), quadrant_4(A), radius_big(R).
+
 confidence_rules(N,0)  :- N = lumbarL1, artery(_,_,_,_,_,_,_,_,_,_,A,N), semiquadrant_7(A).
 confidence_rules(N,1)  :- N = lumbarL1, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_4(R).
 confidence_rules(N,2)  :- N = lumbarL1, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_6(R).
@@ -240,6 +260,8 @@ confidence_rules(N,12) :- N = lumbarL1, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery
 confidence_rules(N,13) :- N = lumbarL1, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,lumbarR1), height_greater(H1+5,H2).
 
 %% 1st RIGHT LUMBAR
+confidence_rules(N,14) :- N = lumbarR1, artery(_,R,_,_,_,_,_,_,_,_,A,N), quadrant_3(A), radius_big(R).
+
 confidence_rules(N,0)  :- N = lumbarR1, artery(_,_,_,_,_,_,_,_,_,_,A,N), semiquadrant_6(A).
 confidence_rules(N,1)  :- N = lumbarR1, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_4(R).
 confidence_rules(N,2)  :- N = lumbarR1, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_6(R).
@@ -256,6 +278,8 @@ confidence_rules(N,12) :- N = lumbarR1, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery
 confidence_rules(N,13) :- N = lumbarR1, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,lumbarL1), height_greater(H1+5,H2).
 
 %% 2nd LEFT LUMBAR
+confidence_rules(N,14) :- N = lumbarL2, artery(_,R,_,_,_,_,_,_,_,_,A,N), quadrant_4(A), radius_big(R).
+
 confidence_rules(N,0)  :- N = lumbarL2, artery(_,_,_,_,_,_,_,_,_,_,A,N), semiquadrant_7(A).
 confidence_rules(N,1)  :- N = lumbarL2, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_4(R).
 confidence_rules(N,2)  :- N = lumbarL2, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_6(R).
@@ -272,6 +296,8 @@ confidence_rules(N,12) :- N = lumbarL2, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery
 confidence_rules(N,13) :- N = lumbarL2, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,lumbarR2), height_greater(H1+5,H2).
 
 %% 2nd RIGHT LUMBAR
+confidence_rules(N,14) :- N = lumbarR2, artery(_,R,_,_,_,_,_,_,_,_,A,N), quadrant_3(A), radius_big(R).
+
 confidence_rules(N,0)  :- N = lumbarR2, artery(_,_,_,_,_,_,_,_,_,_,A,N), semiquadrant_6(A).
 confidence_rules(N,1)  :- N = lumbarR2, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_4(R).
 confidence_rules(N,2)  :- N = lumbarR2, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_6(R).
@@ -288,6 +314,8 @@ confidence_rules(N,12) :- N = lumbarR2, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery
 confidence_rules(N,13) :- N = lumbarR2, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,lumbarL2), height_greater(H1+5,H2).
 
 %% 3rd LEFT LUMBAR
+confidence_rules(N,14) :- N = lumbarL3, artery(_,R,_,_,_,_,_,_,_,_,A,N), quadrant_4(A), radius_big(R).
+
 confidence_rules(N,0)  :- N = lumbarL3, artery(_,_,_,_,_,_,_,_,_,_,A,N), semiquadrant_7(A).
 confidence_rules(N,1)  :- N = lumbarL3, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_4(R).
 confidence_rules(N,2)  :- N = lumbarL3, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_6(R).
@@ -304,6 +332,8 @@ confidence_rules(N,12) :- N = lumbarL3, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery
 confidence_rules(N,13) :- N = lumbarL3, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,lumbarR2), height_greater(H1+5,H2).
 
 %% 3rd RIGHT LUMBAR
+confidence_rules(N,14) :- N = lumbarR3, artery(_,R,_,_,_,_,_,_,_,_,A,N), quadrant_3(A), radius_big(R).
+
 confidence_rules(N,0)  :- N = lumbarR3, artery(_,_,_,_,_,_,_,_,_,_,A,N), semiquadrant_6(A).
 confidence_rules(N,1)  :- N = lumbarR3, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_4(R).
 confidence_rules(N,2)  :- N = lumbarR3, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_6(R).
@@ -320,6 +350,8 @@ confidence_rules(N,12) :- N = lumbarR3, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery
 confidence_rules(N,13) :- N = lumbarR3, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,lumbarL3), height_greater(H1+5,H2).
 
 %% 4th LEFT LUMBAR
+confidence_rules(N,14) :- N = lumbarL4, artery(_,R,_,_,_,_,_,_,_,_,A,N), quadrant_4(A), radius_big(R).
+
 confidence_rules(N,0)  :- N = lumbarL4, artery(_,_,_,_,_,_,_,_,_,_,A,N), semiquadrant_7(A).
 confidence_rules(N,1)  :- N = lumbarL4, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_4(R).
 confidence_rules(N,2)  :- N = lumbarL4, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_6(R).
@@ -336,6 +368,8 @@ confidence_rules(N,12) :- N = lumbarL4, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery
 confidence_rules(N,13) :- N = lumbarL4, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,lumbarR3), height_greater(H1+5,H2).
 
 %% 4th RIGHT LUMBAR
+confidence_rules(N,14) :- N = lumbarR4, artery(_,R,_,_,_,_,_,_,_,_,A,N), quadrant_3(A), radius_big(R).
+
 confidence_rules(N,0)  :- N = lumbarR4, artery(_,_,_,_,_,_,_,_,_,_,A,N), semiquadrant_6(A).
 confidence_rules(N,1)  :- N = lumbarR4, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_4(R).
 confidence_rules(N,2)  :- N = lumbarR4, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_6(R).
