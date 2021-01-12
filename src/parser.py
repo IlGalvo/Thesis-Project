@@ -7,6 +7,7 @@ import sys
 import os
 import re
 from enum import Enum
+from graphviz import Digraph
 
 
 # InputArtery has name,
@@ -505,9 +506,75 @@ def write_arteries_parsed(file_name: str, arteries: list, is_debug: bool):
                 print(artery)
 
 
+def write_arteries_graph(file_name: str, arteries: list, is_debug: bool):
+    dot = Digraph(comment='Arteries')
+
+    for i in range(0, 4):
+        artery = arteries[i]
+
+        name1 = str(i)
+        label1 = artery.get_name()
+
+        dot.node(name1, label1)
+
+        k = 0
+        for cr in artery.get_confidence_rules():
+            name2 = str(cr.get_id()) + "_" + name1 + "_" + str(k)
+
+            for rule in cr.get_rules():
+                if isinstance(rule, General):
+                    label2 = rule.to_text()
+
+                    dot.node(name2, label2)
+                    dot.edge(name1, name2)
+
+    dot.edge("0", "1", dir="both")
+    dot.edge("0", "2")
+    dot.edge("1", "3")
+
+    if is_debug:
+        print(dot.source)
+
+    dot.render(file_name, view=is_debug)
+
+
 def main():
     # To simplify debug
     is_debug = True
+
+    dot = Digraph(comment='tmp')
+
+    dot.node("1", "artery1")
+    dot.node("1_1", "rule1")
+    dot.node("1_2", "rule2")
+    dot.node("1_3", "rule3")
+
+    dot.node("2", "artery2")
+    dot.node("2_1", "rule1")
+    dot.node("2_2", "rule2")
+
+    dot.node("3", "artery3")
+    dot.node("3_1", "rule1")
+
+    dot.node("4", "artery4")
+
+    dot.edge("1", "1_1")
+    dot.edge("1", "1_2")
+    dot.edge("1", "1_3")
+
+    dot.edge("2", "2_1")
+    dot.edge("2", "2_2")
+
+    dot.edge("3", "3_1")
+
+    dot.edge("1", "2")
+    dot.edge("1", "3")
+    dot.edge("3", "4")
+
+    dot.edge("2_2", "4")
+
+    dot.render("tmptmtmp.svg", view=is_debug)
+    exit()
 
     if is_debug:
         os.chdir(os.path.dirname(__file__))
@@ -525,9 +592,11 @@ def main():
         for artery in arteries:
             print(str(artery))
 
-    #arteries = parse_artery_classified(sys.argv[2], arteries)
+    write_arteries_graph("abc.svg", arteries, is_debug)
 
-    #write_arteries_parsed(sys.argv[3], arteries, is_debug)
+    # arteries = parse_artery_classified(sys.argv[2], arteries)
+
+    # write_arteries_parsed(sys.argv[3], arteries, is_debug)
 
 
 if __name__ == "__main__":
