@@ -253,7 +253,8 @@ confidence_rules(anatomy,pair(N1,N2)) :- N1 = celiac_trunk, N2 = superior_mesent
                                          artery(ID1,_,_,_,_,_,Z1,_,_,_,_,N1), artery(ID2,_,_,_,_,_,Z2,_,_,_,_,N2), Z1 < Z2.
 
 %% CELIAC TRUNK
-confidence_rules(N,12) :- N = celiac_trunk, artery(_,R,_,_,_,_,_,_,_,_,A,N), quadrant_1(A), radius_l(R).
+confidence_rules(N,12) :- N = celiac_trunk, artery(_,_,_,_,_,_,_,_,_,_,A,N), quadrant_1(A).
+confidence_rules(N,15) :- N = celiac_trunk, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_l(R).
 confidence_rules(N,1)  :- N = celiac_trunk, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_big(R).
 confidence_rules(N,13) :- N = celiac_trunk, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_m(R).
 confidence_rules(N,2)  :- N = celiac_trunk, artery(ID1,_,_,_,_,_,_,_,_,_,_,N), artery(ID2,_,_,_,_,_,_,_,_,_,_,left_gastric), edge(ID1,ID2).
