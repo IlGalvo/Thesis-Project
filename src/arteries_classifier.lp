@@ -3,16 +3,16 @@
 % ********** MODEL ********** %
 
 %%% Parameters
-id(ID) :- 		   artery(ID,_,_,_,_,_,_,_,_,_,_).
+id(ID)			:- artery(ID,_,_,_,_,_,_,_,_,_,_).
 radius(1..50).
-density(D) :- 	   artery(_,_,D,_,_,_,_,_,_,_,_).
-quality(Q) :- 	   artery(_,_,_,Q,_,_,_,_,_,_,_).
-cog_x(X) :- 	   artery(_,_,_,_,X,_,_,_,_,_,_).
-cog_y(Y) :- 	   artery(_,_,_,_,_,Y,_,_,_,_,_).
-cog_z(Z) :- 	   artery(_,_,_,_,_,_,Z,_,_,_,_).
+density(D)		:- artery(_,_,D,_,_,_,_,_,_,_,_).
+quality(Q)		:- artery(_,_,_,Q,_,_,_,_,_,_,_).
+cog_x(X)		:- artery(_,_,_,_,X,_,_,_,_,_,_).
+cog_y(Y) 		:- artery(_,_,_,_,_,Y,_,_,_,_,_).
+cog_z(Z) 		:- artery(_,_,_,_,_,_,Z,_,_,_,_).
 path_length(PL) :- artery(_,_,_,_,_,_,_,PL,_,_,_).
-dfe(DE) :- 		   artery(_,_,_,_,_,_,_,_,DE,_,_).
-height(H) :- 	   artery(_,_,_,_,_,_,_,_,_,H,_).
+dfe(DE) 		:- artery(_,_,_,_,_,_,_,_,DE,_,_).
+height(H) 		:- artery(_,_,_,_,_,_,_,_,_,H,_).
 angle(1..360).
 
 % List of arteries
@@ -257,8 +257,7 @@ confidence_rules(N,12) :- N = celiac_trunk, artery(_,R,_,_,_,_,_,_,_,_,A,N), qua
 confidence_rules(N,1)  :- N = celiac_trunk, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_big(R).
 confidence_rules(N,13) :- N = celiac_trunk, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_m(R).
 confidence_rules(N,2)  :- N = celiac_trunk, artery(ID1,_,_,_,_,_,_,_,_,_,_,N), artery(ID2,_,_,_,_,_,_,_,_,_,_,left_gastric), edge(ID1,ID2).
-confidence_rules(N,21) :- N = celiac_trunk, artery(ID1,_,_,_,_,_,_,_,_,_,_,N), artery(ID2,_,_,_,_,_,_,_,_,_,_,_),   %%% intermedio
-                          artery(ID3,_,_,_,_,_,_,_,_,_,_,left_gastric), edge(ID1,ID2), edge(ID2,ID3).
+confidence_rules(N,21) :- N = celiac_trunk, artery(ID1,_,_,_,_,_,_,_,_,_,_,N), artery(ID2,_,_,_,_,_,_,_,_,_,_,_), artery(ID3,_,_,_,_,_,_,_,_,_,_,left_gastric), edge(ID1,ID2), edge(ID2,ID3). %%% intermedio
 confidence_rules(N,5)  :- N = celiac_trunk, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,superior_mesenteric), height_less(H1+10,H2).
 confidence_rules(N,6)  :- N = celiac_trunk, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,superior_mesenteric), height_less(H1,H2).
 confidence_rules(N,7)  :- N = celiac_trunk, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,right_renal), height_greater(H1,H2+10).
@@ -267,12 +266,12 @@ confidence_rules(N,9)  :- N = celiac_trunk, artery(_,_,_,_,_,_,_,_,_,H1,_,N), ar
 confidence_rules(N,10) :- N = celiac_trunk, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,left_renal), height_greater(H1,H2).
 
 %% LEFT GASTRIC
-confidence_rules(N,2) :-  N = left_gastric, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_s(R).
-confidence_rules(N,3) :-  N = left_gastric, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_m(R).
-confidence_rules(N,4) :-  N = left_gastric, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_5_10(R).
-confidence_rules(N,5) :-  N = left_gastric, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_10_15(R).
-confidence_rules(N,6) :-  N = left_gastric, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_15_20(R).
-confidence_rules(N,1) :-  N = left_gastric, artery(ID1,_,_,_,_,_,_,_,_,_,_,N), artery(ID2,_,_,_,_,_,_,_,_,_,_,celiac_trunk), edge(ID1,ID2).
+confidence_rules(N,2) :- N = left_gastric, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_s(R).
+confidence_rules(N,3) :- N = left_gastric, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_m(R).
+confidence_rules(N,4) :- N = left_gastric, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_5_10(R).
+confidence_rules(N,5) :- N = left_gastric, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_10_15(R).
+confidence_rules(N,6) :- N = left_gastric, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_15_20(R).
+confidence_rules(N,1) :- N = left_gastric, artery(ID1,_,_,_,_,_,_,_,_,_,_,N), artery(ID2,_,_,_,_,_,_,_,_,_,_,celiac_trunk), edge(ID1,ID2).
 confidence_rules(N,7) :- N = left_gastric, artery(ID1,_,_,_,_,_,Z1,_,_,_,_,N), artery(ID2,_,_,_,_,_,Z2,_,_,_,_,splenic), Z1<Z2.
 
 %% SPLENIC
