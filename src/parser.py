@@ -99,7 +99,7 @@ class Edge(IRule):
         return self.__str__()
 
     def __str__(self) -> str:
-        text = self._artery1 + "is "
+        text = self._artery1 + " is "
 
         if self._is_transitive:
             text += "transitively "
