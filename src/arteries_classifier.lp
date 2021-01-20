@@ -79,17 +79,17 @@ semiquadrant_6(A) :- angle(A), A > 225, A <= 270.
 semiquadrant_7(A) :- angle(A), A > 270, A <= 315.
 semiquadrant_8(A) :- angle(A), A > 315, A <= 360.
 
+% Cog_X comparators
+cog_x_greater(X1,X2) :- cog_x(X1), cog_x(X2), X1 > X2.
+cog_x_less(X1,X2)	:- cog_x(X1), cog_x(X2), X1 < X2.
+
+% Cog_Z comparators
+cog_z_greater(Z1,Z2) :- cog_z(Z1), cog_z(Z2), Z1 > Z2.
+cog_z_less(Z1,Z2)	:- cog_z(Z1), cog_z(Z2), Z1 < Z2.
+
 % Height comparators
 height_greater(H1,H2) :- height(H1), height(H2), H1 > H2.
 height_less(H1,H2)	  :- height(H1), height(H2), H1 < H2.
-
-% Cog_X comparators
-cogx_greater(X1,X2) :- cog_x(X1), cog_x(X2), X1 > X2.
-cogx_less(X1,X2)	:- cog_x(X1), cog_x(X2), X1 < X2.
-
-% Cog_Z comparators
-cogz_greater(Z1,Z2) :- cog_z(Z1), cog_z(Z2), Z1 > Z2.
-cogz_less(Z1,Z2)	:- cog_z(Z1), cog_z(Z2), Z1 < Z2.
 
 % ASP helper
 params_artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A) :- id(ID), radius(R), density(D), quality(Q),
@@ -281,17 +281,17 @@ confidence_rules(N,2) :- N = left_gastric, artery(_,R,_,_,_,_,_,_,_,_,_,N), radi
 confidence_rules(N,3) :- N = left_gastric, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_10_15(R).
 confidence_rules(N,4) :- N = left_gastric, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_15_20(R).
 confidence_rules(N,5) :- N = left_gastric, artery(ID1,_,_,_,_,_,_,_,_,_,_,N), artery(ID2,_,_,_,_,_,_,_,_,_,_,celiac_trunk), edge(ID1,ID2).
-confidence_rules(N,6) :- N = left_gastric, artery(_,_,_,_,_,_,Z1,_,_,_,_,N), artery(_,_,_,_,_,_,Z2,_,_,_,_,splenic), cogz_less(Z1,Z2).
+confidence_rules(N,6) :- N = left_gastric, artery(_,_,_,_,_,_,Z1,_,_,_,_,N), artery(_,_,_,_,_,_,Z2,_,_,_,_,splenic), cog_z_less(Z1,Z2).
 
 %% SPLENIC
 confidence_rules(N,0) :- N = splenic, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_l(R).
 confidence_rules(N,1) :- N = splenic, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_15_20(R).
 confidence_rules(N,2) :- N = splenic, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_20_25(R).
 confidence_rules(N,3) :- N = splenic, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_25_30(R).
-confidence_rules(N,4) :- N = splenic, artery(_,_,_,_,_,_,Z1,_,_,_,_,N), artery(_,_,_,_,_,_,Z2,_,_,_,_,left_gastric), cogz_greater(Z1,Z2).
-confidence_rules(N,5) :- N = splenic, artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_,common_hepatic), cogx_greater(X1,X2).
-confidence_rules(N,6) :- N = splenic, artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_,left_hepatic), cogx_greater(X1,X2).
-confidence_rules(N,7) :- N = splenic, artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_,right_hepatic), cogx_greater(X1,X2).
+confidence_rules(N,4) :- N = splenic, artery(_,_,_,_,_,_,Z1,_,_,_,_,N), artery(_,_,_,_,_,_,Z2,_,_,_,_,left_gastric), cog_z_greater(Z1,Z2).
+confidence_rules(N,5) :- N = splenic, artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_,common_hepatic), cog_x_greater(X1,X2).
+confidence_rules(N,6) :- N = splenic, artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_,left_hepatic), cog_x_greater(X1,X2).
+confidence_rules(N,7) :- N = splenic, artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_,right_hepatic), cog_x_greater(X1,X2).
 
 %% Parser is not yet able to handle this confidence rule
 %confidence_rules(N,8) :- N = splenic, artery(ID1,_,_,_,_,_,_,_,_,_,_,N), artery(ID2,_,_,_,X2,_,_,_,_,_,_,celiac_trunk), %%% almeno un vaso foglia della splenica e' a sinistra del celiac trunk di almeno 50mm
@@ -328,7 +328,7 @@ confidence_rules(N,5) :- N = left_renal, artery(_,_,_,_,_,_,_,_,_,H1,_,N), arter
 confidence_rules(N,6) :- N = left_renal, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,celiac_trunk), height_less(H1,H2).
 confidence_rules(N,7) :- N = left_renal, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,superior_mesenteric), height_less(H1,H2).
 confidence_rules(N,8) :- N = left_renal, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,right_renal), height_less(H1,H2+10).
-confidence_rules(N,9) :- N = left_renal, artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_,right_renal), cogx_greater(X1,X2).
+confidence_rules(N,9) :- N = left_renal, artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_,right_renal), cog_x_greater(X1,X2).
 
 %% RIGHT RENAL
 confidence_rules(N,0) :- N = right_renal, artery(_,_,_,_,_,_,_,_,_,_,A,N), quadrant_2(A).
@@ -340,7 +340,7 @@ confidence_rules(N,5) :- N = right_renal, artery(_,_,_,_,_,_,_,_,_,H1,_,N), arte
 confidence_rules(N,6) :- N = right_renal, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,celiac_trunk), height_less(H1,H2).
 confidence_rules(N,7) :- N = right_renal, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,superior_mesenteric), height_less(H1,H2).
 confidence_rules(N,8) :- N = right_renal, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,left_renal), height_greater(H1+10,H2).
-confidence_rules(N,9) :- N = right_renal, artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_,left_renal), cogx_less(X1,X2).
+confidence_rules(N,9) :- N = right_renal, artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_,left_renal), cog_x_less(X1,X2).
 
 %% accessory LEFT RENAL
 confidence_rules(N,0) :- N = accessory_left_renal, artery(_,_,_,_,_,_,_,_,_,_,A,N), quadrant_4(A).
@@ -367,10 +367,10 @@ confidence_rules(N,2) :- N = left_intercostal_1, artery(ID,_,_,_,_,_,_,_,_,_,_,N
 confidence_rules(N,3) :- N = left_intercostal_1, artery(_,_,_,_,_,_,_,_,_,_,A,N), quadrant_3(A).
 confidence_rules(N,4) :- N = left_intercostal_1, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_5_10(R).
 confidence_rules(N,5) :- N = left_intercostal_1, artery(ID,_,_,_,_,_,_,_,_,_,_,N), edge(aorta,ID).
-confidence_rules(N,6) :- N = left_intercostal_1, artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_,right_intercostal_1), cogx_greater(X1,X2).
-confidence_rules(N,7) :- N = left_intercostal_1, artery(_,_,_,_,_,_,Z1,_,_,_,_,N), artery(_,_,_,_,_,_,Z2,_,_,_,_,right_intercostal_1), cogz_greater(Z1+5,Z2).
-confidence_rules(N,8) :- N = left_intercostal_1, artery(_,_,_,_,_,_,Z1,_,_,_,_,N), artery(_,_,_,_,_,_,Z2,_,_,_,_,right_intercostal_1), cogz_greater(Z1-5,Z2).
-confidence_rules(N,9) :- N = left_intercostal_1, artery(_,_,_,_,_,_,Z1,_,_,_,_,N), artery(_,_,_,_,_,_,Z2,_,_,_,_,left_intercostal_2), cogz_less(Z1,Z2).
+confidence_rules(N,6) :- N = left_intercostal_1, artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_,right_intercostal_1), cog_x_greater(X1,X2).
+confidence_rules(N,7) :- N = left_intercostal_1, artery(_,_,_,_,_,_,Z1,_,_,_,_,N), artery(_,_,_,_,_,_,Z2,_,_,_,_,right_intercostal_1), cog_z_greater(Z1+5,Z2).
+confidence_rules(N,8) :- N = left_intercostal_1, artery(_,_,_,_,_,_,Z1,_,_,_,_,N), artery(_,_,_,_,_,_,Z2,_,_,_,_,right_intercostal_1), cog_z_greater(Z1-5,Z2).
+confidence_rules(N,9) :- N = left_intercostal_1, artery(_,_,_,_,_,_,Z1,_,_,_,_,N), artery(_,_,_,_,_,_,Z2,_,_,_,_,left_intercostal_2), cog_z_less(Z1,Z2).
 
 %% right intercostal 1
 confidence_rules(N,0) :- N = right_intercostal_1, artery(_,_,_,_,_,_,_,_,_,_,A,N), quadrant_3(A).
@@ -387,9 +387,9 @@ confidence_rules(N,2) :- N = left_intercostal_2, artery(ID,_,_,_,_,_,_,_,_,_,_,N
 confidence_rules(N,3) :- N = left_intercostal_2, artery(_,_,_,_,_,_,_,_,_,_,A,N), quadrant_3(A).
 confidence_rules(N,4) :- N = left_intercostal_2, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_5_10(R).
 confidence_rules(N,5) :- N = left_intercostal_2, artery(ID,_,_,_,_,_,_,_,_,_,_,N), edge(aorta,ID).
-confidence_rules(N,6) :- N = left_intercostal_2, artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_,right_intercostal_2), cogx_greater(X1,X2).
-confidence_rules(N,7) :- N = left_intercostal_2, artery(_,_,_,_,_,_,Z1,_,_,_,_,N), artery(_,_,_,_,_,_,Z2,_,_,_,_,right_intercostal_2), cogz_greater(Z1+5,Z2).
-confidence_rules(N,8) :- N = left_intercostal_2, artery(_,_,_,_,_,_,Z1,_,_,_,_,N), artery(_,_,_,_,_,_,Z2,_,_,_,_,right_intercostal_2), cogz_greater(Z1-5,Z2).
+confidence_rules(N,6) :- N = left_intercostal_2, artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_,right_intercostal_2), cog_x_greater(X1,X2).
+confidence_rules(N,7) :- N = left_intercostal_2, artery(_,_,_,_,_,_,Z1,_,_,_,_,N), artery(_,_,_,_,_,_,Z2,_,_,_,_,right_intercostal_2), cog_z_greater(Z1+5,Z2).
+confidence_rules(N,8) :- N = left_intercostal_2, artery(_,_,_,_,_,_,Z1,_,_,_,_,N), artery(_,_,_,_,_,_,Z2,_,_,_,_,right_intercostal_2), cog_z_greater(Z1-5,Z2).
 
 %% right intercostal 1
 confidence_rules(N,0) :- N = right_intercostal_2, artery(_,_,_,_,_,_,_,_,_,_,A,N), quadrant_3(A).
