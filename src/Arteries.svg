@@ -2,8 +2,6 @@
 digraph {
 	celiac_trunk -> left_gastric
 	celiac_trunk -> noname1
-	common_hepatic -> proper_hepatic
-	common_hepatic -> gastroduodenal
 	noname1 -> splenic
 	noname1 -> common_hepatic
 	aorta -> celiac_trunk
