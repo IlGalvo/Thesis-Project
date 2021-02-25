@@ -6,7 +6,7 @@
              xmlns:controls="clr-namespace:AppDemo.Controls"
              xmlns:internal="clr-namespace:AppDemo.Internal"
              mc:Ignorable="d"
-             x:Class="AppDemo.ListViewPage1">
+             x:Class="AppDemo.Views.CRListViewPage">
 
     <ContentPage.Content>
         <StackLayout Orientation="Vertical"

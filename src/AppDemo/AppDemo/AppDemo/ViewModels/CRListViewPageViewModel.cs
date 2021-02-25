@@ -1,4 +1,6 @@
 ﻿using AppDemo.Internal;
+using AppDemo.Models;
+using AppDemo.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,9 +8,9 @@ using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
 
-namespace AppDemo
+namespace AppDemo.ViewModels
 {
-    public class ListViewPage1ViewModel : PageHelper, INotifyPropertyChanged
+    public class CRListViewPageViewModel : PageHelper, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -44,7 +46,7 @@ namespace AppDemo
 
         private IEnumerable<ConfidenceRule> mainAccountList;
 
-        public ListViewPage1ViewModel()
+        public CRListViewPageViewModel()
         {
             mainAccountList = new List<ConfidenceRule>();
             accountList = null;
@@ -77,7 +79,7 @@ namespace AppDemo
 
         private async void ManageSelectedAccount()
         {
-            await CurrentPage.Navigation.PushAsync(new Page1(SelectedAccount.Text));
+            await CurrentPage.Navigation.PushAsync(new CRPage(SelectedAccount.Text, SelectedAccount.Rule));
 
             SelectedAccount = null;
         }

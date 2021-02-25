@@ -27,7 +27,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Page1.xaml">
+    <Compile Update="Views\CRListViewPage.xaml.cs">
+      <DependentUpon>CRListViewPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\CRPage.xaml.cs">
+      <DependentUpon>CRPage.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Views\CRPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

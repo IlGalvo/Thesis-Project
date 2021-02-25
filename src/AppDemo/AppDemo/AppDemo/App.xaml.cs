@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using AppDemo.Views;
+using Xamarin.Forms;
 
 namespace AppDemo
 {
@@ -8,7 +9,7 @@ namespace AppDemo
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage(new ListViewPage1());
+            MainPage = new NavigationPage(new CRListViewPage());
         }
 
         protected override void OnStart()
