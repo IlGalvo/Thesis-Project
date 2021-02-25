@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:AppDemo.Controls"
+             xmlns:internal="clr-namespace:AppDemo.Internal"
+             mc:Ignorable="d"
+             x:Class="AppDemo.ListViewPage1">
+
+    <ContentPage.Content>
+        <StackLayout Orientation="Vertical"
+                     Spacing="20"
+                     Margin="20">
+
+            <Frame CornerRadius="20"
+                   BackgroundColor="{AppThemeBinding Light={StaticResource TertiaryColorLight}, Dark={StaticResource TertiaryColorDark}}"
+                   Padding="0">
+
+                <Grid ColumnSpacing="10">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="85*" />
+                        <ColumnDefinition Width="15*" />
+                    </Grid.ColumnDefinitions>
+
+                    <controls:OptimizedSearchBar TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                                                 HorizontalTextAlignment="Center"
+                                                 Placeholder="Cerca..."
+                                                 PlaceholderColor="{StaticResource PlaceholderColor}"
+                                                 CancelButtonColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                                                 BackgroundColor="{AppThemeBinding Light={StaticResource TertiaryColorLight}, Dark={StaticResource TertiaryColorDark}}"
+                                                 TextChangedCommand="{Binding SearchCommand}"
+                                                 Grid.Row="0"
+                                                 Grid.Column="0" />
+                    <ImageButton Source="{internal:ImageResource Add}"
+                                 Aspect="Fill"
+                                 HeightRequest="0"
+                                 CornerRadius="20"
+                                 BackgroundColor="{StaticResource SecondaryColor}"
+                                 Command="{Binding AddCommand}"
+                                 Grid.Row="0"
+                                 Grid.Column="1" />
+                </Grid>
+            </Frame>
+
+            <ListView ItemsSource="{Binding AccountList}"
+                      SelectedItem="{Binding SelectedAccount, Mode=TwoWay}"
+                      CachingStrategy="RecycleElement"
+                      HasUnevenRows="True"
+                      SeparatorColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}">
+
+                <d:ListView.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Item One</x:String>
+                        <x:String>Item Two</x:String>
+                        <x:String>Item Three</x:String>
+                    </x:Array>
+                </d:ListView.ItemsSource>
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Vertical"
+                                         Padding="20">
+
+                                <Label TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                                       d:Text="{Binding}"
+                                       FontSize="Title"
+                                       VerticalTextAlignment="Center">
+                                    <Label.Text>
+                                        <MultiBinding StringFormat="{}ID: {0}, Name: {1}">
+                                            <Binding Path="Id" />
+                                            <Binding Path="Name" />
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
