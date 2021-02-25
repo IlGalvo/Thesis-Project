@@ -86,6 +86,9 @@ class IRule:
     def to_text() -> str:
         pass
 
+    def to_rule() -> str:
+        pass
+
 
 # Edge rule referes to two arteries and can be transitive
 class Edge(IRule):
@@ -96,15 +99,26 @@ class Edge(IRule):
         self._is_transitive = is_transitive
 
     def to_text(self) -> str:
-        return self.__str__()
-
-    def __str__(self) -> str:
         text = self._artery1 + " is"
 
         if self._is_transitive:
             text += " transitively "
 
         return text + " connected to " + self._artery2 + "."
+
+    def to_rule(self) -> str:
+        if self._artery1 == "aorta":
+            if self._is_transitive:
+                return "artery(ID,_,_,_,_,_,_,_,_,_,_,N), edge_t(aorta,ID)."
+            else:
+                return "artery(ID,_,_,_,_,_,_,_,_,_,_,N), edge(aorta,ID)."
+
+        text = "artery(ID1,_,_,_,_,_,_,_,_,_,_,N), artery(ID2,_,_,_,_,_,_,_,_,_,_," + self._artery2 + "), "
+        
+        if self._is_transitive:
+            return text + "edge_t(ID1,ID2)."
+
+        return text + "edge(ID1,ID2)."
 
 
 # Comparator rule param types
@@ -135,9 +149,6 @@ class Comparator(IRule):
         self._offset2 = offset2
 
     def to_text(self) -> str:
-        return self.__str__()
-
-    def __str__(self) -> str:
         if self._comparator_type == ComparatorType.Cog_X:
             comparator_type = " cog_x"
         elif self._comparator_type == ComparatorType.Cog_Z:
@@ -151,6 +162,37 @@ class Comparator(IRule):
 
         return text + " than " + self._artery2 + comparator_type + self._offset2 + "."
 
+    def to_rule(self) -> str:
+        if self._comparator_type == ComparatorType.Cog_X:
+            if self._comparator_mode == ComparatorMode.Greater:
+                text = "artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_," + self._artery2 + "), "
+
+                return text + "cog_x_greater(X1" + self._offset1 + ",X2" + self._offset2 + ")."
+            else:
+                text = "artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_," + self._artery2 + "), "
+
+                return text + "cog_x_less(X1" + self._offset1 + ",X2" + self._offset2 + ")."
+
+        elif self._comparator_type == ComparatorType.Cog_Z:
+            if self._comparator_mode == ComparatorMode.Greater:
+                text = "artery(_,_,_,_,_,_,Z1,_,_,_,_,N), artery(_,_,_,_,_,_,Z2,_,_,_,_," + self._artery2 + "), "
+
+                return text + "cog_z_greater(Z1" + self._offset1 + ",Z2" + self._offset2 + ")."
+            else:
+                text = "artery(_,_,_,_,_,_,Z1,_,_,_,_,N), artery(_,_,_,_,_,_,Z2,_,_,_,_," + self._artery2 + "), "
+
+                return text + "cog_z_less(Z1" + self._offset1 + ",Z2" + self._offset2 + ")."
+
+        else:
+            if self._comparator_mode == ComparatorMode.Greater:
+                text = "artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_," + self._artery2 + "), "
+
+                return text + "height_greater(H1" + self._offset1 + ",H2" + self._offset2 + ")."
+            else:
+                text = "artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_," + self._artery2 + "), "
+
+                return text + "height_less(H1" + self._offset1 + ",H2" + self._offset2 + ")."
+
 
 # General rule has a text description and can refer to an artery
 class General(IRule):
@@ -159,13 +201,22 @@ class General(IRule):
         self._artery = artery
 
     def to_text(self) -> str:
-        return self.__str__()
-
-    def __str__(self) -> str:
         if self._artery != None:
             return self._artery + " has " + self._rule_text + "."
 
         return self._rule_text
+
+    def to_rule(self) -> str:
+        if self._artery == None:
+            return self._rule_text
+
+        index = list(general_rule_dictionary.values()).index(self._rule_text)
+        value = list(general_rule_dictionary.keys())[index]
+
+        if self._rule_text.startswith("radius"):
+            return "artery(_,R,_,_,_,_,_,_,_,_,_,N), " + value + "(R)."
+
+        return "artery(_,_,_,_,_,_,_,_,_,_,A,N), " + value + "(A)."
 
 
 # General rule text descriptions
@@ -232,7 +283,7 @@ class Model:
 
 
 # ConfidenceRule wrapper
-class ConfidenceRule:
+class ConfidenceRule(IRule):
     def __init__(self, id: int, name: str):
         self._id = id
         self._name = name
@@ -251,16 +302,19 @@ class ConfidenceRule:
     def set_rule(self, rule:IRule):
         self._rule = rule
 
-    def __str__(self) -> str:
+    def to_text(self) -> str:
         text = "Confidence Rule with ID: [" + \
             str(self._id) + "] and Name: [" + self._name + "].\n"
 
         return text + "\t\tRule: " + self._rule.to_text() + "\n"
 
+    def to_rule(self) -> str:
+        return "confidence_rule(N," + str(self._id) + ") :- N = " + self._name + ", " + self._rule.to_rule()
+
     def to_json(self) -> str:
         text = "{'id': " + str(self._id) + ", 'name': '" + self._name + "', '"
 
-        return text + "text': '" + self._rule.to_text() + "'}"
+        return text + "text': '" + self.to_text() + "', 'rule': '" + self.to_rule() + "'}"
 
 
 # OutputArtery wrapper
@@ -609,7 +663,7 @@ class S(BaseHTTPRequestHandler):
         for i in range(0, len(self._confidence_rules)):
             fulltext+= self._confidence_rules[i].to_json()
             
-            if i < len(self._confidence_rules)-1:
+            if i < len(self._confidence_rules) - 1:
                 fulltext+=", "
         fulltext+="]"
 
@@ -642,7 +696,7 @@ def main():
 
     models, arteries, dot = parse_artery_classified(sys.argv[2], models, confidence_rules)
 
-    write_arteries_parsed(sys.argv[3], models, arteries, is_debug)
+    #write_arteries_parsed(sys.argv[3], models, arteries, is_debug)
     #dot.render("Arteries.svg", view=is_debug)
 
     server_address = ("localhost", 8000)
