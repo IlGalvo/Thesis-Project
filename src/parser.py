@@ -1,22 +1,25 @@
 # This file parses the ASP output to natural language.
 #
-# Usage: python Parser.py in_arteries_classifier.lp in_arteries_classified.lpout_arteries_parsed.txt
-# where: in_arteries_classifier.lp and in_arteries_classified.lp must be valid ASP file.
-
+# Usage: python Parser.py in_arteries_classifier.lp
+# in_arteries_classified.lpout_arteries_parsed.txt
+# where: in_arteries_classifier.lp and in_arteries_classified.lp must be valid
+# ASP file.
 import sys
 import os
 import re
 from enum import Enum
 from graphviz import Digraph
+import json
+from http.server import HTTPServer, BaseHTTPRequestHandler
 
 
 # ParamsArtery is primary if it refers to confidence rule
 class ParamsArtery:
     def __init__(self, is_primary: bool, name: str,
-                 id: str = None, radius: str = None, density: str = None, quality: str = None,
-                 cog_x: str = None, cog_y: str = None, cog_z: str = None,
-                 path_length: str = None, distance_from_extremes: str = None,
-                 heigth: str = None, angle: str = None):
+                 id: str=None, radius: str=None, density: str=None, quality: str=None,
+                 cog_x: str=None, cog_y: str=None, cog_z: str=None,
+                 path_length: str=None, distance_from_extremes: str=None,
+                 heigth: str=None, angle: str=None):
         self._is_primary = is_primary
         self._name = name
 
@@ -86,7 +89,7 @@ class IRule:
 
 # Edge rule referes to two arteries and can be transitive
 class Edge(IRule):
-    def __init__(self, artery1: str, artery2: str, is_transitive: bool = False):
+    def __init__(self, artery1: str, artery2: str, is_transitive: bool=False):
         self._artery1 = artery1
         self._artery2 = artery2
 
@@ -151,7 +154,7 @@ class Comparator(IRule):
 
 # General rule has a text description and can refer to an artery
 class General(IRule):
-    def __init__(self, rule_text: str, artery: str = None):
+    def __init__(self, rule_text: str, artery: str=None):
         self._rule_text = rule_text
         self._artery = artery
 
@@ -234,7 +237,7 @@ class ConfidenceRule:
         self._id = id
         self._name = name
 
-        self._rules = []
+        self._rule = None
 
     def get_id(self) -> int:
         return self._id
@@ -242,17 +245,22 @@ class ConfidenceRule:
     def get_name(self) -> str:
         return self._name
 
-    def get_rules(self) -> list:
-        return self._rules
+    def get_rule(self) -> IRule:
+        return self._rule
+
+    def set_rule(self, rule:IRule):
+        self._rule = rule
 
     def __str__(self) -> str:
         text = "Confidence Rule with ID: [" + \
             str(self._id) + "] and Name: [" + self._name + "].\n"
 
-        for rule in self._rules:
-            text += "\t\tRule: " + rule.to_text() + "\n"
+        return text + "\t\tRule: " + self._rule.to_text() + "\n"
 
-        return text
+    def to_json(self) -> str:
+        text = "{'id': " + str(self._id) + ", 'name': '" + self._name + "', '"
+
+        return text + "text': '" + self._rule.to_text() + "'}"
 
 
 # OutputArtery wrapper
@@ -336,8 +344,10 @@ def parse_arteries_classifier(file_name: str):
                 # artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N)
                 if rule[0] == "artery":
                     # If args are not equal to "_", they're valid
-                    # If name is equal to "N", it refers to confidence rule principal artery
-                    # If name is equal to "N", it refers to confidence rule name
+                    # If name is equal to "N", it refers to confidence rule
+                    # principal artery
+                    # If name is equal to "N", it refers to confidence rule
+                    # name
                     id = rule[1] if rule[1] != "_" else None
                     radius = rule[2] if rule[2] != "_" else None
                     density = rule[3] if rule[3] != "_" else None
@@ -371,28 +381,23 @@ def parse_arteries_classifier(file_name: str):
                     is_transitive = rule[0] == "edge_t"
 
                     edge_rule = Edge(artery1, artery2, is_transitive)
-                    confidence_rule.get_rules().append(edge_rule)
+                    confidence_rule.set_rule(edge_rule)
 
                 # cog_x_greater/cog_x_less(X1+n,X2+m), with +n and +m optional
                 elif rule[0] == "cog_x_greater" or rule[0] == "cog_x_less":
-                    comparator_mode = ComparatorMode.Greater if rule[
-                        0] == "cog_x_greater" else ComparatorMode.Less
+                    comparator_mode = ComparatorMode.Greater if rule[0] == "cog_x_greater" else ComparatorMode.Less
 
                     # Check if there are X+n and X+m
                     offset_regex1 = number_regex2.search(rule[1])
                     offset_regex2 = number_regex2.search(rule[2])
 
                     # If success, get the value
-                    offset1 = offset_regex1.group(
-                        0) if offset_regex1 != None else ""
-                    offset2 = offset_regex2.group(
-                        0) if offset_regex2 != None else ""
+                    offset1 = offset_regex1.group(0) if offset_regex1 != None else ""
+                    offset2 = offset_regex2.group(0) if offset_regex2 != None else ""
 
                     # Substring to get the n and m
-                    cog_x1 = rule[1][0: offset_regex1.start(
-                    )] if offset_regex1 != None else rule[1]
-                    cog_x2 = rule[1][0: offset_regex2.start(
-                    )] if offset_regex2 != None else rule[2]
+                    cog_x1 = rule[1][0: offset_regex1.start()] if offset_regex1 != None else rule[1]
+                    cog_x2 = rule[1][0: offset_regex2.start()] if offset_regex2 != None else rule[2]
 
                     # Find arteries for CoG_X
                     artery1 = next(artery.get_name() for artery in arteries
@@ -403,28 +408,23 @@ def parse_arteries_classifier(file_name: str):
                     cog_x_rule = Comparator(ComparatorType.Cog_X, comparator_mode,
                                             artery1, offset1,
                                             artery2, offset2)
-                    confidence_rule.get_rules().append(cog_x_rule)
+                    confidence_rule.set_rule(cog_x_rule)
 
                 # cog_z_greater/cog_z_less(Z1+n,Z2+m), with +n and +m optional
                 elif rule[0] == "cog_z_greater" or rule[0] == "cog_z_less":
-                    comparator_mode = ComparatorMode.Greater if rule[
-                        0] == "cog_z_greater" else ComparatorMode.Less
+                    comparator_mode = ComparatorMode.Greater if rule[0] == "cog_z_greater" else ComparatorMode.Less
 
                     # Check if there are Z+n and Z+m
                     offset_regex1 = number_regex2.search(rule[1])
                     offset_regex2 = number_regex2.search(rule[2])
 
                     # If success, get the value
-                    offset1 = offset_regex1.group(
-                        0) if offset_regex1 != None else ""
-                    offset2 = offset_regex2.group(
-                        0) if offset_regex2 != None else ""
+                    offset1 = offset_regex1.group(0) if offset_regex1 != None else ""
+                    offset2 = offset_regex2.group(0) if offset_regex2 != None else ""
 
                     # Substring to get the n and m
-                    cog_z1 = rule[1][0: offset_regex1.start(
-                    )] if offset_regex1 != None else rule[1]
-                    cog_z2 = rule[1][0: offset_regex2.start(
-                    )] if offset_regex2 != None else rule[2]
+                    cog_z1 = rule[1][0: offset_regex1.start()] if offset_regex1 != None else rule[1]
+                    cog_z2 = rule[1][0: offset_regex2.start()] if offset_regex2 != None else rule[2]
 
                     # Find arteries for CoG_Z
                     artery1 = next(artery.get_name() for artery in arteries
@@ -435,28 +435,24 @@ def parse_arteries_classifier(file_name: str):
                     cog_z_rule = Comparator(ComparatorType.Cog_Z, comparator_mode,
                                             artery1, offset1,
                                             artery2, offset2)
-                    confidence_rule.get_rules().append(cog_z_rule)
+                    confidence_rule.set_rule(cog_z_rule)
 
-                # height_greater/height_less(H1+n,H2+m), with +n and +m optional
+                # height_greater/height_less(H1+n,H2+m), with +n and +m
+                # optional
                 elif rule[0] == "height_greater" or rule[0] == "height_less":
-                    comparator_mode = ComparatorMode.Greater if rule[
-                        0] == "height_greater" else ComparatorMode.Less
+                    comparator_mode = ComparatorMode.Greater if rule[0] == "height_greater" else ComparatorMode.Less
 
                     # Check if there are H+n and H+m
                     offset_regex1 = number_regex2.search(rule[1])
                     offset_regex2 = number_regex2.search(rule[2])
 
                     # If success, get the value
-                    offset1 = offset_regex1.group(
-                        0) if offset_regex1 != None else ""
-                    offset2 = offset_regex2.group(
-                        0) if offset_regex2 != None else ""
+                    offset1 = offset_regex1.group(0) if offset_regex1 != None else ""
+                    offset2 = offset_regex2.group(0) if offset_regex2 != None else ""
 
                     # Substring to get the n and m
-                    heigth1 = rule[1][0: offset_regex1.start(
-                    )] if offset_regex1 != None else rule[1]
-                    heigth2 = rule[1][0: offset_regex2.start(
-                    )] if offset_regex2 != None else rule[2]
+                    heigth1 = rule[1][0: offset_regex1.start()] if offset_regex1 != None else rule[1]
+                    heigth2 = rule[1][0: offset_regex2.start()] if offset_regex2 != None else rule[2]
 
                     # Find arteries for Heigth
                     artery1 = next(artery.get_name() for artery in arteries
@@ -467,11 +463,12 @@ def parse_arteries_classifier(file_name: str):
                     heigth_rule = Comparator(ComparatorType.Heigth, comparator_mode,
                                              artery1, offset1,
                                              artery2, offset2)
-                    confidence_rule.get_rules().append(heigth_rule)
+                    confidence_rule.set_rule(heigth_rule)
 
                 # It's a self meaning rule
                 else:
-                    # Check if it's a general rule contained in general rule dictionary
+                    # Check if it's a general rule contained in general rule
+                    # dictionary
                     rule_text = general_rule_dictionary.get(rule[0], None)
 
                     if rule_text != None:
@@ -480,14 +477,14 @@ def parse_arteries_classifier(file_name: str):
                                        if artery.get_is_primary)
 
                         general_rule = General(rule_text, artery1)
-                        confidence_rule.get_rules().append(general_rule)
+                        confidence_rule.set_rule(general_rule)
                     else:
                         # Parse as generic text rule
                         info[0] = confidence_rule.get_name() + " has: "
                         rule_text = " ".join(info)
 
                         general_rule = General(rule_text)
-                        confidence_rule.get_rules().append(general_rule)
+                        confidence_rule.set_rule(general_rule)
 
                         break
 
@@ -535,8 +532,7 @@ def parse_artery_classified(file_name: str, input_models: list, confidence_rules
 
             # Find associated model for id and variant
             model = next(model for model in input_models
-                         if model.get_id() == id and
-                         model.get_variant() == variant)
+                         if model.get_id() == id and model.get_variant() == variant)
 
             output_models.append(model)
 
@@ -553,8 +549,7 @@ def parse_artery_classified(file_name: str, input_models: list, confidence_rules
 
             # Find associated confidence rule for id and name
             confidence_rule = next(confidence_rule for confidence_rule in confidence_rules
-                                   if confidence_rule.get_id() == id and
-                                   confidence_rule.get_name() == name)
+                                   if confidence_rule.get_id() == id and confidence_rule.get_name() == name)
 
             # Find artery associated to confidence rule for name
             artery = next(artery for artery in arteries
@@ -591,6 +586,44 @@ def write_arteries_parsed(file_name: str, output_models: list, arteries: list, i
                 print(artery)
 
 
+class S(BaseHTTPRequestHandler):
+    def set_c_rules(self, confidence_rules:list):
+        self._confidence_rules = confidence_rules
+
+    def _set_headers(self):
+        self.send_response(200)
+        self.send_header("Content-type", "text/html")
+        self.end_headers()
+
+    def _html(self, message):
+        """This just generates an HTML document that includes `message`
+        in the body. Override, or re-write this do do more interesting stuff.
+        """
+        content = f"<html><body><h1>{message}</h1></body></html>"
+        return content.encode("utf8")  # NOTE: must return a bytes object!
+
+    def do_GET(self):
+        self._set_headers()
+
+        fulltext = "["
+        for i in range(0, len(self._confidence_rules)):
+            fulltext+= self._confidence_rules[i].to_json()
+            
+            if i < len(self._confidence_rules)-1:
+                fulltext+=", "
+        fulltext+="]"
+
+        self.wfile.write(fulltext.encode("utf8"))
+
+    def do_HEAD(self):
+        self._set_headers()
+
+    def do_POST(self):
+        # Doesn't do anything with posted data
+        self._set_headers()
+        self.wfile.write(self._html("POST!"))
+
+
 def main():
     # To simplify debug
     is_debug = True
@@ -607,12 +640,22 @@ def main():
 
     models, confidence_rules = parse_arteries_classifier(sys.argv[1])
 
-    models, arteries, dot = parse_artery_classified(
-        sys.argv[2], models, confidence_rules)
+    models, arteries, dot = parse_artery_classified(sys.argv[2], models, confidence_rules)
 
     write_arteries_parsed(sys.argv[3], models, arteries, is_debug)
-    dot.render("Arteries.svg", view=is_debug)
+    #dot.render("Arteries.svg", view=is_debug)
 
+    server_address = ("localhost", 8000)
+    httpd = HTTPServer(server_address, S)
+    httpd.RequestHandlerClass.set_c_rules(httpd.RequestHandlerClass, confidence_rules)
+
+    print("Starting httpd server")
+    try:
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    httpd.server_close()
+    print("Sopped httpd server")
 
 if __name__ == "__main__":
     main()

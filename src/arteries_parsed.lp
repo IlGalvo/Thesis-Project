@@ -25,6 +25,7 @@ Model with ID: [1] and Variant: [1].
 Model with ID: [2] and Variant: [1].
 	Rule: noname1 is connected to common_hepatic.
 
+
 Artery with ID: [72] and Name: [celiac_trunk].
 	Confidence Rule with ID: [0] and Name: [celiac_trunk].
 		Rule: celiac_trunk has angle between 45 and 90 degrees, or between 90 and 135 degrees.
@@ -47,6 +48,7 @@ Artery with ID: [72] and Name: [celiac_trunk].
 	Confidence Rule with ID: [11] and Name: [celiac_trunk].
 		Rule: celiac_trunk is transitively  connected to left_gastric.
 
+
 Artery with ID: [6] and Name: [noname1].
 
 Artery with ID: [58] and Name: [splenic].
@@ -67,6 +69,7 @@ Artery with ID: [58] and Name: [splenic].
 
 	Confidence Rule with ID: [7] and Name: [splenic].
 		Rule: splenic cog_x is greater than right_hepatic cog_x.
+
 
 Artery with ID: [92] and Name: [common_hepatic].
 
@@ -93,6 +96,7 @@ Artery with ID: [68] and Name: [left_renal].
 	Confidence Rule with ID: [9] and Name: [left_renal].
 		Rule: left_renal cog_x is greater than right_renal cog_x.
 
+
 Artery with ID: [74] and Name: [left_gastric].
 	Confidence Rule with ID: [1] and Name: [left_gastric].
 		Rule: left_gastric has radius between 10 and 20 voxels.
@@ -102,6 +106,7 @@ Artery with ID: [74] and Name: [left_gastric].
 
 	Confidence Rule with ID: [6] and Name: [left_gastric].
 		Rule: left_gastric cog_z is less than splenic cog_z.
+
 
 Artery with ID: [79] and Name: [accessory_left_renal].
 	Confidence Rule with ID: [0] and Name: [accessory_left_renal].
@@ -119,6 +124,7 @@ Artery with ID: [79] and Name: [accessory_left_renal].
 	Confidence Rule with ID: [6] and Name: [accessory_left_renal].
 		Rule: accessory_left_renal has:  K = #count {ID2: edge(ID1,ID2)} K = 0 out_artery(ID1,N).
 
+
 Artery with ID: [88] and Name: [accessory_right_renal].
 	Confidence Rule with ID: [4] and Name: [accessory_right_renal].
 		Rule: accessory_right_renal has radius between 10 and 15 voxels.
@@ -128,6 +134,7 @@ Artery with ID: [88] and Name: [accessory_right_renal].
 
 	Confidence Rule with ID: [6] and Name: [accessory_right_renal].
 		Rule: accessory_right_renal has:  K = #count {ID2: edge(ID1,ID2)} K = 0 out_artery(ID1,N).
+
 
 Artery with ID: [96] and Name: [right_intercostal_1].
 	Confidence Rule with ID: [0] and Name: [right_intercostal_1].
@@ -144,6 +151,7 @@ Artery with ID: [96] and Name: [right_intercostal_1].
 
 	Confidence Rule with ID: [5] and Name: [right_intercostal_1].
 		Rule: aorta is connected to right_intercostal_1.
+
 
 Artery with ID: [101] and Name: [left_intercostal_1].
 	Confidence Rule with ID: [0] and Name: [left_intercostal_1].
@@ -163,6 +171,7 @@ Artery with ID: [101] and Name: [left_intercostal_1].
 
 	Confidence Rule with ID: [6] and Name: [left_intercostal_1].
 		Rule: left_intercostal_1 cog_x is greater than right_intercostal_1 cog_x.
+
 
 Artery with ID: [107] and Name: [left_intercostal_2].
 	Confidence Rule with ID: [0] and Name: [left_intercostal_2].
@@ -186,6 +195,7 @@ Artery with ID: [107] and Name: [left_intercostal_2].
 	Confidence Rule with ID: [8] and Name: [left_intercostal_2].
 		Rule: left_intercostal_2 cog_z-5 is greater than right_intercostal_2 cog_z.
 
+
 Artery with ID: [108] and Name: [superior_mesenteric].
 	Confidence Rule with ID: [0] and Name: [superior_mesenteric].
 		Rule: superior_mesenteric has angle between 45 and 90 degrees, or between 90 and 135 degrees.
@@ -208,6 +218,7 @@ Artery with ID: [108] and Name: [superior_mesenteric].
 	Confidence Rule with ID: [6] and Name: [superior_mesenteric].
 		Rule: celiac_trunk heigth+10 is less than superior_mesenteric heigth.
 
+
 Artery with ID: [21] and Name: [proper_hepatic].
 
 Artery with ID: [70] and Name: [gastroduodenal].
@@ -228,6 +239,7 @@ Artery with ID: [50] and Name: [right_renal].
 	Confidence Rule with ID: [9] and Name: [right_renal].
 		Rule: right_renal cog_x is less than left_renal cog_x.
 
+
 Artery with ID: [110] and Name: [right_intercostal_2].
 	Confidence Rule with ID: [0] and Name: [right_intercostal_2].
 		Rule: right_intercostal_2 has angle between 225 and 270 degrees, or between 270 and 315 degrees.
@@ -244,6 +256,9 @@ Artery with ID: [110] and Name: [right_intercostal_2].
 	Confidence Rule with ID: [5] and Name: [right_intercostal_2].
 		Rule: aorta is connected to right_intercostal_2.
 
+
 Artery with ID: [97] and Name: [dorsal_pancreatic].
 	Confidence Rule with ID: [1] and Name: [dorsal_pancreatic].
 		Rule: common_hepatic is transitively  connected to dorsal_pancreatic.
+
+
