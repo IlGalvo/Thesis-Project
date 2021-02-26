@@ -11,6 +11,7 @@ from enum import Enum
 from graphviz import Digraph
 import json
 from http.server import HTTPServer, BaseHTTPRequestHandler
+from urllib.parse import urlparse, parse_qs
 
 
 # ParamsArtery is primary if it refers to confidence rule
@@ -640,6 +641,12 @@ def write_arteries_parsed(file_name: str, output_models: list, arteries: list, i
                 print(artery)
 
 
+artery_list = ["celiac_trunk", "left_gastric", "splenic", "common_hepatic", "proper_hepatic",
+               "dorsal_pancreatic", "left_renal", "right_renal", "accessory_left_renal",
+               "accessory_right_renal", "gastroduodenal", "left_hepatic", "right_hepatic",
+               "superior_mesenteric", "left_intercostal_1", "right_intercostal_1",
+               "left_intercostal_2", "right_intercostal_2"]
+
 class S(BaseHTTPRequestHandler):
     def set_c_rules(self, confidence_rules:list):
         self._confidence_rules = confidence_rules
@@ -659,23 +666,87 @@ class S(BaseHTTPRequestHandler):
     def do_GET(self):
         self._set_headers()
 
-        fulltext = "["
-        for i in range(0, len(self._confidence_rules)):
-            fulltext+= self._confidence_rules[i].to_json()
-            
-            if i < len(self._confidence_rules) - 1:
-                fulltext+=", "
-        fulltext+="]"
+        query_path = urlparse(self.path).query
+        query_components = parse_qs(query_path)
 
-        self.wfile.write(fulltext.encode("utf8"))
+        if "q" in query_components:
+            if "confidence_rules" in query_components["q"]:
+                full_text = "["
+
+                for i in range(0, len(self._confidence_rules)):
+                    full_text+= self._confidence_rules[i].to_json()
+            
+                    if i < len(self._confidence_rules) - 1:
+                        full_text+=", "
+
+                full_text+="]"
+            elif "arteries" in query_components["q"]:
+                full_text = json.dumps(artery_list)
+            elif "general_rules" in query_components["q"]:
+                full_text = json.dumps(list(general_rule_dictionary.values()))
+            else:
+                full_text = ""
+
+            self.wfile.write(full_text.encode("utf8"))
 
     def do_HEAD(self):
         self._set_headers()
 
     def do_POST(self):
-        # Doesn't do anything with posted data
         self._set_headers()
-        self.wfile.write(self._html("POST!"))
+
+        content_length = int(self.headers['Content-Length'])
+        post_data = self.rfile.read(content_length)
+
+        fields = parse_qs(post_data.decode("utf8"), True)
+        full_text = ""
+        
+        print(fields)
+
+        if "id" in fields and "artery" in fields and "rule_type" in fields:
+            id = fields["id"][0]
+            artery = fields["artery"][0]
+
+            rule_type = fields["rule_type"][0]
+
+            if rule_type == "general" and "text" in fields:
+                text = fields["text"][0]
+
+                cr = ConfidenceRule(id, artery)
+                cr.set_rule(General(text, artery))
+
+                full_text += cr.to_json()
+            elif rule_type == "comparator" and "type" in fields and "mode" in fields and "offset1" in fields and "artery2" in fields and "offset2" in fields:
+                type = fields["type"][0]
+
+                if type == "cog_x":
+                    type = ComparatorType.Cog_X
+                elif type == "cog_z":
+                    type = ComparatorType.Cog_Z
+                else:
+                    type = ComparatorType.Heigth
+
+                mode = ComparatorMode.Greater if ["mode"][0] == "greater" else "less"
+
+                offset1 = fields["offset1"][0]
+
+                artery2 = fields["artery2"][0]
+                offset2 = fields["offset2"][0]
+                
+                cr = ConfidenceRule(id, artery)
+                cr.set_rule(Comparator(type, mode, artery, offset1, artery2, offset2))
+
+                full_text += cr.to_json()
+            elif rule_type == "edge" and "artery2" in fields and "is_transitive" in fields:
+                artery2 = fields["artery2"][0]
+                is_transitive = True if fields["is_transitive"][0] == "true" else False
+
+                cr = ConfidenceRule(id, artery)
+                cr.set_rule(Edge(artery, artery2, is_transitive))
+
+                full_text += cr.to_json()
+
+        self.wfile.write(full_text.encode("utf8"))
 
 
 def main():
