@@ -74,7 +74,7 @@ namespace AppDemo.ViewModels
 
         private async void Add()
         {
-            // Temp
+            await CurrentPage.Navigation.PushAsync(new AddPage());
         }
 
         private async void ManageSelectedAccount()

@@ -26,7 +26,7 @@ namespace AppDemo.Views
 
             using (var httpClient = new HttpClient())
             {
-                var result = await httpClient.GetAsync("http://localhost:8000");
+                var result = await httpClient.GetAsync("http://localhost:8000?q=confidence_rules");
 
                 var text = await result.Content.ReadAsStringAsync();
 

@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="AppDemo.Views.ComparatorPage"
+             Title="{StaticResource ApplicationName}"
+             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}">
+
+    <ContentPage.Content>
+        <StackLayout Orientation="Vertical"
+                     Margin="30">
+
+            <Label Text="Add comparator rule"
+                   TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                   HorizontalTextAlignment="Center"
+                   FontSize="30"
+                   VerticalOptions="StartAndExpand" />
+
+            <StackLayout Spacing="20"
+                         VerticalOptions="CenterAndExpand">
+
+                <Picker Title="Select type"
+                        TitleColor="{StaticResource SecondaryColor}"
+                        ItemsSource="{Binding Types}"
+                        SelectedItem="{Binding SelectedType}"
+                        TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
+                        HorizontalTextAlignment="Center" />
+                <Picker Title="Select mode"
+                        TitleColor="{StaticResource SecondaryColor}"
+                        ItemsSource="{Binding Modes}"
+                        SelectedItem="{Binding SelectedMode}"
+                        TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
+                        HorizontalTextAlignment="Center" />
+
+                <Picker Title="Select artery1"
+                        TitleColor="{StaticResource SecondaryColor}"
+                        ItemsSource="{Binding Arteries}"
+                        SelectedItem="{Binding SelectedArtery1}"
+                        TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
+                        HorizontalTextAlignment="Center" />
+                <Entry x:Name="entryPasswordEntered1"
+                       Text="{Binding EnteredOffset1}"
+                       TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                       Keyboard="Numeric"
+                       Placeholder="Insert offset1"
+                       PlaceholderColor="{StaticResource PlaceholderColor}"
+                       BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
+                       HorizontalTextAlignment="Center"
+                       ReturnType="Next" />
+
+                <Picker Title="Select artery2"
+                        TitleColor="{StaticResource SecondaryColor}"
+                        ItemsSource="{Binding Arteries}"
+                        SelectedItem="{Binding SelectedArtery2}"
+                        TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
+                        HorizontalTextAlignment="Center" />
+                <Entry x:Name="entryPasswordEntered2"
+                       Text="{Binding EnteredOffset2}"
+                       TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                       Keyboard="Numeric"
+                       Placeholder="Insert offset2"
+                       PlaceholderColor="{StaticResource PlaceholderColor}"
+                       BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
+                       HorizontalTextAlignment="Center"
+                       ReturnType="Next" />
+            </StackLayout>
+
+            <Button Text="Add"
+                    TextColor="{StaticResource ButtonTextColor}"
+                    FontSize="18"
+                    CornerRadius="20"
+                    BackgroundColor="{StaticResource SecondaryColor}"
+                    VerticalOptions="EndAndExpand"
+                    Command="{Binding AddCommand}" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

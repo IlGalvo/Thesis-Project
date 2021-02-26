@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="AppDemo.Views.AddPage"
+             Title="{StaticResource ApplicationName}"
+             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}">
+
+    <ContentPage.Content>
+        <StackLayout Orientation="Vertical"
+                     Margin="30">
+
+            <Label Text="Choose rule type"
+                   TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                   HorizontalTextAlignment="Center"
+                   FontSize="30"
+                   VerticalOptions="StartAndExpand" />
+
+            <StackLayout VerticalOptions="CenterAndExpand"
+                         Spacing="50">
+
+                <Entry x:Name="entryPasswordEntered"
+                       Text="{Binding EnteredId}"
+                       TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                       Keyboard="Numeric"
+                       Placeholder="Insert Id"
+                       PlaceholderColor="{StaticResource PlaceholderColor}"
+                       BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
+                       HorizontalTextAlignment="Center"
+                       ReturnType="Next" />
+
+                <Picker Title="Select Artery"
+                        TitleColor="{StaticResource SecondaryColor}"
+                        ItemsSource="{Binding Arteries}"
+                        SelectedItem="{Binding SelectedArtery}"
+                        TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
+                        HorizontalTextAlignment="Center" />
+            </StackLayout>
+
+            <StackLayout VerticalOptions="EndAndExpand"
+                         Spacing="20">
+
+                <Button Text="Edge"
+                        TextColor="{StaticResource ButtonTextColor}"
+                        FontSize="18"
+                        CornerRadius="20"
+                        BackgroundColor="{StaticResource SecondaryColor}"
+                        VerticalOptions="CenterAndExpand"
+                        Command="{Binding EdgeCommand}" />
+                <Button Text="Comparator"
+                        TextColor="{StaticResource ButtonTextColor}"
+                        FontSize="18"
+                        CornerRadius="20"
+                        BackgroundColor="{StaticResource SecondaryColor}"
+                        VerticalOptions="CenterAndExpand"
+                        Command="{Binding ComparatorCommand}" />
+                <Button Text="General"
+                        TextColor="{StaticResource ButtonTextColor}"
+                        FontSize="18"
+                        CornerRadius="20"
+                        BackgroundColor="{StaticResource SecondaryColor}"
+                        VerticalOptions="CenterAndExpand"
+                        Command="{Binding GeneralCommand}" />
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

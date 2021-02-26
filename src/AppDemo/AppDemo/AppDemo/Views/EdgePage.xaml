@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AppDemo.Views.EdgePage">
+    <ContentPage.Content>
+        <StackLayout Orientation="Vertical"
+                     Margin="30">
+
+            <Label Text="Add comparator rule"
+                   TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                   HorizontalTextAlignment="Center"
+                   FontSize="30"
+                   VerticalOptions="StartAndExpand" />
+
+            <StackLayout Spacing="50"
+                         VerticalOptions="CenterAndExpand">
+
+                <Picker Title="Select artery1"
+                        TitleColor="{StaticResource SecondaryColor}"
+                        ItemsSource="{Binding Arteries}"
+                        SelectedItem="{Binding SelectedArtery1}"
+                        TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
+                        HorizontalTextAlignment="Center" />
+                <Picker Title="Select artery2"
+                        TitleColor="{StaticResource SecondaryColor}"
+                        ItemsSource="{Binding Arteries}"
+                        SelectedItem="{Binding SelectedArtery2}"
+                        TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
+                        HorizontalTextAlignment="Center" />
+
+                <Grid Margin="0, 20, 0, 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+
+                    <Label Text="Is transitive:"
+                           TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                           HorizontalTextAlignment="Start"
+                           FontSize="20"
+                           Grid.Row="0"
+                           Grid.Column="0" />
+                    <Switch IsToggled="{Binding IsTransitive}"
+                            OnColor="{StaticResource SecondaryColor}"
+                            ThumbColor="Red"
+                            Grid.Row="0"
+                            Grid.Column="1" />
+                </Grid>
+
+            </StackLayout>
+
+            <Button Text="Add"
+                    TextColor="{StaticResource ButtonTextColor}"
+                    FontSize="18"
+                    CornerRadius="20"
+                    BackgroundColor="{StaticResource SecondaryColor}"
+                    VerticalOptions="EndAndExpand"
+                    Command="{Binding AddCommand}" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

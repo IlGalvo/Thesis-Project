@@ -33,10 +33,28 @@
     <Compile Update="Views\CRPage.xaml.cs">
       <DependentUpon>CRPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\ComparatorPage.xaml.cs">
+      <DependentUpon>ComparatorPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\AddPage.xaml.cs">
+      <DependentUpon>AddPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Edgepage.xaml.cs">
+      <DependentUpon>EdgePage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Update="Views\CRPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\EdgePage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\GeneralPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\AddPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
