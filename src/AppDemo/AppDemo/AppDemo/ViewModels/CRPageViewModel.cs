@@ -1,14 +1,35 @@
-﻿namespace AppDemo.ViewModels
-{
-    public class CRPageViewModel
-    {
-        public string Text { get; }
-        public string Rule { get; }
+﻿using AppDemo.Internal;
+using AppDemo.Models;
+using System.Windows.Input;
+using Xamarin.Forms;
 
-        public CRPageViewModel(string text, string rule)
+namespace AppDemo.ViewModels
+{
+    public class CRPageViewModel : PageHelper
+    {
+        public ConfidenceRule ConfidenceRule { get; }
+
+        public ICommand DeleteCommand { get; private set; }
+
+        public CRPageViewModel(ConfidenceRule confidenceRule)
         {
-            Text = text;
-            Rule = rule;
+            ConfidenceRule = confidenceRule;
+
+            DeleteCommand = new Command(Delete);
+        }
+
+        private async void Delete()
+        {
+            var result = await HttpRequestClient.Instance.DeleteAsync(ConfidenceRule.Id, ConfidenceRule.Name);
+
+            if (result == "ok")
+            {
+                await CurrentPage.DisplayAlert("Info", "Deleted", "Ok");
+            }
+            else
+            {
+                await CurrentPage.DisplayAlert("Info", "Not Deleted", "Ok");
+            }
         }
     }
 }

@@ -21,10 +21,10 @@
             <StackLayout Spacing="50"
                          VerticalOptions="CenterAndExpand">
 
-                <Picker Title="Select artery"
+                <Picker Title="Select main artery"
                         TitleColor="{StaticResource SecondaryColor}"
                         ItemsSource="{Binding Arteries}"
-                        SelectedItem="{Binding SelectedArtery}"
+                        SelectedItem="{Binding SelectedMainArtery}"
                         TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
                         BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
                         HorizontalTextAlignment="Center" />

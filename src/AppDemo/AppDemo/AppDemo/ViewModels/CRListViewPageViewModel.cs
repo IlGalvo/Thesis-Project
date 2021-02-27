@@ -36,7 +36,7 @@ namespace AppDemo.ViewModels
 
                 if (selectedAccount != null)
                 {
-                    ManageSelectedAccount();
+                    ManageSelectedConfidenceRule();
                 }
             }
         }
@@ -59,11 +59,6 @@ namespace AppDemo.ViewModels
 
         public void Update(IEnumerable<ConfidenceRule> accountList)
         {
-            if (AccountList != null)
-            {
-                // Temp
-            }
-
             AccountList = mainAccountList = accountList;
         }
 
@@ -77,9 +72,9 @@ namespace AppDemo.ViewModels
             await CurrentPage.Navigation.PushAsync(new AddPage());
         }
 
-        private async void ManageSelectedAccount()
+        private async void ManageSelectedConfidenceRule()
         {
-            await CurrentPage.Navigation.PushAsync(new CRPage(SelectedAccount.Text, SelectedAccount.Rule));
+            await CurrentPage.Navigation.PushAsync(new CRPage(SelectedAccount));
 
             SelectedAccount = null;
         }

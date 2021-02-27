@@ -1,8 +1,5 @@
-﻿using AppDemo.ViewModels;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Net.Http;
-
+﻿using AppDemo.Internal;
+using AppDemo.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -13,7 +10,7 @@ namespace AppDemo.Views
     {
         private readonly GeneralPageViewModel generalPageViewModel;
 
-        public GeneralPage(string id)
+        public GeneralPage(int id)
         {
             InitializeComponent();
 
@@ -22,18 +19,10 @@ namespace AppDemo.Views
 
         protected override async void OnAppearing()
         {
-            var tmpList = new List<string>();
+            var arteries = await HttpRequestClient.Instance.GetArteriesAsync();
+            var texts = await HttpRequestClient.Instance.GetGeneralTextsAsync();
 
-            using (var httpClient = new HttpClient())
-            {
-                var result = await httpClient.GetAsync("http://localhost:8000?q=general_rules");
-
-                var text = await result.Content.ReadAsStringAsync();
-
-                tmpList = JsonConvert.DeserializeObject<List<string>>(text);
-            }
-
-            generalPageViewModel.Update(tmpList);
+            generalPageViewModel.Update(arteries, texts);
 
             base.OnAppearing();
         }

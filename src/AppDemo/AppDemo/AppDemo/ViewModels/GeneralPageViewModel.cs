@@ -1,28 +1,9 @@
-﻿using AppDemo.Internal;
-using AppDemo.Models;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Net.Http;
-using Xamarin.Forms;
+﻿using System.Collections.Generic;
 
 namespace AppDemo.ViewModels
 {
-    public class GeneralPageViewModel : PageHelper, INotifyPropertyChanged
+    public class GeneralPageViewModel : AddBaseViewModel
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private List<string> arteries;
-        public List<string> Arteries
-        {
-            get { return arteries; }
-            set
-            {
-                arteries = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Arteries)));
-            }
-        }
-
         private List<string> texts;
         public List<string> Texts
         {
@@ -30,57 +11,43 @@ namespace AppDemo.ViewModels
             set
             {
                 texts = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Texts)));
+                OnPropertyChanged();
             }
         }
 
-        public string SelectedArtery { get; set; }
         public string SelectedText { get; set; }
 
-        public Command AddCommand { get; private set; }
-
-        private readonly string id;
-
-        public GeneralPageViewModel(string id)
+        public GeneralPageViewModel(int id) : base(id)
         {
-            this.id = id;
-
-            Arteries = new List<string>();
             Texts = new List<string>();
 
-            SelectedArtery = string.Empty;
             SelectedText = string.Empty;
-
-            AddCommand = new Command(Bhorobho);
         }
 
-        public void Update(List<string> texts)
+        public void Update(List<string> arteries, List<string> texts)
         {
+            Arteries = arteries;
+
             Texts = texts;
         }
 
-        private async void Bhorobho()
+        protected override async void Add()
         {
-            using (var httpClient = new HttpClient())
+            if ((!string.IsNullOrEmpty(SelectedMainArtery)) && (!string.IsNullOrEmpty(SelectedText)))
             {
-                var cde = new Dictionary<string, string>
+                var dictionary = new Dictionary<string, string>
                 {
-                    { "id", id },
-                    { "artery", SelectedArtery },
+                    { "id", id.ToString() },
+                    { "artery", SelectedMainArtery },
                     { "rule_type", "general" },
                     { "text", SelectedText }
                 };
 
-                using (var abc = new FormUrlEncodedContent(cde))
-                {
-                    var result = await httpClient.PostAsync("http://localhost:8000", abc);
-
-                    var text = await result.Content.ReadAsStringAsync();
-
-                    var cr = JsonConvert.DeserializeObject<ConfidenceRule>(text);
-
-                    await CurrentPage.DisplayAlert("Added", cr.Text, "Ok");
-                }
+                Add(dictionary);
+            }
+            else
+            {
+                await CurrentPage.DisplayAlert("Error", "Artery and text cannot be empty.", "Close");
             }
         }
     }

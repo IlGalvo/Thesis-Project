@@ -1,8 +1,5 @@
-﻿using AppDemo.Models;
+﻿using AppDemo.Internal;
 using AppDemo.ViewModels;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Net.Http;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -11,29 +8,18 @@ namespace AppDemo.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CRListViewPage : ContentPage
     {
-        private readonly CRListViewPageViewModel listViewPage1ViewModel;
+        private readonly CRListViewPageViewModel crListViewPageViewModel;
 
         public CRListViewPage()
         {
             InitializeComponent();
 
-            BindingContext = listViewPage1ViewModel = new CRListViewPageViewModel();
+            BindingContext = crListViewPageViewModel = new CRListViewPageViewModel();
         }
 
         protected override async void OnAppearing()
         {
-            var tmpList = new List<ConfidenceRule>();
-
-            using (var httpClient = new HttpClient())
-            {
-                var result = await httpClient.GetAsync("http://localhost:8000?q=confidence_rules");
-
-                var text = await result.Content.ReadAsStringAsync();
-
-                tmpList = JsonConvert.DeserializeObject<List<ConfidenceRule>>(text);
-            }
-
-            listViewPage1ViewModel.Update(tmpList);
+            crListViewPageViewModel.Update(await HttpRequestClient.Instance.GetConfidenceRulesAsync());
 
             base.OnAppearing();
         }

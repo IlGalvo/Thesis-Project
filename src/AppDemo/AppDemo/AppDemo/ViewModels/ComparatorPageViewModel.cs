@@ -1,17 +1,10 @@
-﻿using AppDemo.Internal;
-using AppDemo.Models;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Net.Http;
-using Xamarin.Forms;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AppDemo.ViewModels
 {
-    public class ComparatorPageViewModel : PageHelper, INotifyPropertyChanged
+    public class ComparatorPageViewModel : AddBaseViewModel
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private List<string> modes;
         public List<string> Modes
         {
@@ -19,7 +12,7 @@ namespace AppDemo.ViewModels
             set
             {
                 modes = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Modes)));
+                OnPropertyChanged();
             }
         }
 
@@ -30,53 +23,30 @@ namespace AppDemo.ViewModels
             set
             {
                 types = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Types)));
-            }
-        }
-
-        private List<string> arteries;
-        public List<string> Arteries
-        {
-            get { return arteries; }
-            set
-            {
-                arteries = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Arteries)));
+                OnPropertyChanged();
             }
         }
 
         public string SelectedType { get; set; }
         public string SelectedMode { get; set; }
 
-        public string SelectedArtery1 { get; set; }
         public string EnteredOffset1 { get; set; }
 
-        public string SelectedArtery2 { get; set; }
+        public string SelectedArtery { get; set; }
         public string EnteredOffset2 { get; set; }
 
-        public Command AddCommand { get; private set; }
-
-        private readonly string id;
-
-        public ComparatorPageViewModel(string id)
+        public ComparatorPageViewModel(int id) : base(id)
         {
-            this.id = id;
-
             Modes = new List<string>() { "cog_x", "cog_z", "heigth" };
             Types = new List<string>() { "greater", "less" };
-
-            Arteries = new List<string>();
 
             SelectedType = string.Empty;
             SelectedMode = string.Empty;
 
-            SelectedArtery1 = string.Empty;
             EnteredOffset1 = string.Empty;
 
-            SelectedArtery2 = string.Empty;
+            SelectedArtery = string.Empty;
             EnteredOffset2 = string.Empty;
-
-            AddCommand = new Command(Bhorobho);
         }
 
         public void Update(List<string> arteries)
@@ -84,35 +54,49 @@ namespace AppDemo.ViewModels
             Arteries = arteries;
         }
 
-        private async void Bhorobho()
+        private async Task<string> ValidateOffsetAsync(string offset)
         {
-            if (SelectedArtery1 == SelectedArtery2)
-                return;
-
-            using (var httpClient = new HttpClient())
+            if (!string.IsNullOrEmpty(offset))
             {
-                var cde = new Dictionary<string, string>
+                if (int.TryParse(offset, out int tmpOffset) && tmpOffset != 0)
                 {
-                    { "id", id },
-                    { "artery", SelectedArtery1 },
+                    offset = ((tmpOffset > 0) ? ("+" + offset) : offset);
+                }
+                else
+                {
+                    await CurrentPage.DisplayAlert("Error", "Enter valid offsets (empty or non-zero whole number).", "Close");
+                }
+            }
+
+            return offset;
+        }
+
+        protected override async void Add()
+        {
+            if ((!string.IsNullOrEmpty(SelectedMainArtery)) &&
+                (!string.IsNullOrEmpty(SelectedArtery)) &&
+                (SelectedMainArtery != SelectedArtery))
+            {
+                string offset1 = await ValidateOffsetAsync(EnteredOffset1);
+                string offset2 = await ValidateOffsetAsync(EnteredOffset2);
+
+                var dictionary = new Dictionary<string, string>
+                {
+                    { "id", id.ToString() },
+                    { "artery", SelectedMainArtery },
                     { "rule_type", "comparator" },
                     { "type", SelectedType },
                     { "mode", SelectedMode },
-                    { "offset1", EnteredOffset1 },
-                    { "artery2", SelectedArtery2 },
-                    { "offset2", EnteredOffset2 },
+                    { "offset1", offset1 },
+                    { "artery2", SelectedArtery },
+                    { "offset2", offset2 }
                 };
 
-                using (var abc = new FormUrlEncodedContent(cde))
-                {
-                    var result = await httpClient.PostAsync("http://localhost:8000", abc);
-
-                    var text = await result.Content.ReadAsStringAsync();
-
-                    var cr = JsonConvert.DeserializeObject<ConfidenceRule>(text);
-
-                    await CurrentPage.DisplayAlert("Added", cr.Text, "Ok");
-                }
+                Add(dictionary);
+            }
+            else
+            {
+                await CurrentPage.DisplayAlert("Error", "Arteries cannot be empty or the equal.", "Close");
             }
         }
     }

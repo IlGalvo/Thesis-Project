@@ -6,7 +6,7 @@
         <StackLayout Orientation="Vertical"
                      Margin="30">
 
-            <Label Text="Add comparator rule"
+            <Label Text="Add edge rule"
                    TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
                    HorizontalTextAlignment="Center"
                    FontSize="30"
@@ -15,17 +15,17 @@
             <StackLayout Spacing="50"
                          VerticalOptions="CenterAndExpand">
 
-                <Picker Title="Select artery1"
+                <Picker Title="Select main artery"
                         TitleColor="{StaticResource SecondaryColor}"
                         ItemsSource="{Binding Arteries}"
-                        SelectedItem="{Binding SelectedArtery1}"
+                        SelectedItem="{Binding SelectedMainArtery}"
                         TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
                         BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
                         HorizontalTextAlignment="Center" />
-                <Picker Title="Select artery2"
+                <Picker Title="Select artery"
                         TitleColor="{StaticResource SecondaryColor}"
                         ItemsSource="{Binding Arteries}"
-                        SelectedItem="{Binding SelectedArtery2}"
+                        SelectedItem="{Binding SelectedArtery}"
                         TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
                         BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
                         HorizontalTextAlignment="Center" />

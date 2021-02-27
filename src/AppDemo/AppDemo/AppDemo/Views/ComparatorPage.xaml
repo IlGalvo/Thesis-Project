@@ -36,10 +36,10 @@
                         BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
                         HorizontalTextAlignment="Center" />
 
-                <Picker Title="Select artery1"
+                <Picker Title="Select main artery"
                         TitleColor="{StaticResource SecondaryColor}"
                         ItemsSource="{Binding Arteries}"
-                        SelectedItem="{Binding SelectedArtery1}"
+                        SelectedItem="{Binding SelectedMainArtery}"
                         TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
                         BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
                         HorizontalTextAlignment="Center" />
@@ -47,16 +47,16 @@
                        Text="{Binding EnteredOffset1}"
                        TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
                        Keyboard="Numeric"
-                       Placeholder="Insert offset1"
+                       Placeholder="Insert main artery offset"
                        PlaceholderColor="{StaticResource PlaceholderColor}"
                        BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
                        HorizontalTextAlignment="Center"
                        ReturnType="Next" />
 
-                <Picker Title="Select artery2"
+                <Picker Title="Select artery"
                         TitleColor="{StaticResource SecondaryColor}"
                         ItemsSource="{Binding Arteries}"
-                        SelectedItem="{Binding SelectedArtery2}"
+                        SelectedItem="{Binding SelectedArtery}"
                         TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
                         BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
                         HorizontalTextAlignment="Center" />
@@ -64,7 +64,7 @@
                        Text="{Binding EnteredOffset2}"
                        TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
                        Keyboard="Numeric"
-                       Placeholder="Insert offset2"
+                       Placeholder="Insert artery offset"
                        PlaceholderColor="{StaticResource PlaceholderColor}"
                        BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
                        HorizontalTextAlignment="Center"

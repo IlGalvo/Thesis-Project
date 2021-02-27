@@ -1,8 +1,5 @@
-﻿using AppDemo.ViewModels;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Net.Http;
-
+﻿using AppDemo.Internal;
+using AppDemo.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -13,7 +10,7 @@ namespace AppDemo.Views
     {
         private readonly EdgePageViewModel edgePageViewModel;
 
-        public EdgePage(string id)
+        public EdgePage(int id)
         {
             InitializeComponent();
 
@@ -22,18 +19,7 @@ namespace AppDemo.Views
 
         protected override async void OnAppearing()
         {
-            var tmpList = new List<string>();
-
-            using (var httpClient = new HttpClient())
-            {
-                var result = await httpClient.GetAsync("http://localhost:8000?q=arteries");
-
-                var text = await result.Content.ReadAsStringAsync();
-
-                tmpList = JsonConvert.DeserializeObject<List<string>>(text);
-            }
-
-            edgePageViewModel.Update(tmpList);
+            edgePageViewModel.Update(await HttpRequestClient.Instance.GetArteriesAsync());
 
             base.OnAppearing();
         }

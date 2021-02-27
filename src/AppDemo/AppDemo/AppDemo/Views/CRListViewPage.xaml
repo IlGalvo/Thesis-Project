@@ -72,10 +72,11 @@
                                        d:Text="{Binding}"
                                        FontSize="Title"
                                        VerticalTextAlignment="Center">
+
                                     <Label.Text>
-                                        <MultiBinding StringFormat="{}ID: {0}, Name: {1}">
-                                            <Binding Path="Id" />
+                                        <MultiBinding StringFormat="{}Name: {0}, Id: {1}">
                                             <Binding Path="Name" />
+                                            <Binding Path="Id" />
                                         </MultiBinding>
                                     </Label.Text>
                                 </Label>

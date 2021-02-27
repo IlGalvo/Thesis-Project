@@ -1,5 +1,6 @@
 ﻿using AppDemo.Internal;
 using AppDemo.Views;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace AppDemo.ViewModels
@@ -8,57 +9,39 @@ namespace AppDemo.ViewModels
     {
         public string EnteredId { get; set; }
 
-        public Command EdgeCommand { get; private set; }
-        public Command ComparatorCommand { get; private set; }
-        public Command GeneralCommand { get; private set; }
+        public ICommand ActionCommand { get; private set; }
 
         public AddPageViewModel()
         {
             EnteredId = string.Empty;
 
-            EdgeCommand = new Command(Edge);
-            ComparatorCommand = new Command(Comparator);
-            GeneralCommand = new Command(General);
+            ActionCommand = new Command<string>(Action);
         }
 
-        private bool Validate()
+        private async void Action(string type)
         {
-            return (!string.IsNullOrEmpty(EnteredId));
-        }
-
-        private void Edge()
-        {
-            if (Validate())
+            if (int.TryParse(EnteredId, out int id) && id > 0)
             {
-                CurrentPage.Navigation.PushAsync(new EdgePage(EnteredId));
+                Page page = null;
+
+                switch (type)
+                {
+                    case "Edge":
+                        page = new EdgePage(id);
+                        break;
+                    case "Comparator":
+                        page = new ComparatorPage(id);
+                        break;
+                    case "General":
+                        page = new GeneralPage(id);
+                        break;
+                }
+
+                await CurrentPage.Navigation.PushAsync(page);
             }
             else
             {
-                CurrentPage.DisplayAlert("Error", "Bhorobho", "Ok");
-            }
-        }
-
-        private void Comparator(object obj)
-        {
-            if (Validate())
-            {
-                CurrentPage.Navigation.PushAsync(new ComparatorPage(EnteredId));
-            }
-            else
-            {
-                CurrentPage.DisplayAlert("Error", "Bhorobho", "Ok");
-            }
-        }
-
-        private void General()
-        {
-            if (Validate())
-            {
-                CurrentPage.Navigation.PushAsync(new GeneralPage(EnteredId));
-            }
-            else
-            {
-                CurrentPage.DisplayAlert("Error", "Bhorobho", "Ok");
+                await CurrentPage.DisplayAlert("Error", "Enter a valid Id (natural number).", "Close");
             }
         }
     }
