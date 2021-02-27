@@ -1,28 +1,12 @@
 ﻿using AppDemo.Internal;
 using AppDemo.Views;
-using System.Collections.Generic;
-using System.ComponentModel;
 using Xamarin.Forms;
 
 namespace AppDemo.ViewModels
 {
-    public class AddPageViewModel : PageHelper, INotifyPropertyChanged
+    public class AddPageViewModel : PageHelper
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private List<string> arteries;
-        public List<string> Arteries
-        {
-            get { return arteries; }
-            set
-            {
-                arteries = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Arteries)));
-            }
-        }
-
         public string EnteredId { get; set; }
-        public string SelectedArtery { get; set; }
 
         public Command EdgeCommand { get; private set; }
         public Command ComparatorCommand { get; private set; }
@@ -30,24 +14,16 @@ namespace AppDemo.ViewModels
 
         public AddPageViewModel()
         {
-            Arteries = new List<string>();
-
             EnteredId = string.Empty;
-            SelectedArtery = string.Empty;
 
             EdgeCommand = new Command(Edge);
             ComparatorCommand = new Command(Comparator);
             GeneralCommand = new Command(General);
         }
 
-        public void Update(List<string> arteries)
-        {
-            Arteries = arteries;
-        }
-
         private bool Validate()
         {
-            return ((!string.IsNullOrEmpty(EnteredId)) && (!string.IsNullOrEmpty(SelectedArtery)));
+            return (!string.IsNullOrEmpty(EnteredId));
         }
 
         private void Edge()
@@ -78,7 +54,7 @@ namespace AppDemo.ViewModels
         {
             if (Validate())
             {
-                CurrentPage.Navigation.PushAsync(new GeneralPage(EnteredId, SelectedArtery));
+                CurrentPage.Navigation.PushAsync(new GeneralPage(EnteredId));
             }
             else
             {

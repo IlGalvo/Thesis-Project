@@ -13,11 +13,11 @@ namespace AppDemo.Views
     {
         private readonly GeneralPageViewModel generalPageViewModel;
 
-        public GeneralPage(string id, string artery)
+        public GeneralPage(string id)
         {
             InitializeComponent();
 
-            BindingContext = generalPageViewModel = new GeneralPageViewModel(id, artery);
+            BindingContext = generalPageViewModel = new GeneralPageViewModel(id);
         }
 
         protected override async void OnAppearing()

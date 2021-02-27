@@ -12,6 +12,17 @@ namespace AppDemo.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private List<string> arteries;
+        public List<string> Arteries
+        {
+            get { return arteries; }
+            set
+            {
+                arteries = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Arteries)));
+            }
+        }
+
         private List<string> texts;
         public List<string> Texts
         {
@@ -23,19 +34,21 @@ namespace AppDemo.ViewModels
             }
         }
 
+        public string SelectedArtery { get; set; }
         public string SelectedText { get; set; }
 
         public Command AddCommand { get; private set; }
 
         private readonly string id;
-        private readonly string artery;
 
-        public GeneralPageViewModel(string id, string artery)
+        public GeneralPageViewModel(string id)
         {
             this.id = id;
-            this.artery = artery;
 
+            Arteries = new List<string>();
             Texts = new List<string>();
+
+            SelectedArtery = string.Empty;
             SelectedText = string.Empty;
 
             AddCommand = new Command(Bhorobho);
@@ -53,7 +66,7 @@ namespace AppDemo.ViewModels
                 var cde = new Dictionary<string, string>
                 {
                     { "id", id },
-                    { "artery", artery },
+                    { "artery", SelectedArtery },
                     { "rule_type", "general" },
                     { "text", SelectedText }
                 };

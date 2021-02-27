@@ -18,14 +18,24 @@
                    FontSize="30"
                    VerticalOptions="StartAndExpand" />
 
-            <Picker Title="Select text"
-                    TitleColor="{StaticResource SecondaryColor}"
-                    ItemsSource="{Binding Texts}"
-                    SelectedItem="{Binding SelectedText}"
-                    TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
-                    HorizontalTextAlignment="Center"
-                    VerticalOptions="CenterAndExpand" />
+            <StackLayout Spacing="50"
+                         VerticalOptions="CenterAndExpand">
+
+                <Picker Title="Select artery"
+                        TitleColor="{StaticResource SecondaryColor}"
+                        ItemsSource="{Binding Arteries}"
+                        SelectedItem="{Binding SelectedArtery}"
+                        TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
+                        HorizontalTextAlignment="Center" />
+                <Picker Title="Select text"
+                        TitleColor="{StaticResource SecondaryColor}"
+                        ItemsSource="{Binding Texts}"
+                        SelectedItem="{Binding SelectedText}"
+                        TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
+                        HorizontalTextAlignment="Center" />
+            </StackLayout>
 
             <Button Text="Add"
                     TextColor="{StaticResource ButtonTextColor}"
