@@ -682,7 +682,7 @@ class S(BaseHTTPRequestHandler):
                 full_text+="]"
             elif "arteries" in query_components["q"]:
                 full_text = json.dumps(artery_list)
-            elif "general_rules" in query_components["q"]:
+            elif "general_texts" in query_components["q"]:
                 full_text = json.dumps(list(general_rule_dictionary.values()))
             else:
                 full_text = ""
@@ -695,6 +695,9 @@ class S(BaseHTTPRequestHandler):
     def do_POST(self):
         self._set_headers()
 
+        query_path = urlparse(self.path).query
+        query_components = parse_qs(query_path)
+
         content_length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(content_length)
 
@@ -703,48 +706,57 @@ class S(BaseHTTPRequestHandler):
         
         print(fields)
 
-        if "id" in fields and "artery" in fields and "rule_type" in fields:
-            id = fields["id"][0]
-            artery = fields["artery"][0]
+        if "action" in query_components:
+            if "insert" in query_components["action"]:
+                if "id" in fields and "artery" in fields and "rule_type" in fields:
+                    id = fields["id"][0]
+                    artery = fields["artery"][0]
 
-            rule_type = fields["rule_type"][0]
+                    rule_type = fields["rule_type"][0]
 
-            if rule_type == "general" and "text" in fields:
-                text = fields["text"][0]
+                    if rule_type == "general" and "text" in fields:
+                        text = fields["text"][0]
 
-                cr = ConfidenceRule(id, artery)
-                cr.set_rule(General(text, artery))
+                        cr = ConfidenceRule(id, artery)
+                        cr.set_rule(General(text, artery))
 
-                full_text += cr.to_json()
-            elif rule_type == "comparator" and "type" in fields and "mode" in fields and "offset1" in fields and "artery2" in fields and "offset2" in fields:
-                type = fields["type"][0]
+                        full_text += cr.to_json()
+                    elif rule_type == "comparator" and "type" in fields and "mode" in fields and "offset1" in fields and "artery2" in fields and "offset2" in fields:
+                        type = fields["type"][0]
 
-                if type == "cog_x":
-                    type = ComparatorType.Cog_X
-                elif type == "cog_z":
-                    type = ComparatorType.Cog_Z
-                else:
-                    type = ComparatorType.Heigth
+                        if type == "cog_x":
+                            type = ComparatorType.Cog_X
+                        elif type == "cog_z":
+                            type = ComparatorType.Cog_Z
+                        else:
+                            type = ComparatorType.Heigth
 
-                mode = ComparatorMode.Greater if ["mode"][0] == "greater" else "less"
+                        mode = ComparatorMode.Greater if ["mode"][0] == "greater" else "less"
 
-                offset1 = fields["offset1"][0]
+                        offset1 = fields["offset1"][0]
 
-                artery2 = fields["artery2"][0]
-                offset2 = fields["offset2"][0]
+                        artery2 = fields["artery2"][0]
+                        offset2 = fields["offset2"][0]
                 
-                cr = ConfidenceRule(id, artery)
-                cr.set_rule(Comparator(type, mode, artery, offset1, artery2, offset2))
+                        cr = ConfidenceRule(id, artery)
+                        cr.set_rule(Comparator(type, mode, artery, offset1, artery2, offset2))
 
-                full_text += cr.to_json()
-            elif rule_type == "edge" and "artery2" in fields and "is_transitive" in fields:
-                artery2 = fields["artery2"][0]
-                is_transitive = True if fields["is_transitive"][0] == "true" else False
+                        full_text += cr.to_json()
+                    elif rule_type == "edge" and "artery2" in fields and "is_transitive" in fields:
+                        artery2 = fields["artery2"][0]
+                        is_transitive = True if fields["is_transitive"][0] == "true" else False
 
-                cr = ConfidenceRule(id, artery)
-                cr.set_rule(Edge(artery, artery2, is_transitive))
+                        cr = ConfidenceRule(id, artery)
+                        cr.set_rule(Edge(artery, artery2, is_transitive))
 
-                full_text += cr.to_json()
+                        full_text += cr.to_json()
+            elif "delete" in query_components["action"]:
+                if "id" in fields and "name" in fields:
+                    id = fields["id"][0]
+                    artery = fields["name"][0]
+
+                    full_text = "ok"
+
 
         self.wfile.write(full_text.encode("utf8"))
 
