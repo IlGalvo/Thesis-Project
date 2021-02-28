@@ -71,7 +71,7 @@ namespace AppDemo.ViewModels
             return offset;
         }
 
-        protected override async void Add()
+        protected override async void Action(object value)
         {
             if ((!string.IsNullOrEmpty(SelectedMainArtery)) &&
                 (!string.IsNullOrEmpty(SelectedArtery)) &&

@@ -20,7 +20,7 @@ namespace AppDemo.Internal
 
         public async Task<List<ConfidenceRule>> GetConfidenceRulesAsync()
         {
-            var httpResponseMessage = await httpClient.GetAsync("http://localhost:8000?q=confidence_rules");
+            var httpResponseMessage = await httpClient.GetAsync("http://192.168.1.5:8000?q=confidence_rules");
             var jsonText = await httpResponseMessage.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<List<ConfidenceRule>>(jsonText);
@@ -28,7 +28,7 @@ namespace AppDemo.Internal
 
         public async Task<List<string>> GetArteriesAsync()
         {
-            var httpResponseMessage = await httpClient.GetAsync("http://localhost:8000?q=arteries");
+            var httpResponseMessage = await httpClient.GetAsync("http://192.168.1.5:8000?q=arteries");
             var jsonText = await httpResponseMessage.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<List<string>>(jsonText);
@@ -36,7 +36,7 @@ namespace AppDemo.Internal
 
         public async Task<List<string>> GetGeneralTextsAsync()
         {
-            var httpResponseMessage = await httpClient.GetAsync("http://localhost:8000?q=general_texts");
+            var httpResponseMessage = await httpClient.GetAsync("http://192.168.1.5:8000?q=general_texts");
             var jsonText = await httpResponseMessage.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<List<string>>(jsonText);
@@ -44,9 +44,9 @@ namespace AppDemo.Internal
 
         public async Task<ConfidenceRule> InsertAsync(Dictionary<string, string> dictionary)
         {
-            using (var formUrlEncodedContent = new FormUrlEncodedContent(dictionary))
+            using (var formUrlEncoded = new FormUrlEncodedContent(dictionary))
             {
-                var httpResponseMessage = await httpClient.PostAsync("http://localhost:8000?action=insert", formUrlEncodedContent);
+                var httpResponseMessage = await httpClient.PostAsync("http://192.168.1.5:8000?action=insert", formUrlEncoded);
                 var jsonText = await httpResponseMessage.Content.ReadAsStringAsync();
 
                 return JsonConvert.DeserializeObject<ConfidenceRule>(jsonText);
@@ -61,9 +61,9 @@ namespace AppDemo.Internal
                 { "name", name }
             };
 
-            using (var formUrlEncodedContent = new FormUrlEncodedContent(dictionary))
+            using (var formUrlEncoded = new FormUrlEncodedContent(dictionary))
             {
-                var httpResponseMessage = await httpClient.PostAsync("http://localhost:8000?action=delete", formUrlEncodedContent);
+                var httpResponseMessage = await httpClient.PostAsync("http://192.168.1.5:8000?action=delete", formUrlEncoded);
 
                 return await httpResponseMessage.Content.ReadAsStringAsync();
             }

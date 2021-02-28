@@ -1,5 +1,6 @@
 ﻿using AppDemo.Internal;
 using AppDemo.ViewModels;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -19,7 +20,14 @@ namespace AppDemo.Views
 
         protected override async void OnAppearing()
         {
-            crListViewPageViewModel.Update(await HttpRequestClient.Instance.GetConfidenceRulesAsync());
+            try
+            {
+                crListViewPageViewModel.Update(await HttpRequestClient.Instance.GetConfidenceRulesAsync());
+            }
+            catch(Exception ex)
+            {
+
+            }
 
             base.OnAppearing();
         }

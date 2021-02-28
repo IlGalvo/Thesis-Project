@@ -5,20 +5,16 @@ using Xamarin.Forms;
 
 namespace AppDemo.ViewModels
 {
-    public class CRPageViewModel : PageHelper
+    public class CRPageViewModel : BaseViewModel
     {
         public ConfidenceRule ConfidenceRule { get; }
-
-        public ICommand DeleteCommand { get; private set; }
 
         public CRPageViewModel(ConfidenceRule confidenceRule)
         {
             ConfidenceRule = confidenceRule;
-
-            DeleteCommand = new Command(Delete);
         }
 
-        private async void Delete()
+        protected override async void Action(object value)
         {
             var result = await HttpRequestClient.Instance.DeleteAsync(ConfidenceRule.Id, ConfidenceRule.Name);
 

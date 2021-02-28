@@ -10,10 +10,8 @@ using Xamarin.Forms;
 
 namespace AppDemo.ViewModels
 {
-    public class CRListViewPageViewModel : PageHelper, INotifyPropertyChanged
+    public class CRListViewPageViewModel : BaseViewModel
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private IEnumerable<ConfidenceRule> accountList;
         public IEnumerable<ConfidenceRule> AccountList
         {
@@ -21,7 +19,7 @@ namespace AppDemo.ViewModels
             set
             {
                 accountList = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AccountList)));
+                OnPropertyChanged();
             }
         }
 
@@ -32,7 +30,7 @@ namespace AppDemo.ViewModels
             set
             {
                 selectedAccount = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedAccount)));
+                OnPropertyChanged();
 
                 if (selectedAccount != null)
                 {
@@ -42,7 +40,6 @@ namespace AppDemo.ViewModels
         }
 
         public ICommand SearchCommand { get; private set; }
-        public ICommand AddCommand { get; private set; }
 
         private IEnumerable<ConfidenceRule> mainAccountList;
 
@@ -54,7 +51,6 @@ namespace AppDemo.ViewModels
             selectedAccount = null;
 
             SearchCommand = new Command<string>(Search);
-            AddCommand = new Command(Add);
         }
 
         public void Update(IEnumerable<ConfidenceRule> accountList)
@@ -67,7 +63,7 @@ namespace AppDemo.ViewModels
             AccountList = mainAccountList.Where(cr => cr.Name.StartsWith(seachFilter, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        private async void Add()
+        protected override async void Action(object value)
         {
             await CurrentPage.Navigation.PushAsync(new AddPage());
         }

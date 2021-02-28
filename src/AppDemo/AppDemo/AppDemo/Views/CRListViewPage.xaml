@@ -6,7 +6,9 @@
              xmlns:controls="clr-namespace:AppDemo.Controls"
              xmlns:internal="clr-namespace:AppDemo.Internal"
              mc:Ignorable="d"
-             x:Class="AppDemo.Views.CRListViewPage">
+             x:Class="AppDemo.Views.CRListViewPage"
+             Title="{StaticResource ApplicationName}"
+             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}">
 
     <ContentPage.Content>
         <StackLayout Orientation="Vertical"
@@ -42,7 +44,7 @@
                                  HeightRequest="0"
                                  CornerRadius="20"
                                  BackgroundColor="{StaticResource SecondaryColor}"
-                                 Command="{Binding AddCommand}"
+                                 Command="{Binding ActionCommand}"
                                  Grid.Row="0"
                                  Grid.Column="1" />
                 </Grid>

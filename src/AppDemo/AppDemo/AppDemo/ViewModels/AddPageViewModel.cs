@@ -5,26 +5,22 @@ using Xamarin.Forms;
 
 namespace AppDemo.ViewModels
 {
-    public class AddPageViewModel : PageHelper
+    public class AddPageViewModel : BaseViewModel
     {
         public string EnteredId { get; set; }
-
-        public ICommand ActionCommand { get; private set; }
 
         public AddPageViewModel()
         {
             EnteredId = string.Empty;
-
-            ActionCommand = new Command<string>(Action);
         }
 
-        private async void Action(string type)
+        protected override async void Action(object value)
         {
             if (int.TryParse(EnteredId, out int id) && id > 0)
             {
                 Page page = null;
 
-                switch (type)
+                switch (value.ToString())
                 {
                     case "Edge":
                         page = new EdgePage(id);

@@ -43,7 +43,7 @@
                     CornerRadius="20"
                     BackgroundColor="{StaticResource SecondaryColor}"
                     VerticalOptions="EndAndExpand"
-                    Command="{Binding AddCommand}" />
+                    Command="{Binding ActionCommand}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

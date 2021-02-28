@@ -31,7 +31,7 @@ namespace AppDemo.ViewModels
             Texts = texts;
         }
 
-        protected override async void Add()
+        protected override async void Action(object value)
         {
             if ((!string.IsNullOrEmpty(SelectedMainArtery)) && (!string.IsNullOrEmpty(SelectedText)))
             {
