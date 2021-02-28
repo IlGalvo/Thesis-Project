@@ -782,7 +782,7 @@ def main():
     #write_arteries_parsed(sys.argv[3], models, arteries, is_debug)
     #dot.render("Arteries.svg", view=is_debug)
 
-    server_address = ("localhost", 8000)
+    server_address = ("192.168.1.5", 8000)
     httpd = HTTPServer(server_address, S)
     httpd.RequestHandlerClass.set_c_rules(httpd.RequestHandlerClass, confidence_rules)
 
