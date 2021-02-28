@@ -24,9 +24,9 @@ namespace AppDemo.Views
             {
                 crListViewPageViewModel.Update(await HttpRequestClient.Instance.GetConfidenceRulesAsync());
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-
+                await DisplayAlert("error", ex.ToString(), "ok");
             }
 
             base.OnAppearing();
