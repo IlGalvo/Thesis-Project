@@ -1,0 +1,1 @@
+[INSERT]: confidence_rule(N,7) :- N = gastroduodenal, artery(ID1,_,_,_,_,_,_,_,_,_,_,N), artery(ID2,_,_,_,_,_,_,_,_,_,_,left_renal), edge(ID1,ID2).
