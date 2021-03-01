@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="AppDemo.Views.GeneralPage"
+             Title="{StaticResource ApplicationName}"
+             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}">
+
+    <ContentPage.Content>
+        <StackLayout Orientation="Vertical"
+                     Margin="30">
+
+            <Label Text="Add general rule"
+                   TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                   HorizontalTextAlignment="Center"
+                   FontSize="30"
+                   VerticalOptions="StartAndExpand" />
+
+            <StackLayout Spacing="50"
+                         VerticalOptions="CenterAndExpand">
+
+                <Picker Title="Select main artery"
+                        TitleColor="{StaticResource SecondaryColor}"
+                        ItemsSource="{Binding Arteries}"
+                        SelectedItem="{Binding SelectedMainArtery}"
+                        TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
+                        HorizontalTextAlignment="Center" />
+                <Picker Title="Select text"
+                        TitleColor="{StaticResource SecondaryColor}"
+                        ItemsSource="{Binding Texts}"
+                        SelectedItem="{Binding SelectedText}"
+                        TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
+                        HorizontalTextAlignment="Center" />
+            </StackLayout>
+
+            <Button Text="Add"
+                    TextColor="{StaticResource ButtonTextColor}"
+                    FontSize="18"
+                    CornerRadius="20"
+                    BackgroundColor="{StaticResource SecondaryColor}"
+                    VerticalOptions="EndAndExpand"
+                    Command="{Binding ActionCommand}" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
