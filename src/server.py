@@ -63,7 +63,7 @@ class ServerHandler(BaseHTTPRequestHandler):
         if "action" in query_components:
             if "insert" in query_components["action"]:
                 if "id" in fields and "artery" in fields and "rule_type" in fields:
-                    id = fields["id"][0]
+                    id = int(fields["id"][0])
                     artery = fields["artery"][0]
 
                     if any(confidence_rule for confidence_rule in self._confidence_rules
@@ -92,8 +92,7 @@ class ServerHandler(BaseHTTPRequestHandler):
                         else:
                             type = ComparatorType.Heigth
 
-                        mode = ComparatorMode.Greater if [
-                            "mode"][0] == "greater" else ComparatorMode.Less
+                        mode = ComparatorMode.Greater if ["mode"][0] == "greater" else ComparatorMode.Less
 
                         offset1 = fields["offset1"][0]
 
@@ -112,8 +111,7 @@ class ServerHandler(BaseHTTPRequestHandler):
                         is_transitive = True if fields["is_transitive"][0] == "true" else False
 
                         confidence_rule = ConfidenceRule(id, artery)
-                        confidence_rule.set_rule(
-                            Edge(artery, artery2, is_transitive))
+                        confidence_rule.set_rule(Edge(artery, artery2, is_transitive))
 
                         self._confidence_rules.append(confidence_rule)
 
@@ -122,7 +120,7 @@ class ServerHandler(BaseHTTPRequestHandler):
                 self._log("[INSERT]: " + confidence_rule.to_rule())
             elif "delete" in query_components["action"]:
                 if "id" in fields and "name" in fields:
-                    id = fields["id"][0]
+                    id = int(fields["id"][0])
                     artery = fields["name"][0]
 
                     confidence_rule = next((confidence_rule for confidence_rule in self._confidence_rules
@@ -139,16 +137,14 @@ class ServerHandler(BaseHTTPRequestHandler):
 
         self.wfile.write(full_text.encode("utf8"))
 
-        main.save_confidence_rules(
-            "confidence_rules.db", self._confidence_rules)
+        main.save_confidence_rules("confidence_rules.db", self._confidence_rules)
 
 
 class Server:
     def __init__(self, ip: str, port: int, confidence_rules: list):
         self._httpd = HTTPServer((ip, port), ServerHandler)
 
-        self._httpd.RequestHandlerClass.set_c_rules(
-            self._httpd.RequestHandlerClass, confidence_rules)
+        self._httpd.RequestHandlerClass.set_c_rules(self._httpd.RequestHandlerClass, confidence_rules)
 
     def run(self):
         try:

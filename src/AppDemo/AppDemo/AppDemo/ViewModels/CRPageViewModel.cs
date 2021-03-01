@@ -1,7 +1,5 @@
 ﻿using AppDemo.Internal;
 using AppDemo.Models;
-using System.Windows.Input;
-using Xamarin.Forms;
 
 namespace AppDemo.ViewModels
 {

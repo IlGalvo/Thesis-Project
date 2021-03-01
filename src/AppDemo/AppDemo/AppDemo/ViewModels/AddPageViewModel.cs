@@ -1,6 +1,4 @@
-﻿using AppDemo.Internal;
-using AppDemo.Views;
-using System.Windows.Input;
+﻿using AppDemo.Views;
 using Xamarin.Forms;
 
 namespace AppDemo.ViewModels

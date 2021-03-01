@@ -1,9 +1,7 @@
-﻿using AppDemo.Internal;
-using AppDemo.Models;
+﻿using AppDemo.Models;
 using AppDemo.Views;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;

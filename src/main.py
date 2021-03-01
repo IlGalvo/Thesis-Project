@@ -2,7 +2,7 @@ import sys
 import os
 import hashlib
 
-import parser
+import dataparser
 from server import *
 
 
@@ -27,7 +27,7 @@ def import_confidence_rules(file_name: str) -> list:
 
     with open(file_name, "r") as file:
         for line in file.readlines():
-            confidence_rule = parser.parse_confidence_rule(line)
+            confidence_rule = dataparser.parse_confidence_rule(line)
 
             confidence_rules.append(confidence_rule)
 
@@ -82,11 +82,9 @@ def main():
         with open(md5_file_name, "w") as md5_file:
             md5_file.write(md5_1)
 
-        models, confidence_rules = parser.parse_arteries_classifier(
-            sys.argv[1])
+        models, confidence_rules = dataparser.parse_arteries_classifier(sys.argv[1])
 
-        models, arteries, dot = parser.parse_artery_classified(
-            sys.argv[2], models, confidence_rules)
+        models, arteries, dot = dataparser.parse_artery_classified(sys.argv[2], models, confidence_rules)
 
         write_arteries_parsed(sys.argv[3], models, arteries, is_debug)
         dot.render("Arteries.svg", view=is_debug)
