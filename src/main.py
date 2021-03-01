@@ -2,7 +2,8 @@ import sys
 import os
 import hashlib
 
-from server import Server
+import parser
+from server import *
 
 
 def get_md5(file_name: str) -> str:
@@ -12,21 +13,25 @@ def get_md5(file_name: str) -> str:
         return hashlib.md5(data).hexdigest()
 
 
-def save_confidence_rules(file_name:str, confidence_rules:list):
+def save_confidence_rules(file_name: str, confidence_rules: list):
     with open(file_name, "w") as file:
-            for i in range(0, len(confidence_rules)):
-                file.write(confidence_rules[i].to_rule())
+        for i in range(0, len(confidence_rules)):
+            file.write(confidence_rules[i].to_rule())
 
-                if i != len(confidence_rules) - 1:
-                    file.write("\n")
+            if i != len(confidence_rules) - 1:
+                file.write("\n")
 
 
-def import_confidence_rules(file_name:str) -> list:
+def import_confidence_rules(file_name: str) -> list:
+    confidence_rules = []
+
     with open(file_name, "r") as file:
-            for line in file.readlines():
-                confidence_rule = parse_confidence_rule(line)
+        for line in file.readlines():
+            confidence_rule = parser.parse_confidence_rule(line)
 
-                confidence_rules.append(confidence_rule)
+            confidence_rules.append(confidence_rule)
+
+    return confidence_rules
 
 
 # Write out_arteries_parsed.lp as text
@@ -77,9 +82,11 @@ def main():
         with open(md5_file_name, "w") as md5_file:
             md5_file.write(md5_1)
 
-        models, confidence_rules = parse_arteries_classifier(sys.argv[1])
+        models, confidence_rules = parser.parse_arteries_classifier(
+            sys.argv[1])
 
-        models, arteries, dot = parse_artery_classified(sys.argv[2], models, confidence_rules)
+        models, arteries, dot = parser.parse_artery_classified(
+            sys.argv[2], models, confidence_rules)
 
         write_arteries_parsed(sys.argv[3], models, arteries, is_debug)
         dot.render("Arteries.svg", view=is_debug)

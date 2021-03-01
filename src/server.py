@@ -1,7 +1,9 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 import json
+
 from data import *
+import main
 
 
 class ServerHandler(BaseHTTPRequestHandler):
@@ -90,7 +92,8 @@ class ServerHandler(BaseHTTPRequestHandler):
                         else:
                             type = ComparatorType.Heigth
 
-                        mode = ComparatorMode.Greater if ["mode"][0] == "greater" else ComparatorMode.Less
+                        mode = ComparatorMode.Greater if [
+                            "mode"][0] == "greater" else ComparatorMode.Less
 
                         offset1 = fields["offset1"][0]
 
@@ -99,7 +102,7 @@ class ServerHandler(BaseHTTPRequestHandler):
 
                         confidence_rule = ConfidenceRule(id, artery)
                         confidence_rule.set_rule(Comparator(type, mode, artery,
-                                               offset1, artery2, offset2))
+                                                            offset1, artery2, offset2))
 
                         self._confidence_rules.append(confidence_rule)
 
@@ -109,7 +112,8 @@ class ServerHandler(BaseHTTPRequestHandler):
                         is_transitive = True if fields["is_transitive"][0] == "true" else False
 
                         confidence_rule = ConfidenceRule(id, artery)
-                        confidence_rule.set_rule(Edge(artery, artery2, is_transitive))
+                        confidence_rule.set_rule(
+                            Edge(artery, artery2, is_transitive))
 
                         self._confidence_rules.append(confidence_rule)
 
@@ -122,9 +126,9 @@ class ServerHandler(BaseHTTPRequestHandler):
                     artery = fields["name"][0]
 
                     confidence_rule = next((confidence_rule for confidence_rule in self._confidence_rules
-                                if confidence_rule.get_id() == id and confidence_rule.get_name() == artery), None)
+                                            if confidence_rule.get_id() == id and confidence_rule.get_name() == artery), None)
 
-                    if c_r != None:
+                    if confidence_rule != None:
                         self._confidence_rules.remove(confidence_rule)
 
                         full_text += "ok"
@@ -135,19 +139,16 @@ class ServerHandler(BaseHTTPRequestHandler):
 
         self.wfile.write(full_text.encode("utf8"))
 
-        with open("c_rules.db", "w") as tmp_file2:
-            for i in range(0, len(self._confidence_rules)):
-                tmp_file2.write(self._confidence_rules[i].to_rule())
-
-                if i != len(self._confidence_rules) - 1:
-                    tmp_file2.write("\n")
+        main.save_confidence_rules(
+            "confidence_rules.db", self._confidence_rules)
 
 
 class Server:
     def __init__(self, ip: str, port: int, confidence_rules: list):
         self._httpd = HTTPServer((ip, port), ServerHandler)
 
-        self._httpd.RequestHandlerClass.set_c_rules(self._httpd.RequestHandlerClass, confidence_rules)
+        self._httpd.RequestHandlerClass.set_c_rules(
+            self._httpd.RequestHandlerClass, confidence_rules)
 
     def run(self):
         try:

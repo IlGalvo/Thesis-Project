@@ -47,7 +47,7 @@ class ConfidenceRule(IRule):
 
 # Edge rule referes to two arteries and can be transitive
 class Edge(IRule):
-    def __init__(self, artery1: str, artery2: str, is_transitive: bool=False):
+    def __init__(self, artery1: str, artery2: str, is_transitive: bool = False):
         self._artery1 = artery1
         self._artery2 = artery2
 
@@ -158,7 +158,7 @@ class Comparator(IRule):
 
 # General rule has a text description and can refer to an artery
 class General(IRule):
-    def __init__(self, rule_text: str, artery: str=None):
+    def __init__(self, rule_text: str, artery: str = None):
         self._rule_text = rule_text
         self._artery = artery
 
@@ -217,7 +217,7 @@ general_rule_dictionary = {
 }
 
 artery_list = ["celiac_trunk", "left_gastric", "splenic", "common_hepatic", "proper_hepatic",
-    "dorsal_pancreatic", "left_renal", "right_renal", "accessory_left_renal",
-    "accessory_right_renal", "gastroduodenal", "left_hepatic", "right_hepatic",
-    "superior_mesenteric", "left_intercostal_1", "right_intercostal_1",
-    "left_intercostal_2", "right_intercostal_2"]
+               "dorsal_pancreatic", "left_renal", "right_renal", "accessory_left_renal",
+               "accessory_right_renal", "gastroduodenal", "left_hepatic", "right_hepatic",
+               "superior_mesenteric", "left_intercostal_1", "right_intercostal_1",
+               "left_intercostal_2", "right_intercostal_2"]
