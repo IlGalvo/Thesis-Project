@@ -7,149 +7,178 @@ import main
 
 
 class ServerHandler(BaseHTTPRequestHandler):
-    def set_c_rules(self, confidence_rules: list):
+    def set_confidence_rules(self, confidence_rules: list):
         self._confidence_rules = confidence_rules
 
-    def _log(self, text):
+    def _confidence_rules_to_json(self):
+        text = "["
+
+        for i in range(0, len(self._confidence_rules)):
+            text += self._confidence_rules[i].to_json()
+
+            if i < len(self._confidence_rules) - 1:
+                text += ", "
+
+        return text + "]"
+
+    def _log(self, text: str):
         with open("server_log.txt", "a+") as log_file:
             log_file.write(text + "\n")
 
-    def _set_headers(self):
+    def _set_ok_headers(self):
         self.send_response(200)
         self.send_header("Content-type", "application/json")
         self.end_headers()
 
-    def do_GET(self):
-        self._set_headers()
+    def _set_ko_headers(self):
+        self.send_response(400)
+        self.send_header("Content-type", "text/plain")
+        self.end_headers()
 
+    def _write_ok_response(self, text:str):
+        self._set_ok_headers()
+
+        self.wfile.write(text.encode("utf8"))
+
+    def _write_ko_response(self, text:str):
+        self._set_ko_headers()
+
+        self.wfile.write(text.encode("utf8"))
+
+    def _write_add_confidence_rule(self, confidence_rule:ConfidenceRule):
+        self._confidence_rules.append(confidence_rule)
+
+        text = confidence_rule.to_json()
+        self._write_ok_response(text)
+
+        self._log("[INSERT]: " + confidence_rule.to_rule())
+        main.save_confidence_rules("confidence_rules.db", self._confidence_rules)
+
+    def do_GET(self):
         query_path = urlparse(self.path).query
         query_components = parse_qs(query_path)
 
         if "q" in query_components:
             if "confidence_rules" in query_components["q"]:
-                full_text = "["
-
-                for i in range(0, len(self._confidence_rules)):
-                    full_text += self._confidence_rules[i].to_json()
-
-                    if i < len(self._confidence_rules) - 1:
-                        full_text += ", "
-
-                full_text += "]"
+                text = self._confidence_rules_to_json()
+                self._write_ok_response(text)
             elif "arteries" in query_components["q"]:
-                full_text = json.dumps(artery_list)
+                text = json.dumps(artery_list)
+                self._write_ok_response(text)
             elif "general_texts" in query_components["q"]:
-                full_text = json.dumps(list(general_rule_dictionary.values()))
+                text = json.dumps(list(general_rule_dictionary.values()))
+                self._write_ok_response(text)
+            elif "comparator_types" in query_components["q"]:
+                text = json.dumps([ctype.name for ctype in ComparatorType])
+                self._write_ok_response(text)
+            elif "comparator_modes" in query_components["q"]:
+                text = json.dumps([cmode.name for cmode in ComparatorMode])
+                self._write_ok_response(text)
             else:
-                full_text = "ToDo: Handle 400 Error"
-
-            self.wfile.write(full_text.encode("utf8"))
+                text = "ToDo: Handle 400 Error"
+                self._write_ko_response(text)
+        else:
+            text = "ToDo: Handle 400 Error"
+            self._write_ko_response(text)
 
     def do_HEAD(self):
-        self._set_headers()
+        self._set_ok_headers()
 
     def do_POST(self):
-        self._set_headers()
-
         query_path = urlparse(self.path).query
         query_components = parse_qs(query_path)
 
         content_length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(content_length)
 
-        fields = parse_qs(post_data.decode("utf8"), True)
-        full_text = ""
+        post_fields = parse_qs(post_data.decode("utf8"), True)
 
         if "action" in query_components:
             if "insert" in query_components["action"]:
-                if "id" in fields and "artery" in fields and "rule_type" in fields:
-                    id = int(fields["id"][0])
-                    artery = fields["artery"][0]
+                if "main_artery" in post_fields and "rule_type" in post_fields:
+                    main_artery = post_fields["main_artery"][0]
+                    rule_type = post_fields["rule_type"][0]
 
-                    if any(confidence_rule for confidence_rule in self._confidence_rules
-                           if confidence_rule.get_id() == id and confidence_rule.get_name() == artery):
-                        error = "ToDo: Handle <already exists> Error"
-                        return
+                    iterator = filter(lambda confidence_rule: confidence_rule.get_name() == main_artery, self._confidence_rules)
+                    id = max(iterator, key=lambda confidence_rule: confidence_rule.get_id()).get_id()
 
-                    rule_type = fields["rule_type"][0]
+                    if rule_type == "edge" and "artery" in post_fields and "is_transitive" in post_fields:
+                        artery = post_fields["artery"][0]
+                        is_transitive = json.loads(post_fields["is_transitive"][0].lower())
 
-                    if rule_type == "general" and "text" in fields:
-                        text = fields["text"][0]
+                        confidence_rule = ConfidenceRule(id, main_artery)
+                        confidence_rule.set_rule(Edge(main_artery, artery, is_transitive))
 
-                        confidence_rule = ConfidenceRule(id, artery)
-                        confidence_rule.set_rule(General(text, artery))
+                        self._write_add_confidence_rule(confidence_rule)
+                    elif rule_type == "comparator" and "type" in post_fields and "mode" in post_fields and "offset1" in post_fields and "artery" in post_fields and "offset2" in post_fields:
+                        type = post_fields["type"][0]
+                        type = ComparatorType[type]
 
-                        self._confidence_rules.append(confidence_rule)
+                        mode = post_fields["mode"][0]
+                        mode = ComparatorMode[mode]
 
-                        full_text += confidence_rule.to_json()
-                    elif rule_type == "comparator" and "type" in fields and "mode" in fields and "offset1" in fields and "artery2" in fields and "offset2" in fields:
-                        type = fields["type"][0]
+                        offset1 = post_fields["offset1"][0]
 
-                        if type == "cog_x":
-                            type = ComparatorType.Cog_X
-                        elif type == "cog_z":
-                            type = ComparatorType.Cog_Z
-                        else:
-                            type = ComparatorType.Heigth
+                        artery = post_fields["artery"][0]
+                        offset2 = post_fields["offset2"][0]
 
-                        mode = ComparatorMode.Greater if ["mode"][0] == "greater" else ComparatorMode.Less
+                        confidence_rule = ConfidenceRule(id, main_artery)
+                        confidence_rule.set_rule(Comparator(type, mode, main_artery, offset1, artery, offset2))
 
-                        offset1 = fields["offset1"][0]
+                        self._write_add_confidence_rule(confidence_rule)
+                    elif rule_type == "general" and "text" in post_fields:
+                        text = post_fields["text"][0]
 
-                        artery2 = fields["artery2"][0]
-                        offset2 = fields["offset2"][0]
+                        confidence_rule = ConfidenceRule(id, main_artery)
+                        confidence_rule.set_rule(General(text, main_artery))
 
-                        confidence_rule = ConfidenceRule(id, artery)
-                        confidence_rule.set_rule(Comparator(type, mode, artery,
-                                                            offset1, artery2, offset2))
-
-                        self._confidence_rules.append(confidence_rule)
-
-                        full_text += confidence_rule.to_json()
-                    elif rule_type == "edge" and "artery2" in fields and "is_transitive" in fields:
-                        artery2 = fields["artery2"][0]
-                        is_transitive = True if fields["is_transitive"][0] == "true" else False
-
-                        confidence_rule = ConfidenceRule(id, artery)
-                        confidence_rule.set_rule(Edge(artery, artery2, is_transitive))
-
-                        self._confidence_rules.append(confidence_rule)
-
-                        full_text += confidence_rule.to_json()
-
-                self._log("[INSERT]: " + confidence_rule.to_rule())
+                        self._write_add_confidence_rule(confidence_rule)
+                    else:
+                        text = "ToDo: Handle 400 Error"
+                        self._write_ko_response(text)
+                else:
+                    text = "ToDo: Handle 400 Error"
+                    self._write_ko_response(text)
             elif "delete" in query_components["action"]:
-                if "id" in fields and "name" in fields:
-                    id = int(fields["id"][0])
-                    artery = fields["name"][0]
+                if "id" in post_fields and "name" in post_fields:
+                    id = int(post_fields["id"][0])
+                    name = post_fields["name"][0]
 
                     confidence_rule = next((confidence_rule for confidence_rule in self._confidence_rules
-                                            if confidence_rule.get_id() == id and confidence_rule.get_name() == artery), None)
+                                            if confidence_rule.get_id() == id and confidence_rule.get_name() == name), None)
 
                     if confidence_rule != None:
                         self._confidence_rules.remove(confidence_rule)
 
-                        full_text += "ok"
+                        self._set_ok_headers()
 
                         self._log("[DELETED]: " + confidence_rule.to_rule())
+                        main.save_confidence_rules("confidence_rules.db", self._confidence_rules)
                     else:
-                        full_text += "ko"
-
-        self.wfile.write(full_text.encode("utf8"))
-
-        main.save_confidence_rules("confidence_rules.db", self._confidence_rules)
+                        text = "ToDo: Handle 400 Error"
+                        self._write_ko_response(text)
+                else:
+                    text = "ToDo: Handle 400 Error"
+                    self._write_ko_response(text)
+            else:
+                text = "ToDo: Handle 400 Error"
+                self._write_ko_response(text)
+        else:
+            text = "ToDo: Handle 400 Error"
+            self._write_ko_response(text)
 
 
 class Server:
     def __init__(self, ip: str, port: int, confidence_rules: list):
-        self._httpd = HTTPServer((ip, port), ServerHandler)
+        self._http_server = HTTPServer((ip, port), ServerHandler)
 
-        self._httpd.RequestHandlerClass.set_c_rules(self._httpd.RequestHandlerClass, confidence_rules)
+        handler = self._http_server.RequestHandlerClass
+        handler.set_confidence_rules(handler, confidence_rules)
 
     def run(self):
         try:
-            self._httpd.serve_forever()
+            self._http_server.serve_forever()
         except KeyboardInterrupt:
             pass
 
-        self._httpd.server_close()
+        self._http_server.server_close()

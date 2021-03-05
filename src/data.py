@@ -47,7 +47,7 @@ class ConfidenceRule(IRule):
 
 # Edge rule referes to two arteries and can be transitive
 class Edge(IRule):
-    def __init__(self, artery1: str, artery2: str, is_transitive: bool = False):
+    def __init__(self, artery1: str, artery2: str, is_transitive: bool=False):
         self._artery1 = artery1
         self._artery2 = artery2
 
@@ -79,14 +79,14 @@ class Edge(IRule):
 
 # Comparator rule param types
 class ComparatorType(Enum):
-    Cog_X = 0,
-    Cog_Z = 1,
-    Heigth = 2,
+    Cog_X = 0
+    Cog_Z = 1
+    Heigth = 2
 
 
 # Comparator rule can be greater or less
 class ComparatorMode(Enum):
-    Greater = 0,
+    Greater = 0
     Less = 1
 
 
@@ -158,7 +158,7 @@ class Comparator(IRule):
 
 # General rule has a text description and can refer to an artery
 class General(IRule):
-    def __init__(self, rule_text: str, artery: str = None):
+    def __init__(self, rule_text: str, artery: str=None):
         self._rule_text = rule_text
         self._artery = artery
 
