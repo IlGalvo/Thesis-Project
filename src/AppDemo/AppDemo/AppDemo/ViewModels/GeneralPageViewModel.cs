@@ -17,9 +17,9 @@ namespace AppDemo.ViewModels
 
         public string SelectedText { get; set; }
 
-        public GeneralPageViewModel(int id) : base(id)
+        public GeneralPageViewModel(List<string> arteries, List<string> texts) : base(arteries)
         {
-            Texts = new List<string>();
+            Texts = texts;
 
             SelectedText = string.Empty;
         }
@@ -37,8 +37,7 @@ namespace AppDemo.ViewModels
             {
                 var dictionary = new Dictionary<string, string>
                 {
-                    { "id", id.ToString() },
-                    { "artery", SelectedMainArtery },
+                    { "main_artery", SelectedMainArtery },
                     { "rule_type", "general" },
                     { "text", SelectedText }
                 };

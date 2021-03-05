@@ -1,5 +1,6 @@
 ﻿using AppDemo.Internal;
 using AppDemo.Models;
+using System;
 
 namespace AppDemo.ViewModels
 {
@@ -14,15 +15,13 @@ namespace AppDemo.ViewModels
 
         protected override async void Action(object value)
         {
-            var result = await HttpRequestClient.Instance.DeleteAsync(ConfidenceRule.Id, ConfidenceRule.Name);
-
-            if (result == "ok")
+            try
             {
-                await CurrentPage.DisplayAlert("Info", "Deleted", "Ok");
+                await HttpRequestClient.Instance.DeleteAsync(ConfidenceRule.Id, ConfidenceRule.Name);
             }
-            else
+            catch (Exception exception)
             {
-                await CurrentPage.DisplayAlert("Info", "Not Deleted", "Ok");
+                await CurrentPage.DisplayAlert("Error", exception.ToString(), "Close");
             }
         }
     }

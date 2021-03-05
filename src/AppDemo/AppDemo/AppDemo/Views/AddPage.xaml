@@ -16,21 +16,9 @@
                    TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
                    HorizontalTextAlignment="Center"
                    FontSize="30"
-                   VerticalOptions="StartAndExpand" />
+                   VerticalOptions="Start" />
 
-
-            <Entry x:Name="entryPasswordEntered"
-                   Text="{Binding EnteredId}"
-                   TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
-                   Keyboard="Numeric"
-                   Placeholder="Insert Id"
-                   PlaceholderColor="{StaticResource PlaceholderColor}"
-                   BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
-                   HorizontalTextAlignment="Center"
-                   VerticalOptions="CenterAndExpand"
-                   ReturnType="Next" />
-
-            <StackLayout VerticalOptions="EndAndExpand"
+            <StackLayout VerticalOptions="CenterAndExpand"
                          Spacing="20">
 
                 <Button Text="Edge"

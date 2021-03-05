@@ -1,5 +1,5 @@
-﻿using AppDemo.Internal;
-using AppDemo.ViewModels;
+﻿using AppDemo.ViewModels;
+using System.Collections.Generic;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -8,20 +8,11 @@ namespace AppDemo.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ComparatorPage : ContentPage
     {
-        private readonly ComparatorPageViewModel comparatorPageViewModel;
-
-        public ComparatorPage(int id)
+        public ComparatorPage(List<string> arteries)
         {
             InitializeComponent();
 
-            BindingContext = comparatorPageViewModel = new ComparatorPageViewModel(id);
-        }
-
-        protected override async void OnAppearing()
-        {
-            comparatorPageViewModel.Update(await HttpRequestClient.Instance.GetArteriesAsync());
-
-            base.OnAppearing();
+            BindingContext = new ComparatorPageViewModel(arteries);
         }
     }
 }

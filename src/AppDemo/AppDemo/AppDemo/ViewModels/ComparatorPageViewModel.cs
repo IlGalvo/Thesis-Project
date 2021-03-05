@@ -35,11 +35,8 @@ namespace AppDemo.ViewModels
         public string SelectedArtery { get; set; }
         public string EnteredOffset2 { get; set; }
 
-        public ComparatorPageViewModel(int id) : base(id)
+        public ComparatorPageViewModel(List<string> arteries) : base(arteries)
         {
-            Modes = new List<string>() { "cog_x", "cog_z", "heigth" };
-            Types = new List<string>() { "greater", "less" };
-
             SelectedType = string.Empty;
             SelectedMode = string.Empty;
 
@@ -82,13 +79,12 @@ namespace AppDemo.ViewModels
 
                 var dictionary = new Dictionary<string, string>
                 {
-                    { "id", id.ToString() },
-                    { "artery", SelectedMainArtery },
+                    { "main_artery", SelectedMainArtery },
                     { "rule_type", "comparator" },
                     { "type", SelectedType },
                     { "mode", SelectedMode },
                     { "offset1", offset1 },
-                    { "artery2", SelectedArtery },
+                    { "artery", SelectedArtery },
                     { "offset2", offset2 }
                 };
 
@@ -96,7 +92,7 @@ namespace AppDemo.ViewModels
             }
             else
             {
-                await CurrentPage.DisplayAlert("Error", "Arteries cannot be empty or the equal.", "Close");
+                await CurrentPage.DisplayAlert("Error", "Arteries cannot be empty or equal.", "Close");
             }
         }
     }

@@ -1,5 +1,5 @@
-﻿using AppDemo.Internal;
-using AppDemo.ViewModels;
+﻿using AppDemo.ViewModels;
+using System.Collections.Generic;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -8,23 +8,11 @@ namespace AppDemo.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class GeneralPage : ContentPage
     {
-        private readonly GeneralPageViewModel generalPageViewModel;
-
-        public GeneralPage(int id)
+        public GeneralPage(List<string> arteries, List<string> texts)
         {
             InitializeComponent();
 
-            BindingContext = generalPageViewModel = new GeneralPageViewModel(id);
-        }
-
-        protected override async void OnAppearing()
-        {
-            var arteries = await HttpRequestClient.Instance.GetArteriesAsync();
-            var texts = await HttpRequestClient.Instance.GetGeneralTextsAsync();
-
-            generalPageViewModel.Update(arteries, texts);
-
-            base.OnAppearing();
+            BindingContext = new GeneralPageViewModel(arteries, texts);
         }
     }
 }

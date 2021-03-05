@@ -12,7 +12,7 @@ namespace AppDemo.ViewModels
 
         public ICommand ActionCommand { get; private set; }
 
-        public BaseViewModel()
+        protected BaseViewModel()
         {
             ActionCommand = new Command(Action);
         }

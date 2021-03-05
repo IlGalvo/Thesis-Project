@@ -25,8 +25,7 @@
                        TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
                        HorizontalTextAlignment="Start"
                        FontSize="20" />
-                <Editor x:Name="entryPasswordEntered1"
-                        Text="{Binding ConfidenceRule.Text}"
+                <Editor Text="{Binding ConfidenceRule.Text}"
                         TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
                         BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
                         AutoSize="TextChanges"
@@ -36,8 +35,7 @@
                        TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
                        HorizontalTextAlignment="Start"
                        FontSize="20" />
-                <Editor x:Name="entryPasswordEntered2"
-                        Text="{Binding ConfidenceRule.Rule}"
+                <Editor Text="{Binding ConfidenceRule.Rule}"
                         TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
                         BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
                         AutoSize="TextChanges"

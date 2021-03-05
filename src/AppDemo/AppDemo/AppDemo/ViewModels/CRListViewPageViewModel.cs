@@ -1,4 +1,5 @@
-﻿using AppDemo.Models;
+﻿using AppDemo.Internal;
+using AppDemo.Models;
 using AppDemo.Views;
 using System;
 using System.Collections.Generic;
@@ -10,27 +11,38 @@ namespace AppDemo.ViewModels
 {
     public class CRListViewPageViewModel : BaseViewModel
     {
-        private IEnumerable<ConfidenceRule> accountList;
-        public IEnumerable<ConfidenceRule> AccountList
+        private bool isRefreshing;
+        public bool IsRefreshing
         {
-            get { return accountList; }
+            get { return isRefreshing; }
             set
             {
-                accountList = value;
+                isRefreshing = value;
                 OnPropertyChanged();
             }
         }
 
-        private ConfidenceRule selectedAccount;
-        public ConfidenceRule SelectedAccount
+        private IEnumerable<ConfidenceRule> confidenceRules;
+        public IEnumerable<ConfidenceRule> ConfidenceRules
         {
-            get { return selectedAccount; }
+            get { return confidenceRules; }
             set
             {
-                selectedAccount = value;
+                confidenceRules = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ConfidenceRule selectedConfidenceRule;
+        public ConfidenceRule SelectedConfidenceRule
+        {
+            get { return selectedConfidenceRule; }
+            set
+            {
+                selectedConfidenceRule = value;
                 OnPropertyChanged();
 
-                if (selectedAccount != null)
+                if (selectedConfidenceRule != null)
                 {
                     ManageSelectedConfidenceRule();
                 }
@@ -38,27 +50,43 @@ namespace AppDemo.ViewModels
         }
 
         public ICommand SearchCommand { get; private set; }
+        public ICommand RefreshCommand { get; private set; }
 
-        private IEnumerable<ConfidenceRule> mainAccountList;
+        private IEnumerable<ConfidenceRule> mainConfidenceRules;
 
         public CRListViewPageViewModel()
         {
-            mainAccountList = new List<ConfidenceRule>();
-            accountList = null;
+            mainConfidenceRules = new List<ConfidenceRule>();
+            confidenceRules = null;
 
-            selectedAccount = null;
+            selectedConfidenceRule = null;
 
             SearchCommand = new Command<string>(Search);
-        }
-
-        public void Update(IEnumerable<ConfidenceRule> accountList)
-        {
-            AccountList = mainAccountList = accountList;
+            RefreshCommand = new Command(Refresh);
         }
 
         private void Search(string seachFilter)
         {
-            AccountList = mainAccountList.Where(cr => cr.Name.StartsWith(seachFilter, StringComparison.InvariantCultureIgnoreCase));
+            ConfidenceRules = mainConfidenceRules.Where(confidenceRule => confidenceRule.Name.StartsWith(seachFilter,
+                StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        public async void Refresh()
+        {
+            IsRefreshing = true;
+
+            try
+            {
+                var confidenceRules = await HttpRequestClient.Instance.GetConfidenceRulesAsync();
+
+                ConfidenceRules = mainConfidenceRules = confidenceRules;
+            }
+            catch (Exception exception)
+            {
+                await CurrentPage.DisplayAlert("Error", exception.Message, "Close");
+            }
+
+            IsRefreshing = false;
         }
 
         protected override async void Action(object value)
@@ -68,9 +96,9 @@ namespace AppDemo.ViewModels
 
         private async void ManageSelectedConfidenceRule()
         {
-            await CurrentPage.Navigation.PushAsync(new CRPage(SelectedAccount));
+            await CurrentPage.Navigation.PushAsync(new CRPage(SelectedConfidenceRule));
 
-            SelectedAccount = null;
+            SelectedConfidenceRule = null;
         }
     }
 }

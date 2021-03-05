@@ -1,6 +1,4 @@
-﻿using AppDemo.Internal;
-using AppDemo.ViewModels;
-using System;
+﻿using AppDemo.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -9,25 +7,16 @@ namespace AppDemo.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CRListViewPage : ContentPage
     {
-        private readonly CRListViewPageViewModel crListViewPageViewModel;
-
         public CRListViewPage()
         {
             InitializeComponent();
 
-            BindingContext = crListViewPageViewModel = new CRListViewPageViewModel();
+            BindingContext = new CRListViewPageViewModel();
         }
 
-        protected override async void OnAppearing()
+        protected override void OnAppearing()
         {
-            try
-            {
-                crListViewPageViewModel.Update(await HttpRequestClient.Instance.GetConfidenceRulesAsync());
-            }
-            catch (Exception ex)
-            {
-                await DisplayAlert("error", ex.ToString(), "ok");
-            }
+            ((CRListViewPageViewModel)BindingContext).Refresh();
 
             base.OnAppearing();
         }

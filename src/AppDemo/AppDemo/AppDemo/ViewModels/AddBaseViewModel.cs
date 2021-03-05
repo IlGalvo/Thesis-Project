@@ -20,13 +20,9 @@ namespace AppDemo.ViewModels
 
         public string SelectedMainArtery { get; set; }
 
-        protected readonly int id;
-
-        protected AddBaseViewModel(int id)
+        protected AddBaseViewModel(List<string> arteries)
         {
-            this.id = id;
-
-            Arteries = new List<string>();
+            Arteries = arteries;
 
             SelectedMainArtery = string.Empty;
         }

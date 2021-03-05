@@ -50,11 +50,14 @@
                 </Grid>
             </Frame>
 
-            <ListView ItemsSource="{Binding AccountList}"
-                      SelectedItem="{Binding SelectedAccount, Mode=TwoWay}"
+            <ListView ItemsSource="{Binding ConfidenceRules}"
+                      SelectedItem="{Binding SelectedConfidenceRule, Mode=TwoWay}"
                       CachingStrategy="RecycleElement"
                       HasUnevenRows="True"
-                      SeparatorColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}">
+                      SeparatorColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                      IsPullToRefreshEnabled="True"
+                      RefreshCommand="{Binding RefreshCommand}"
+                      IsRefreshing="{Binding IsRefreshing}">
 
                 <d:ListView.ItemsSource>
                     <x:Array Type="{x:Type x:String}">

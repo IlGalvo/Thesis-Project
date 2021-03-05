@@ -8,16 +8,11 @@ namespace AppDemo.ViewModels
 
         public bool IsTransitive { get; set; }
 
-        public EdgePageViewModel(int id) : base(id)
+        public EdgePageViewModel(List<string> arteries) : base(arteries)
         {
             SelectedArtery = string.Empty;
 
             IsTransitive = false;
-        }
-
-        public void Update(List<string> arteries)
-        {
-            Arteries = arteries;
         }
 
         protected override async void Action(object value)
@@ -28,10 +23,9 @@ namespace AppDemo.ViewModels
             {
                 var dictionary = new Dictionary<string, string>
                 {
-                    { "id", id.ToString() },
-                    { "artery", SelectedMainArtery },
+                    { "main_artery", SelectedMainArtery },
                     { "rule_type", "edge" },
-                    { "artery2", SelectedArtery },
+                    { "artery", SelectedArtery },
                     { "is_transitive", IsTransitive.ToString() }
                 };
 

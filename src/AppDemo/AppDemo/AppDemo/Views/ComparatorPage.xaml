@@ -43,8 +43,7 @@
                         TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
                         BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
                         HorizontalTextAlignment="Center" />
-                <Entry x:Name="entryPasswordEntered1"
-                       Text="{Binding EnteredOffset1}"
+                <Entry Text="{Binding EnteredOffset1}"
                        TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
                        Keyboard="Numeric"
                        Placeholder="Insert main artery offset"
@@ -60,8 +59,7 @@
                         TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
                         BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
                         HorizontalTextAlignment="Center" />
-                <Entry x:Name="entryPasswordEntered2"
-                       Text="{Binding EnteredOffset2}"
+                <Entry Text="{Binding EnteredOffset2}"
                        TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
                        Keyboard="Numeric"
                        Placeholder="Insert artery offset"

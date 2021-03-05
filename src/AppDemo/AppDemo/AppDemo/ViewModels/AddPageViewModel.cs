@@ -1,41 +1,38 @@
-﻿using AppDemo.Views;
-using Xamarin.Forms;
+﻿using AppDemo.Internal;
+using AppDemo.Views;
+using System;
 
 namespace AppDemo.ViewModels
 {
     public class AddPageViewModel : BaseViewModel
     {
-        public string EnteredId { get; set; }
-
-        public AddPageViewModel()
-        {
-            EnteredId = string.Empty;
-        }
-
         protected override async void Action(object value)
         {
-            if (int.TryParse(EnteredId, out int id) && id > 0)
+            try
             {
-                Page page = null;
+                var arteries = await HttpRequestClient.Instance.GetArteriesAsync();
 
                 switch (value.ToString())
                 {
                     case "Edge":
-                        page = new EdgePage(id);
+                        await CurrentPage.Navigation.PushAsync(new EdgePage(arteries));
                         break;
                     case "Comparator":
-                        page = new ComparatorPage(id);
+                        var types = await HttpRequestClient.Instance.GetComparatorTypesAsync();
+                        var modes = await HttpRequestClient.Instance.GetComparatorModesAsync();
+
+                        await CurrentPage.Navigation.PushAsync(new ComparatorPage(arteries));
                         break;
                     case "General":
-                        page = new GeneralPage(id);
+                        var texts = await HttpRequestClient.Instance.GetGeneralTextsAsync();
+
+                        await CurrentPage.Navigation.PushAsync(new GeneralPage(arteries, texts));
                         break;
                 }
-
-                await CurrentPage.Navigation.PushAsync(page);
             }
-            else
+            catch (Exception exception)
             {
-                await CurrentPage.DisplayAlert("Error", "Enter a valid Id (natural number).", "Close");
+                await CurrentPage.DisplayAlert("Error", exception.Message, "Close");
             }
         }
     }
