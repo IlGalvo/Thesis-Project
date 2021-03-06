@@ -6,14 +6,14 @@
              mc:Ignorable="d"
              x:Class="AppDemo.Views.CRPage"
              Title="{StaticResource ApplicationName}"
-             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}">
+             BackgroundColor="{StaticResource BackgroundColor}">
 
     <ContentPage.Content>
         <StackLayout Orientation="Vertical"
                      Margin="30">
 
             <Label Text="View confidence rule"
-                   TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                   TextColor="{StaticResource PrimaryColor}"
                    HorizontalTextAlignment="Center"
                    FontSize="30"
                    VerticalOptions="StartAndExpand" />
@@ -22,22 +22,22 @@
                          VerticalOptions="CenterAndExpand">
 
                 <Label Text="Text:"
-                       TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                       TextColor="{StaticResource PrimaryColor}"
                        HorizontalTextAlignment="Start"
                        FontSize="20" />
                 <Editor Text="{Binding ConfidenceRule.Text}"
-                        TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
+                        TextColor="{StaticResource PrimaryColor}"
+                        BackgroundColor="{StaticResource BackgroundColor}"
                         AutoSize="TextChanges"
                         IsReadOnly="True" />
 
                 <Label Text="Rule:"
-                       TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                       TextColor="{StaticResource PrimaryColor}"
                        HorizontalTextAlignment="Start"
                        FontSize="20" />
                 <Editor Text="{Binding ConfidenceRule.Rule}"
-                        TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
+                        TextColor="{StaticResource PrimaryColor}"
+                        BackgroundColor="{StaticResource BackgroundColor}"
                         AutoSize="TextChanges"
                         IsReadOnly="True" />
             </StackLayout>

@@ -22,8 +22,8 @@ namespace AppDemo.ViewModels
             }
         }
 
-        private IEnumerable<ConfidenceRule> confidenceRules;
-        public IEnumerable<ConfidenceRule> ConfidenceRules
+        private List<ConfidenceRule> confidenceRules;
+        public List<ConfidenceRule> ConfidenceRules
         {
             get { return confidenceRules; }
             set
@@ -52,10 +52,12 @@ namespace AppDemo.ViewModels
         public ICommand SearchCommand { get; private set; }
         public ICommand RefreshCommand { get; private set; }
 
-        private IEnumerable<ConfidenceRule> mainConfidenceRules;
+        private List<ConfidenceRule> mainConfidenceRules;
 
         public CRListViewPageViewModel()
         {
+            isRefreshing = false;
+
             mainConfidenceRules = new List<ConfidenceRule>();
             confidenceRules = null;
 
@@ -68,7 +70,7 @@ namespace AppDemo.ViewModels
         private void Search(string seachFilter)
         {
             ConfidenceRules = mainConfidenceRules.Where(confidenceRule => confidenceRule.Name.StartsWith(seachFilter,
-                StringComparison.InvariantCultureIgnoreCase));
+                StringComparison.InvariantCultureIgnoreCase)).ToList();
         }
 
         public async void Refresh()
@@ -80,10 +82,16 @@ namespace AppDemo.ViewModels
                 var confidenceRules = await HttpRequestClient.Instance.GetConfidenceRulesAsync();
 
                 ConfidenceRules = mainConfidenceRules = confidenceRules;
+
+                CurrentPage.IsEnabled = true;
             }
             catch (Exception exception)
             {
+                CurrentPage.IsEnabled = false;
+
                 await CurrentPage.DisplayAlert("Error", exception.Message, "Close");
+
+                Refresh();
             }
 
             IsRefreshing = false;

@@ -4,22 +4,23 @@ namespace AppDemo.ViewModels
 {
     public class EdgePageViewModel : AddBaseViewModel
     {
-        public string SelectedArtery { get; set; }
+        public List<string> EdgeArteries { get; }
 
+        public string SelectedArtery { get; set; }
         public bool IsTransitive { get; set; }
 
         public EdgePageViewModel(List<string> arteries) : base(arteries)
         {
-            SelectedArtery = string.Empty;
+            EdgeArteries = new List<string>(arteries);
+            EdgeArteries.Insert(0, "aorta");
 
+            SelectedArtery = EdgeArteries[0];
             IsTransitive = false;
         }
 
         protected override async void Action(object value)
         {
-            if ((!string.IsNullOrEmpty(SelectedMainArtery)) &&
-                (!string.IsNullOrEmpty(SelectedArtery)) &&
-                (SelectedMainArtery != SelectedArtery))
+            if (SelectedMainArtery != SelectedArtery)
             {
                 var dictionary = new Dictionary<string, string>
                 {
@@ -33,7 +34,7 @@ namespace AppDemo.ViewModels
             }
             else
             {
-                await CurrentPage.DisplayAlert("Error", "Arteries cannot be empty or equal.", "Close");
+                await CurrentPage.DisplayAlert("Error", "Arteries cannot be equal.", "Close");
             }
         }
     }

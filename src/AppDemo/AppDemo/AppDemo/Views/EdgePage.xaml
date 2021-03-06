@@ -6,14 +6,14 @@
              mc:Ignorable="d"
              x:Class="AppDemo.Views.EdgePage"
              Title="{StaticResource ApplicationName}"
-             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}">
+             BackgroundColor="{StaticResource BackgroundColor}">
 
     <ContentPage.Content>
         <StackLayout Orientation="Vertical"
                      Margin="30">
 
             <Label Text="Add edge rule"
-                   TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                   TextColor="{StaticResource PrimaryColor}}"
                    HorizontalTextAlignment="Center"
                    FontSize="30"
                    VerticalOptions="StartAndExpand" />
@@ -25,15 +25,15 @@
                         TitleColor="{StaticResource SecondaryColor}"
                         ItemsSource="{Binding Arteries}"
                         SelectedItem="{Binding SelectedMainArtery}"
-                        TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
+                        TextColor="{StaticResource PrimaryColor}"
+                        BackgroundColor="{StaticResource BackgroundColor}"
                         HorizontalTextAlignment="Center" />
                 <Picker Title="Select artery"
                         TitleColor="{StaticResource SecondaryColor}"
-                        ItemsSource="{Binding Arteries}"
+                        ItemsSource="{Binding EdgeArteries}"
                         SelectedItem="{Binding SelectedArtery}"
-                        TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
+                        TextColor="{StaticResource PrimaryColor}"
+                        BackgroundColor="{StaticResource BackgroundColor}"
                         HorizontalTextAlignment="Center" />
 
                 <Grid Margin="0, 20, 0, 0">
@@ -48,7 +48,7 @@
 
 
                     <Label Text="Is transitive:"
-                           TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                           TextColor="{StaticResource PrimaryColor}"
                            HorizontalTextAlignment="Start"
                            FontSize="20"
                            Grid.Row="0"

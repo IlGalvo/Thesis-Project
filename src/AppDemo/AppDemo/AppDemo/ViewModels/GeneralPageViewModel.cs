@@ -4,16 +4,7 @@ namespace AppDemo.ViewModels
 {
     public class GeneralPageViewModel : AddBaseViewModel
     {
-        private List<string> texts;
-        public List<string> Texts
-        {
-            get { return texts; }
-            set
-            {
-                texts = value;
-                OnPropertyChanged();
-            }
-        }
+        public List<string> Texts { get; }
 
         public string SelectedText { get; set; }
 
@@ -21,26 +12,19 @@ namespace AppDemo.ViewModels
         {
             Texts = texts;
 
-            SelectedText = string.Empty;
+            SelectedText = texts[0];
         }
 
-        protected override async void Action(object value)
+        protected override void Action(object value)
         {
-            if ((!string.IsNullOrEmpty(SelectedMainArtery)) && (!string.IsNullOrEmpty(SelectedText)))
+            var dictionary = new Dictionary<string, string>
             {
-                var dictionary = new Dictionary<string, string>
-                {
-                    { "main_artery", SelectedMainArtery },
-                    { "rule_type", "general" },
-                    { "text", SelectedText }
-                };
+                { "main_artery", SelectedMainArtery },
+                { "rule_type", "general" },
+                { "text", SelectedText }
+            };
 
-                Add(dictionary);
-            }
-            else
-            {
-                await CurrentPage.DisplayAlert("Error", "Artery and text cannot be empty.", "Close");
-            }
+            Add(dictionary);
         }
     }
 }

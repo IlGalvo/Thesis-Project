@@ -6,14 +6,14 @@
              mc:Ignorable="d"
              x:Class="AppDemo.Views.ComparatorPage"
              Title="{StaticResource ApplicationName}"
-             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}">
+             BackgroundColor="{StaticResource BackgroundColor}">
 
     <ContentPage.Content>
         <StackLayout Orientation="Vertical"
                      Margin="30">
 
             <Label Text="Add comparator rule"
-                   TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                   TextColor="{StaticResource PrimaryColor}"
                    HorizontalTextAlignment="Center"
                    FontSize="30"
                    VerticalOptions="StartAndExpand" />
@@ -25,30 +25,30 @@
                         TitleColor="{StaticResource SecondaryColor}"
                         ItemsSource="{Binding Types}"
                         SelectedItem="{Binding SelectedType}"
-                        TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
+                        TextColor="{StaticResource PrimaryColor}"
+                        BackgroundColor="{StaticResource BackgroundColor}"
                         HorizontalTextAlignment="Center" />
                 <Picker Title="Select mode"
                         TitleColor="{StaticResource SecondaryColor}"
                         ItemsSource="{Binding Modes}"
                         SelectedItem="{Binding SelectedMode}"
-                        TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
+                        TextColor="{StaticResource PrimaryColor}"
+                        BackgroundColor="{StaticResource BackgroundColor}"
                         HorizontalTextAlignment="Center" />
 
                 <Picker Title="Select main artery"
                         TitleColor="{StaticResource SecondaryColor}"
                         ItemsSource="{Binding Arteries}"
                         SelectedItem="{Binding SelectedMainArtery}"
-                        TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
+                        TextColor="{StaticResource PrimaryColor}"
+                        BackgroundColor="{StaticResource BackgroundColor}"
                         HorizontalTextAlignment="Center" />
                 <Entry Text="{Binding EnteredOffset1}"
-                       TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                       TextColor="{StaticResource PrimaryColor}"
                        Keyboard="Numeric"
                        Placeholder="Insert main artery offset"
                        PlaceholderColor="{StaticResource PlaceholderColor}"
-                       BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
+                       BackgroundColor="{StaticResource BackgroundColor}"
                        HorizontalTextAlignment="Center"
                        ReturnType="Next" />
 
@@ -56,15 +56,15 @@
                         TitleColor="{StaticResource SecondaryColor}"
                         ItemsSource="{Binding Arteries}"
                         SelectedItem="{Binding SelectedArtery}"
-                        TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
+                        TextColor="{StaticResource PrimaryColor}"
+                        BackgroundColor="{StaticResource BackgroundColor}"
                         HorizontalTextAlignment="Center" />
                 <Entry Text="{Binding EnteredOffset2}"
-                       TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                       TextColor="{StaticResource PrimaryColor}"
                        Keyboard="Numeric"
                        Placeholder="Insert artery offset"
                        PlaceholderColor="{StaticResource PlaceholderColor}"
-                       BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}"
+                       BackgroundColor="{StaticResource BackgroundColor}"
                        HorizontalTextAlignment="Center"
                        ReturnType="Next" />
             </StackLayout>

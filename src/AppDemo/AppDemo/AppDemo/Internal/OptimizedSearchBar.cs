@@ -1,6 +1,6 @@
 ﻿using Xamarin.Forms;
 
-namespace AppDemo.Controls
+namespace AppDemo.Internal
 {
     public class OptimizedSearchBar : SearchBar
     {

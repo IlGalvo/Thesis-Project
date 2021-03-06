@@ -3,12 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:controls="clr-namespace:AppDemo.Controls"
              xmlns:internal="clr-namespace:AppDemo.Internal"
              mc:Ignorable="d"
              x:Class="AppDemo.Views.CRListViewPage"
              Title="{StaticResource ApplicationName}"
-             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}">
+             BackgroundColor="{StaticResource BackgroundColor}">
 
     <ContentPage.Content>
         <StackLayout Orientation="Vertical"
@@ -16,7 +15,7 @@
                      Margin="20">
 
             <Frame CornerRadius="20"
-                   BackgroundColor="{AppThemeBinding Light={StaticResource TertiaryColorLight}, Dark={StaticResource TertiaryColorDark}}"
+                   BackgroundColor="{StaticResource TertiaryColor}"
                    Padding="0">
 
                 <Grid ColumnSpacing="10">
@@ -30,12 +29,12 @@
                         <ColumnDefinition Width="15*" />
                     </Grid.ColumnDefinitions>
 
-                    <controls:OptimizedSearchBar TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                    <internal:OptimizedSearchBar TextColor="{StaticResource PrimaryColor}"
                                                  HorizontalTextAlignment="Center"
                                                  Placeholder="Cerca..."
                                                  PlaceholderColor="{StaticResource PlaceholderColor}"
-                                                 CancelButtonColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
-                                                 BackgroundColor="{AppThemeBinding Light={StaticResource TertiaryColorLight}, Dark={StaticResource TertiaryColorDark}}"
+                                                 CancelButtonColor="{StaticResource PrimaryColor}"
+                                                 BackgroundColor="{StaticResource TertiaryColor}"
                                                  TextChangedCommand="{Binding SearchCommand}"
                                                  Grid.Row="0"
                                                  Grid.Column="0" />
@@ -54,7 +53,7 @@
                       SelectedItem="{Binding SelectedConfidenceRule, Mode=TwoWay}"
                       CachingStrategy="RecycleElement"
                       HasUnevenRows="True"
-                      SeparatorColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                      SeparatorColor="{StaticResource PrimaryColor}"
                       IsPullToRefreshEnabled="True"
                       RefreshCommand="{Binding RefreshCommand}"
                       IsRefreshing="{Binding IsRefreshing}">
@@ -73,7 +72,7 @@
                             <StackLayout Orientation="Vertical"
                                          Padding="20">
 
-                                <Label TextColor="{AppThemeBinding Light={StaticResource PrimaryColorLight}, Dark={StaticResource PrimaryColorDark}}"
+                                <Label TextColor="{StaticResource PrimaryColor}"
                                        d:Text="{Binding}"
                                        FontSize="Title"
                                        VerticalTextAlignment="Center">

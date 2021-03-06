@@ -7,16 +7,7 @@ namespace AppDemo.ViewModels
 {
     public abstract class AddBaseViewModel : BaseViewModel
     {
-        private List<string> arteries;
-        public List<string> Arteries
-        {
-            get { return arteries; }
-            set
-            {
-                arteries = value;
-                OnPropertyChanged();
-            }
-        }
+        public List<string> Arteries { get; }
 
         public string SelectedMainArtery { get; set; }
 
@@ -24,7 +15,7 @@ namespace AppDemo.ViewModels
         {
             Arteries = arteries;
 
-            SelectedMainArtery = string.Empty;
+            SelectedMainArtery = arteries[0];
         }
 
         protected async void Add(Dictionary<string, string> dictionary)
