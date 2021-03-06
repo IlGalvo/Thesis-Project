@@ -35,8 +35,11 @@ namespace AppDemo.ViewModels
         public string SelectedArtery { get; set; }
         public string EnteredOffset2 { get; set; }
 
-        public ComparatorPageViewModel(List<string> arteries) : base(arteries)
+        public ComparatorPageViewModel(List<string> arteries, List<string> types, List<string> modes) : base(arteries)
         {
+            Types = types;
+            Modes = modes;
+
             SelectedType = string.Empty;
             SelectedMode = string.Empty;
 
@@ -44,11 +47,6 @@ namespace AppDemo.ViewModels
 
             SelectedArtery = string.Empty;
             EnteredOffset2 = string.Empty;
-        }
-
-        public void Update(List<string> arteries)
-        {
-            Arteries = arteries;
         }
 
         private async Task<string> ValidateOffsetAsync(string offset)
@@ -74,8 +72,8 @@ namespace AppDemo.ViewModels
                 (!string.IsNullOrEmpty(SelectedArtery)) &&
                 (SelectedMainArtery != SelectedArtery))
             {
-                string offset1 = await ValidateOffsetAsync(EnteredOffset1);
-                string offset2 = await ValidateOffsetAsync(EnteredOffset2);
+                var offset1 = await ValidateOffsetAsync(EnteredOffset1);
+                var offset2 = await ValidateOffsetAsync(EnteredOffset2);
 
                 var dictionary = new Dictionary<string, string>
                 {

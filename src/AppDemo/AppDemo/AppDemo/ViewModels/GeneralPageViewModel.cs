@@ -24,13 +24,6 @@ namespace AppDemo.ViewModels
             SelectedText = string.Empty;
         }
 
-        public void Update(List<string> arteries, List<string> texts)
-        {
-            Arteries = arteries;
-
-            Texts = texts;
-        }
-
         protected override async void Action(object value)
         {
             if ((!string.IsNullOrEmpty(SelectedMainArtery)) && (!string.IsNullOrEmpty(SelectedText)))

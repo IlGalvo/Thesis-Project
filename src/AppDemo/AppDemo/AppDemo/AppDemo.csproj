@@ -39,7 +39,7 @@
     <Compile Update="Views\AddPage.xaml.cs">
       <DependentUpon>AddPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\Edgepage.xaml.cs">
+    <Compile Update="Views\EdgePage.xaml.cs">
       <DependentUpon>EdgePage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>

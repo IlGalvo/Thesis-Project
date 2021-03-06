@@ -8,11 +8,11 @@ namespace AppDemo.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ComparatorPage : ContentPage
     {
-        public ComparatorPage(List<string> arteries)
+        public ComparatorPage(List<string> arteries, List<string> types, List<string> modes)
         {
             InitializeComponent();
 
-            BindingContext = new ComparatorPageViewModel(arteries);
+            BindingContext = new ComparatorPageViewModel(arteries, types, modes);
         }
     }
 }

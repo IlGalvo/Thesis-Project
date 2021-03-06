@@ -21,7 +21,7 @@ namespace AppDemo.ViewModels
                         var types = await HttpRequestClient.Instance.GetComparatorTypesAsync();
                         var modes = await HttpRequestClient.Instance.GetComparatorModesAsync();
 
-                        await CurrentPage.Navigation.PushAsync(new ComparatorPage(arteries));
+                        await CurrentPage.Navigation.PushAsync(new ComparatorPage(arteries, types, modes));
                         break;
                     case "General":
                         var texts = await HttpRequestClient.Instance.GetGeneralTextsAsync();

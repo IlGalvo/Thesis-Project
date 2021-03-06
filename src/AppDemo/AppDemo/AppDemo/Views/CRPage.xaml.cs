@@ -8,11 +8,30 @@ namespace AppDemo.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CRPage : ContentPage
     {
-        public CRPage(ConfidenceRule confidenceRule)
+        private readonly bool isPostInsert;
+
+        public CRPage(ConfidenceRule confidenceRule, bool isPostInsert = false)
         {
             InitializeComponent();
 
+            this.isPostInsert = isPostInsert;
+
             BindingContext = new CRPageViewModel(confidenceRule);
+        }
+
+        private async void HandleBackButtonPressed()
+        {
+            if (isPostInsert)
+            {
+                await Navigation.PopToRootAsync();
+            }
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            HandleBackButtonPressed();
+
+            return isPostInsert;
         }
     }
 }

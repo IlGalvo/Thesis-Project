@@ -20,7 +20,7 @@ namespace AppDemo.Internal
 
         private async Task<string> HandleResponseAsync(HttpResponseMessage httpResponseMessage)
         {
-            string text = await httpResponseMessage.Content.ReadAsStringAsync();
+            var text = await httpResponseMessage.Content.ReadAsStringAsync();
 
             if (!httpResponseMessage.IsSuccessStatusCode)
             {

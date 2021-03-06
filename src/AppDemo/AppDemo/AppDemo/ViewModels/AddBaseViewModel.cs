@@ -33,10 +33,13 @@ namespace AppDemo.ViewModels
             {
                 var confidenceRule = await HttpRequestClient.Instance.InsertAsync(dictionary);
 
-                if (await CurrentPage.DisplayAlert("Info", "Added correctly, wanna show?", "Ok", "Close"))
+                if (await CurrentPage.DisplayAlert("Information", "Confidence rule added correctly, want to show?", "Yes", "No"))
                 {
-                    CurrentPage.Navigation.InsertPageBefore(new CRPage(confidenceRule), CurrentPage);
-                    await CurrentPage.Navigation.PopAsync();
+                    await CurrentPage.Navigation.PushAsync(new CRPage(confidenceRule, true));
+                }
+                else
+                {
+                    await CurrentPage.Navigation.PopToRootAsync();
                 }
             }
             catch (Exception exception)
