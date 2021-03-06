@@ -27,3 +27,11 @@
 [INSERT]: confidence_rule(N,0) :- N = gastroduodenal, artery(_,_,_,_,_,_,_,_,_,_,A,N), semiquadrant_1(A).
 [INSERT]: confidence_rule(N,7) :- N = superior_mesenteric, artery(_,_,_,_,_,_,_,_,_,_,A,N), quadrant_3(A).
 [INSERT]: confidence_rule(N,7) :- N = accessory_right_renal, artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_,superior_mesenteric), cog_x_less(X1+5,X2-10).
+[INSERT]: confidence_rule(N,10) :- N = left_renal, artery(ID,_,_,_,_,_,_,_,_,_,_,N), edge_t(aorta,ID).
+[DELETED]: confidence_rule(N,10) :- N = left_renal, artery(ID,_,_,_,_,_,_,_,_,_,_,N), edge_t(aorta,ID).
+[INSERT]: confidence_rule(N,11) :- N = celiac_trunk, artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_,left_gastric), cog_x_greater(X1,X2).
+[DELETED]: confidence_rule(N,11) :- N = celiac_trunk, artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_,left_gastric), cog_x_greater(X1,X2).
+[INSERT]: confidence_rule(N,11) :- N = celiac_trunk, artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_,left_gastric), cog_x_greater(X1++5,X2-10).
+[DELETED]: confidence_rule(N,11) :- N = celiac_trunk, artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_,left_gastric), cog_x_greater(X1++5,X2-10).
+[INSERT]: confidence_rule(N,11) :- N = celiac_trunk, artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_,left_gastric), cog_x_greater(X1+5,X2-10).
+[DELETED]: confidence_rule(N,11) :- N = celiac_trunk, artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_,left_gastric), cog_x_greater(X1+5,X2-10).

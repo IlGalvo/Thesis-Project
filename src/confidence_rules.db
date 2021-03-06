@@ -58,14 +58,14 @@ confidence_rule(N,2) :- N = accessory_left_renal, artery(_,_,_,_,_,_,_,_,_,_,A,N
 confidence_rule(N,3) :- N = accessory_left_renal, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_5_10(R).
 confidence_rule(N,4) :- N = accessory_left_renal, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_10_15(R).
 confidence_rule(N,5) :- N = accessory_left_renal, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,celiac_trunk), height_less(H1,H2).
-confidence_rule(N,6) :- N = accessory_left_renal, accessory_left_renal has:  accessory_left_renal has:  accessory_left_renal has:  accessory_left_renal has:  accessory_left_renal has:  accessory_left_renal has:  accessory_left_renal has:  accessory_left_renal has:  accessory_left_renal has:  accessory_left_renal has:  accessory_left_renal has:  accessory_left_renal has:  accessory_left_renal has:  K = #count {ID2: edge(ID1,ID2)} K = 0 out_artery(ID1,N).
+confidence_rule(N,6) :- N = accessory_left_renal, accessory_left_renal has:  accessory_left_renal has:  accessory_left_renal has:  accessory_left_renal has:  accessory_left_renal has:  accessory_left_renal has:  accessory_left_renal has:  accessory_left_renal has:  accessory_left_renal has:  accessory_left_renal has:  accessory_left_renal has:  accessory_left_renal has:  accessory_left_renal has:  accessory_left_renal has:  accessory_left_renal has:  K = #count {ID2: edge(ID1,ID2)} K = 0 out_artery(ID1,N).
 confidence_rule(N,0) :- N = accessory_right_renal, artery(_,_,_,_,_,_,_,_,_,_,A,N), quadrant_2(A).
 confidence_rule(N,1) :- N = accessory_right_renal, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_s(R).
 confidence_rule(N,2) :- N = accessory_right_renal, artery(_,_,_,_,_,_,_,_,_,_,A,N), quadrant_2(A).
 confidence_rule(N,3) :- N = accessory_right_renal, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_5_10(R).
 confidence_rule(N,4) :- N = accessory_right_renal, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_10_15(R).
 confidence_rule(N,5) :- N = accessory_right_renal, artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_,celiac_trunk), height_less(H1,H2).
-confidence_rule(N,6) :- N = accessory_right_renal, accessory_right_renal has:  accessory_right_renal has:  accessory_right_renal has:  accessory_right_renal has:  accessory_right_renal has:  accessory_right_renal has:  accessory_right_renal has:  accessory_right_renal has:  accessory_right_renal has:  accessory_right_renal has:  accessory_right_renal has:  accessory_right_renal has:  accessory_right_renal has:  K = #count {ID2: edge(ID1,ID2)} K = 0 out_artery(ID1,N).
+confidence_rule(N,6) :- N = accessory_right_renal, accessory_right_renal has:  accessory_right_renal has:  accessory_right_renal has:  accessory_right_renal has:  accessory_right_renal has:  accessory_right_renal has:  accessory_right_renal has:  accessory_right_renal has:  accessory_right_renal has:  accessory_right_renal has:  accessory_right_renal has:  accessory_right_renal has:  accessory_right_renal has:  accessory_right_renal has:  accessory_right_renal has:  K = #count {ID2: edge(ID1,ID2)} K = 0 out_artery(ID1,N).
 confidence_rule(N,1) :- N = left_intercostal_1, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_10_15(R).
 confidence_rule(N,2) :- N = left_intercostal_1, artery(ID,_,_,_,_,_,_,_,_,_,_,N), edge(aorta,ID).
 confidence_rule(N,3) :- N = left_intercostal_1, artery(_,_,_,_,_,_,_,_,_,_,A,N), quadrant_3(A).
@@ -99,4 +99,4 @@ confidence_rule(N,0) :- N = right_hepatic, artery(ID1,_,_,_,_,_,_,_,_,_,_,N), ar
 confidence_rule(N,9) :- N = left_intercostal_1, artery(_,_,_,_,_,_,_,_,_,_,A,N), quadrant_3(A).
 confidence_rule(N,0) :- N = gastroduodenal, artery(_,_,_,_,_,_,_,_,_,_,A,N), semiquadrant_1(A).
 confidence_rule(N,7) :- N = superior_mesenteric, artery(_,_,_,_,_,_,_,_,_,_,A,N), quadrant_3(A).
-confidence_rule(N,7) :- N = accessory_right_renal, artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_,superior_mesenteric), cog_x_less(X1+5,X2-10).
+confidence_rule(N,7) :- N = accessory_right_renal, artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_,accessory_right_renal), cog_x_less(X1+5,X2-10).

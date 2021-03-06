@@ -120,7 +120,11 @@ class ServerHandler(BaseHTTPRequestHandler):
                         is_transitive = json.loads(post_fields["is_transitive"][0].lower())
 
                         confidence_rule = ConfidenceRule(id, main_artery)
-                        confidence_rule.set_rule(Edge(main_artery, artery, is_transitive))
+
+                        if artery == "aorta":
+                            confidence_rule.set_rule(Edge(artery, main_artery, is_transitive))
+                        else:
+                            confidence_rule.set_rule(Edge(main_artery, artery, is_transitive))
 
                         self.__handle_added_confidence_rule(confidence_rule)
                     elif rule_type == "comparator" and "type" in post_fields and "mode" in post_fields and "offset1" in post_fields and "artery" in post_fields and "offset2" in post_fields:
