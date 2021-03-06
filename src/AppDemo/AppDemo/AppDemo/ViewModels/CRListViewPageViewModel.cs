@@ -81,7 +81,10 @@ namespace AppDemo.ViewModels
             {
                 var confidenceRules = await HttpRequestClient.Instance.GetConfidenceRulesAsync();
 
-                ConfidenceRules = mainConfidenceRules = confidenceRules;
+                if (!mainConfidenceRules.SequenceEqual(confidenceRules))
+                {
+                    ConfidenceRules = mainConfidenceRules = confidenceRules;
+                }
 
                 CurrentPage.IsEnabled = true;
             }
