@@ -1,0 +1,17 @@
+// Arteries
+digraph {
+	celiac_trunk -> left_gastric
+	celiac_trunk -> noname1
+	noname1 -> splenic
+	noname1 -> common_hepatic
+	aorta -> celiac_trunk
+	aorta -> left_renal
+	aorta -> right_renal
+	aorta -> accessory_left_renal
+	aorta -> accessory_right_renal
+	aorta -> superior_mesenteric
+	aorta -> left_intercostal_1
+	aorta -> right_intercostal_1
+	aorta -> left_intercostal_2
+	aorta -> right_intercostal_2
+}

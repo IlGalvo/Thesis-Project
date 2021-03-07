@@ -60,9 +60,9 @@ def main():
     if is_debug:
         os.chdir(os.path.dirname(__file__))
 
-        sys.argv.append("arteries_classifier.lp")
-        sys.argv.append("arteries_classified.lp")
-        sys.argv.append("arteries_parsed.lp")
+        sys.argv.append("Asp/arteries_classifier.lp")
+        sys.argv.append("Asp/arteries_classified.lp")
+        sys.argv.append("Asp/arteries_parsed.lp")
     elif len(sys.argv) < 3 or not os.path.isfile(sys.argv[1]) or not os.path.isfile(sys.argv[2]):
         print("Usage: python parser.py in_arteries_classifier.lp in_arteries_classified.lp out_arteries_parsed.lp")
         exit()
