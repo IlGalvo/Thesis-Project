@@ -13,10 +13,10 @@ from data import *
 # ParamsArtery is primary if it refers to confidence rule
 class ParamsArtery:
     def __init__(self, is_primary: bool, name: str,
-                 id: str=None, radius: str=None, density: str=None, quality: str=None,
-                 cog_x: str=None, cog_y: str=None, cog_z: str=None,
-                 path_length: str=None, distance_from_extremes: str=None,
-                 heigth: str=None, angle: str=None):
+                 id: str = None, radius: str = None, density: str = None, quality: str = None,
+                 cog_x: str = None, cog_y: str = None, cog_z: str = None,
+                 path_length: str = None, distance_from_extremes: str = None,
+                 heigth: str = None, angle: str = None):
         self._is_primary = is_primary
         self._name = name
 
@@ -209,12 +209,13 @@ def parse_confidence_rule(text: str) -> ConfidenceRule:
 
             is_transitive = rule[0] == "edge_t"
 
-            edge_rule = Edge(artery1, artery2, is_transitive)
-            confidence_rule.set_rule(edge_rule)
+            edge = Edge(artery1, artery2, is_transitive)
+            confidence_rule.set_rule(edge)
 
         # cog_x_greater/cog_x_less(X1+n,X2+m), with +n and +m optional
         elif rule[0] == "cog_x_greater" or rule[0] == "cog_x_less":
-            comparator_mode = ComparatorMode.Greater if rule[0] == "cog_x_greater" else ComparatorMode.Less
+            comparator_mode = (ComparatorMode.Greater
+                               if rule[0] == "cog_x_greater" else ComparatorMode.Less)
 
             # Check if there are X+n and X+m
             offset_regex1 = number_regex2.search(rule[1])
@@ -225,8 +226,10 @@ def parse_confidence_rule(text: str) -> ConfidenceRule:
             offset2 = offset_regex2.group(0) if offset_regex2 != None else ""
 
             # Substring to get the n and m
-            cog_x1 = rule[1][0: offset_regex1.start()] if offset_regex1 != None else rule[1]
-            cog_x2 = rule[1][0: offset_regex2.start()] if offset_regex2 != None else rule[2]
+            cog_x1 = (rule[1][0: offset_regex1.start()]
+                      if offset_regex1 != None else rule[1])
+            cog_x2 = (rule[1][0: offset_regex2.start()]
+                      if offset_regex2 != None else rule[2])
 
             # Find arteries for CoG_X
             artery1 = next(artery.get_name() for artery in arteries
@@ -234,14 +237,15 @@ def parse_confidence_rule(text: str) -> ConfidenceRule:
             artery2 = next(artery.get_name() for artery in arteries
                            if artery.get_cog_x() == cog_x2)
 
-            cog_x_rule = Comparator(ComparatorType.Cog_X, comparator_mode,
+            comparator = Comparator(ComparatorType.Cog_X, comparator_mode,
                                     artery1, offset1,
                                     artery2, offset2)
-            confidence_rule.set_rule(cog_x_rule)
+            confidence_rule.set_rule(comparator)
 
         # cog_z_greater/cog_z_less(Z1+n,Z2+m), with +n and +m optional
         elif rule[0] == "cog_z_greater" or rule[0] == "cog_z_less":
-            comparator_mode = ComparatorMode.Greater if rule[0] == "cog_z_greater" else ComparatorMode.Less
+            comparator_mode = (ComparatorMode.Greater
+                               if rule[0] == "cog_z_greater" else ComparatorMode.Less)
 
             # Check if there are Z+n and Z+m
             offset_regex1 = number_regex2.search(rule[1])
@@ -252,8 +256,10 @@ def parse_confidence_rule(text: str) -> ConfidenceRule:
             offset2 = offset_regex2.group(0) if offset_regex2 != None else ""
 
             # Substring to get the n and m
-            cog_z1 = rule[1][0: offset_regex1.start()] if offset_regex1 != None else rule[1]
-            cog_z2 = rule[1][0: offset_regex2.start()] if offset_regex2 != None else rule[2]
+            cog_z1 = (rule[1][0: offset_regex1.start()]
+                      if offset_regex1 != None else rule[1])
+            cog_z2 = (rule[1][0: offset_regex2.start()]
+                      if offset_regex2 != None else rule[2])
 
             # Find arteries for CoG_Z
             artery1 = next(artery.get_name() for artery in arteries
@@ -261,15 +267,16 @@ def parse_confidence_rule(text: str) -> ConfidenceRule:
             artery2 = next(artery.get_name() for artery in arteries
                            if artery.get_cog_z() == cog_z2)
 
-            cog_z_rule = Comparator(ComparatorType.Cog_Z, comparator_mode,
+            comparator = Comparator(ComparatorType.Cog_Z, comparator_mode,
                                     artery1, offset1,
                                     artery2, offset2)
-            confidence_rule.set_rule(cog_z_rule)
+            confidence_rule.set_rule(comparator)
 
         # height_greater/height_less(H1+n,H2+m), with +n and +m
         # optional
         elif rule[0] == "height_greater" or rule[0] == "height_less":
-            comparator_mode = ComparatorMode.Greater if rule[0] == "height_greater" else ComparatorMode.Less
+            comparator_mode = (ComparatorMode.Greater
+                               if rule[0] == "height_greater" else ComparatorMode.Less)
 
             # Check if there are H+n and H+m
             offset_regex1 = number_regex2.search(rule[1])
@@ -280,8 +287,10 @@ def parse_confidence_rule(text: str) -> ConfidenceRule:
             offset2 = offset_regex2.group(0) if offset_regex2 != None else ""
 
             # Substring to get the n and m
-            heigth1 = rule[1][0: offset_regex1.start()] if offset_regex1 != None else rule[1]
-            heigth2 = rule[1][0: offset_regex2.start()] if offset_regex2 != None else rule[2]
+            heigth1 = (rule[1][0: offset_regex1.start()]
+                       if offset_regex1 != None else rule[1])
+            heigth2 = (rule[1][0: offset_regex2.start()]
+                       if offset_regex2 != None else rule[2])
 
             # Find arteries for Heigth
             artery1 = next(artery.get_name() for artery in arteries
@@ -289,31 +298,31 @@ def parse_confidence_rule(text: str) -> ConfidenceRule:
             artery2 = next(artery.get_name() for artery in arteries
                            if artery.get_heigth() == heigth2)
 
-            heigth_rule = Comparator(ComparatorType.Heigth, comparator_mode,
-                                     artery1, offset1,
-                                     artery2, offset2)
-            confidence_rule.set_rule(heigth_rule)
+            comparator = Comparator(ComparatorType.Heigth, comparator_mode,
+                                    artery1, offset1,
+                                    artery2, offset2)
+            confidence_rule.set_rule(comparator)
 
         # It's a self meaning rule
         else:
             # Check if it's a general rule contained in general rule
             # dictionary
-            rule_text = general_rule_dictionary.get(rule[0], None)
+            text = general_rule_dictionary.get(rule[0], None)
 
-            if rule_text != None:
+            if text != None:
                 # Find primary artery
-                artery1 = next(artery.get_name() for artery in arteries
-                               if artery.get_is_primary)
+                artery = next(artery.get_name() for artery in arteries
+                              if artery.get_is_primary)
 
-                general_rule = General(rule_text, artery1)
-                confidence_rule.set_rule(general_rule)
+                general = General(text, artery)
+                confidence_rule.set_rule(general)
             else:
                 # Parse as generic text rule
                 info[0] = confidence_rule.get_name() + " has: "
-                rule_text = " ".join(info)
+                text = " ".join(info)
 
-                general_rule = General(rule_text)
-                confidence_rule.set_rule(general_rule)
+                general = General(text)
+                confidence_rule.set_rule(general)
 
                 break
 
@@ -396,8 +405,8 @@ def parse_artery_classified(file_name: str, input_models: list, confidence_rules
             name = fact[1]
 
             # Find associated confidence rule for id and name
-            confidence_rule = next(confidence_rule for confidence_rule in confidence_rules
-                                   if confidence_rule.get_id() == id and confidence_rule.get_name() == name)
+            confidence_rule = next(cr for cr in confidence_rules
+                                   if cr.get_id() == id and cr.get_name() == name)
 
             # Find artery associated to confidence rule for name
             artery = next(artery for artery in arteries

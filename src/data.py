@@ -47,7 +47,7 @@ class ConfidenceRule(IRule):
 
 # Edge rule referes to two arteries and can be transitive
 class Edge(IRule):
-    def __init__(self, artery1: str, artery2: str, is_transitive: bool=False):
+    def __init__(self, artery1: str, artery2: str, is_transitive: bool = False):
         self._artery1 = artery1
         self._artery2 = artery2
 
@@ -158,24 +158,24 @@ class Comparator(IRule):
 
 # General rule has a text description and can refer to an artery
 class General(IRule):
-    def __init__(self, rule_text: str, artery: str=None):
-        self._rule_text = rule_text
+    def __init__(self, text: str, artery: str = None):
+        self._text = text
         self._artery = artery
 
     def to_text(self) -> str:
         if self._artery != None:
-            return self._artery + " has " + self._rule_text + "."
+            return self._artery + " has " + self._text + "."
 
-        return self._rule_text
+        return self._text
 
     def to_rule(self) -> str:
         if self._artery == None:
-            return self._rule_text
+            return self._text
 
-        index = list(general_rule_dictionary.values()).index(self._rule_text)
+        index = list(general_rule_dictionary.values()).index(self._text)
         value = list(general_rule_dictionary.keys())[index]
 
-        if self._rule_text.startswith("radius"):
+        if self._text.startswith("radius"):
             return "artery(_,R,_,_,_,_,_,_,_,_,_,N), " + value + "(R)."
 
         return "artery(_,_,_,_,_,_,_,_,_,_,A,N), " + value + "(A)."
@@ -216,8 +216,10 @@ general_rule_dictionary = {
     "semiquadrant_8": "angle between 315 and 360 degrees"
 }
 
-artery_list = ["celiac_trunk", "left_gastric", "splenic", "common_hepatic", "proper_hepatic",
-               "dorsal_pancreatic", "left_renal", "right_renal", "accessory_left_renal",
-               "accessory_right_renal", "gastroduodenal", "left_hepatic", "right_hepatic",
-               "superior_mesenteric", "left_intercostal_1", "right_intercostal_1",
-               "left_intercostal_2", "right_intercostal_2"]
+artery_list = [
+    "celiac_trunk", "left_gastric", "splenic", "common_hepatic", "proper_hepatic",
+    "dorsal_pancreatic", "left_renal", "right_renal", "accessory_left_renal",
+    "accessory_right_renal", "gastroduodenal", "left_hepatic", "right_hepatic",
+    "superior_mesenteric", "left_intercostal_1", "right_intercostal_1",
+    "left_intercostal_2", "right_intercostal_2"
+]
