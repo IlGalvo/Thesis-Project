@@ -1,34 +1,21 @@
 import sys
 import os
-import hashlib
 
-from dataparser import parse_arteries_classifier, parse_artery_classified, parse_confidence_rule
-from utilities import save_confidence_rules
+from models_parser import (
+    parse_confidence_rule,
+    parse_arteries_classifier,
+    parse_arteries_classified
+)
+from utilities import (
+    get_md5,
+    save_confidence_rules
+)
 from server import Server
-
-
-def get_md5(file_name: str) -> str:
-    with open(file_name, "r") as file:
-        data = file.read().encode()
-
-        return hashlib.md5(data).hexdigest()
-
-
-def import_confidence_rules(file_name: str) -> list:
-    confidence_rules = []
-
-    with open(file_name, "r") as file:
-        for line in file.readlines():
-            confidence_rule = parse_confidence_rule(line)
-
-            confidence_rules.append(confidence_rule)
-
-    return confidence_rules
 
 
 # Write out_arteries_parsed.lp as text
 # and print on terminal if is debug
-def write_arteries_parsed(file_name: str, output_models: list, arteries: list, is_debug: bool):
+def _write_arteries_parsed(file_name: str, output_models: list, arteries: list, is_debug: bool):
     with open(file_name, "w") as out_file:
         for model in output_models:
             out_file.write(str(model))
@@ -59,36 +46,51 @@ def main():
         print("Usage: python parser.py in_arteries_classifier.lp in_arteries_classified.lp out_arteries_parsed.lp")
         exit()
 
-    md5_file_name = os.path.splitext(sys.argv[1])[0] + ".md5"
+    database_file_name = "ConfidenceRules.db"
+    generated_file_name = "Arteries.svg"
+    md5_extension = ".md5"
+
+    classifier_file_name = sys.argv[1]
+    classified_file_name = sys.argv[2]
+    parsed_file_name = sys.argv[3]
+
+    md5_file_name = os.path.splitext(classifier_file_name)[0]
+    md5_file_name += md5_extension
 
     if not os.path.isfile(md5_file_name):
-        with open(md5_file_name, "w") as md5_file:
-            md5_file.write("")
+        with open(md5_file_name, "w") as file:
+            file.write("")
 
-    md5_1 = get_md5(sys.argv[1])
+    current_md5 = get_md5(classifier_file_name)
 
-    with open(md5_file_name, "r") as md5_file:
-        md5_2 = md5_file.read()
+    with open(md5_file_name, "r") as file:
+        saved_md5 = file.read()
 
-    if md5_1 != md5_2:
-        with open(md5_file_name, "w") as md5_file:
-            md5_file.write(md5_1)
+    if current_md5 != saved_md5:
+        with open(md5_file_name, "w") as file:
+            file.write(current_md5)
 
         models, confidence_rules = parse_arteries_classifier(
-            sys.argv[1])
+            classifier_file_name)
 
-        models, arteries, dot = parse_artery_classified(
-            sys.argv[2], models, confidence_rules)
+        models, arteries, dot = parse_arteries_classified(
+            classified_file_name, models, confidence_rules)
 
-        write_arteries_parsed(sys.argv[3], models, arteries, is_debug)
-        dot.render("Arteries.svg", view=is_debug)
+        _write_arteries_parsed(parsed_file_name, models, arteries, is_debug)
+        dot.render(generated_file_name, view=is_debug)
 
-        save_confidence_rules("confidence_rules.db", confidence_rules)
+        save_confidence_rules(database_file_name, confidence_rules)
     else:
-        confidence_rules = import_confidence_rules("confidence_rules.db")
+        confidence_rules = []
+
+        with open(database_file_name, "r") as file:
+            for line in file.readlines():
+                confidence_rule = parse_confidence_rule(line)
+
+                confidence_rules.append(confidence_rule)
 
     print("Starting httpd server")
-    Server("localhost", 8000, confidence_rules).run()
+    Server("localhost", 8000, confidence_rules, database_file_name).run()
     print("Sopped httpd server")
 
 

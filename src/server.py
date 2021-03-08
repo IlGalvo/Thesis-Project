@@ -2,13 +2,21 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 import json
 
-from data import *
+from models import (
+    Edge,
+    Comparator, ComparatorType, ComparatorMode,
+    General, general_rule_dictionary,
+    ConfidenceRule,
+    artery_list
+)
 from utilities import save_confidence_rules
 
 
-class ServerHandler(BaseHTTPRequestHandler):
-    def set_confidence_rules(self, confidence_rules: list):
+class _ServerHandler(BaseHTTPRequestHandler):
+    def set_data(self, confidence_rules: list, database_file_name: str):
         self._confidence_rules = confidence_rules
+
+        self._database_file_name = database_file_name
 
     def __confidence_rules_to_json(self) -> str:
         text = "["
@@ -51,8 +59,8 @@ class ServerHandler(BaseHTTPRequestHandler):
 
     @staticmethod
     def __log(text: str):
-        with open("server_log.txt", "a+") as log_file:
-            log_file.write(text + "\n")
+        with open("server.log", "a+") as file:
+            file.write(text + "\n")
 
     def __handle_added_confidence_rule(self, confidence_rule: ConfidenceRule):
         self._confidence_rules.append(confidence_rule)
@@ -61,7 +69,7 @@ class ServerHandler(BaseHTTPRequestHandler):
         self.__send_ok_response(text)
 
         self.__log("[INSERT]: " + confidence_rule.to_rule())
-        save_confidence_rules("confidence_rules.db", self._confidence_rules)
+        save_confidence_rules(self._database_file_name, self._confidence_rules)
 
     def __handle_removed_confidence_rule(self, confidence_rule: ConfidenceRule):
         self._confidence_rules.remove(confidence_rule)
@@ -69,7 +77,7 @@ class ServerHandler(BaseHTTPRequestHandler):
         self.__send_ok_headers()
 
         self.__log("[DELETED]: " + confidence_rule.to_rule())
-        save_confidence_rules("confidence_rules.db", self._confidence_rules)
+        save_confidence_rules(self._database_file_name, self._confidence_rules)
 
     def do_GET(self):
         query_path = urlparse(self.path).query
@@ -92,10 +100,10 @@ class ServerHandler(BaseHTTPRequestHandler):
                 text = json.dumps([cmode.name for cmode in ComparatorMode])
                 self.__send_ok_response(text)
             else:
-                text = "ToDo: Handle 400 Error"
+                text = "Missing query value."
                 self.__send_ko_response(text)
         else:
-            text = "ToDo: Handle 400 Error"
+            text = "Missing query parameter."
             self.__send_ko_response(text)
 
     def do_HEAD(self):
@@ -164,10 +172,10 @@ class ServerHandler(BaseHTTPRequestHandler):
 
                         self.__handle_added_confidence_rule(confidence_rule)
                     else:
-                        text = "ToDo: Handle 400 Error"
+                        text = "Wrong rule_type and values."
                         self.__send_ko_response(text)
                 else:
-                    text = "ToDo: Handle 400 Error"
+                    text = "Missing main_artery or rule_type."
                     self.__send_ko_response(text)
             elif "delete" in query_components["action"]:
                 if "id" in post_fields and "name" in post_fields:
@@ -180,25 +188,25 @@ class ServerHandler(BaseHTTPRequestHandler):
                     if confidence_rule != None:
                         self.__handle_removed_confidence_rule(confidence_rule)
                     else:
-                        text = "ToDo: Handle 400 Error"
+                        text = "Confidence rule does not exists."
                         self.__send_ko_response(text)
                 else:
-                    text = "ToDo: Handle 400 Error"
+                    text = "Missing id or name."
                     self.__send_ko_response(text)
             else:
-                text = "ToDo: Handle 400 Error"
+                text = "Missing query value."
                 self.__send_ko_response(text)
         else:
-            text = "ToDo: Handle 400 Error"
+            text = "Missing query parameter."
             self.__send_ko_response(text)
 
 
 class Server:
-    def __init__(self, ip: str, port: int, confidence_rules: list):
-        self._http_server = HTTPServer((ip, port), ServerHandler)
+    def __init__(self, ip: str, port: int, confidence_rules: list, database_file_name: str):
+        self._http_server = HTTPServer((ip, port), _ServerHandler)
 
         handler = self._http_server.RequestHandlerClass
-        handler.set_confidence_rules(handler, confidence_rules)
+        handler.set_data(handler, confidence_rules, database_file_name)
 
     def run(self):
         try:

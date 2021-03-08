@@ -7,11 +7,18 @@
 import re
 from graphviz import Digraph
 
-from data import *
+from models import (
+    Edge,
+    Comparator, ComparatorType, ComparatorMode,
+    General, general_rule_dictionary,
+    Model,
+    ConfidenceRule,
+    OutputArtery
+)
 
 
 # ParamsArtery is primary if it refers to confidence rule
-class ParamsArtery:
+class _ParamsArtery:
     def __init__(self, is_primary: bool, name: str,
                  id: str = None, radius: str = None, density: str = None, quality: str = None,
                  cog_x: str = None, cog_y: str = None, cog_z: str = None,
@@ -74,64 +81,9 @@ class ParamsArtery:
     def get_angle(self) -> str:
         return self._angle
 
-    def __str__(self) -> str:
-        return self._name + " is an artery."
-
-
-# Model wrapper
-class Model:
-    def __init__(self, id: int, variant: int, edge: Edge):
-        self._id = id
-        self._variant = variant
-
-        self._edge = edge
-
-    def get_id(self) -> int:
-        return self._id
-
-    def get_variant(self) -> int:
-        return self._variant
-
-    def get_edge(self) -> Edge:
-        return self._edge
-
-    def __str__(self) -> str:
-        text = "Model with ID: [" + str(self._id) + \
-            "] and Variant: [" + str(self._variant) + "].\n"
-
-        return text + "\tRule: " + self._edge.to_text() + "\n\n"
-
-
-# OutputArtery wrapper
-class OutputArtery:
-    def __init__(self, id: int, name: str):
-        self._id = id
-        self._name = name
-
-        self._confidence_rules = []
-
-    def get_id(self) -> int:
-        return self._id
-
-    def get_name(self) -> str:
-        return self._name
-
-    def get_confidence_rules(self) -> list:
-        return self._confidence_rules
-
-    def __str__(self) -> str:
-        text = "Artery with ID: [" + \
-            str(self._id) + "] and Name: [" + self._name + "].\n"
-
-        for confidence_rule in self._confidence_rules:
-            text += "\t" + confidence_rule.to_text() + "\n"
-
-        return (text + "\n")
-
 
 # To find integers number
-number_regex1 = re.compile(r"-?\d+")
-number_regex2 = re.compile(r"[+-]\d+")
+_integer_regex = re.compile(r"-?\d+")
 
 
 def parse_model(text: str) -> Model:
@@ -151,13 +103,15 @@ def parse_model(text: str) -> Model:
 
 
 def parse_confidence_rule(text: str) -> ConfidenceRule:
+    offset_regex = re.compile(r"[+-]\d+")
+
     # [0] = confidence rule info, [1...N] = rules
     info = text.replace("\n", "").split(", ")
 
     # Extract confidence rule id and name
     cr_text = info[0].split("= ")
 
-    id = int(number_regex1.search(cr_text[0]).group(0))
+    id = int(_integer_regex.search(cr_text[0]).group(0))
     name = cr_text[1]
 
     confidence_rule = ConfidenceRule(id, name)
@@ -192,11 +146,11 @@ def parse_confidence_rule(text: str) -> ConfidenceRule:
             is_primary = rule[12] == "N"
             name = rule[12] if rule[12] != "N" else confidence_rule.get_name()
 
-            artery = ParamsArtery(is_primary, name,
-                                  id, radius, density, quality,
-                                  cog_x, cog_y, cog_z,
-                                  path_length, distance_from_extremes,
-                                  heigth, angle)
+            artery = _ParamsArtery(is_primary, name,
+                                   id, radius, density, quality,
+                                   cog_x, cog_y, cog_z,
+                                   path_length, distance_from_extremes,
+                                   heigth, angle)
             arteries.append(artery)
 
         # edge(ID1,ID2) or edge(name,ID)
@@ -218,8 +172,8 @@ def parse_confidence_rule(text: str) -> ConfidenceRule:
                                if rule[0] == "cog_x_greater" else ComparatorMode.Less)
 
             # Check if there are X+n and X+m
-            offset_regex1 = number_regex2.search(rule[1])
-            offset_regex2 = number_regex2.search(rule[2])
+            offset_regex1 = offset_regex.search(rule[1])
+            offset_regex2 = offset_regex.search(rule[2])
 
             # If success, get the value
             offset1 = offset_regex1.group(0) if offset_regex1 != None else ""
@@ -248,8 +202,8 @@ def parse_confidence_rule(text: str) -> ConfidenceRule:
                                if rule[0] == "cog_z_greater" else ComparatorMode.Less)
 
             # Check if there are Z+n and Z+m
-            offset_regex1 = number_regex2.search(rule[1])
-            offset_regex2 = number_regex2.search(rule[2])
+            offset_regex1 = offset_regex.search(rule[1])
+            offset_regex2 = offset_regex.search(rule[2])
 
             # If success, get the value
             offset1 = offset_regex1.group(0) if offset_regex1 != None else ""
@@ -279,8 +233,8 @@ def parse_confidence_rule(text: str) -> ConfidenceRule:
                                if rule[0] == "height_greater" else ComparatorMode.Less)
 
             # Check if there are H+n and H+m
-            offset_regex1 = number_regex2.search(rule[1])
-            offset_regex2 = number_regex2.search(rule[2])
+            offset_regex1 = offset_regex.search(rule[1])
+            offset_regex2 = offset_regex.search(rule[2])
 
             # If success, get the value
             offset1 = offset_regex1.group(0) if offset_regex1 != None else ""
@@ -352,7 +306,7 @@ def parse_arteries_classifier(file_name: str):
 
 # Parses in_artery_classified.lp file with confidence rules
 # and returns a list of all models, arteries and edge tree structure found
-def parse_artery_classified(file_name: str, input_models: list, confidence_rules: list) -> list:
+def parse_arteries_classified(file_name: str, input_models: list, confidence_rules: list) -> list:
     output_models = []
     arteries = []
     dot = Digraph(comment='Arteries')
@@ -371,7 +325,7 @@ def parse_artery_classified(file_name: str, input_models: list, confidence_rules
         # [0] = answer number (skip), [1] = facts, [2] = optimizazion_value
         answer = answers[i].splitlines()
 
-        tmp_opt_value = number_regex1.search(answer[2]).group(0)
+        tmp_opt_value = _integer_regex.search(answer[2]).group(0)
         tmp_opt_value = int(tmp_opt_value)
 
         # Lower is best

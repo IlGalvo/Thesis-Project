@@ -10,41 +10,6 @@ class IRule:
         pass
 
 
-# ConfidenceRule wrapper
-class ConfidenceRule(IRule):
-    def __init__(self, id: int, name: str):
-        self._id = id
-        self._name = name
-
-        self._rule = None
-
-    def get_id(self) -> int:
-        return self._id
-
-    def get_name(self) -> str:
-        return self._name
-
-    def get_rule(self) -> IRule:
-        return self._rule
-
-    def set_rule(self, rule: IRule):
-        self._rule = rule
-
-    def to_text(self) -> str:
-        text = "Confidence Rule with ID: [" + \
-            str(self._id) + "] and Name: [" + self._name + "].\n"
-
-        return text + "\t\tRule: " + self._rule.to_text() + "\n"
-
-    def to_rule(self) -> str:
-        return "confidence_rule(N," + str(self._id) + ") :- N = " + self._name + ", " + self._rule.to_rule()
-
-    def to_json(self) -> str:
-        text = "{'id': " + str(self._id) + ", 'name': '" + self._name + "', '"
-
-        return text + "text': '" + self.to_text() + "', 'rule': '" + self.to_rule() + "'}"
-
-
 # Edge rule referes to two arteries and can be transitive
 class Edge(IRule):
     def __init__(self, artery1: str, artery2: str, is_transitive: bool = False):
@@ -54,12 +19,12 @@ class Edge(IRule):
         self._is_transitive = is_transitive
 
     def to_text(self) -> str:
-        text = self._artery1 + " is"
+        text = self._artery1 + " is "
 
         if self._is_transitive:
-            text += " transitively "
+            text += "transitively "
 
-        return text + " connected to " + self._artery2 + "."
+        return text + "connected to " + self._artery2 + "."
 
     def to_rule(self) -> str:
         if self._artery1 == "aorta":
@@ -181,6 +146,92 @@ class General(IRule):
         return "artery(_,_,_,_,_,_,_,_,_,_,A,N), " + value + "(A)."
 
 
+# Model wrapper
+class Model:
+    def __init__(self, id: int, variant: int, edge: Edge):
+        self._id = id
+        self._variant = variant
+
+        self._edge = edge
+
+    def get_id(self) -> int:
+        return self._id
+
+    def get_variant(self) -> int:
+        return self._variant
+
+    def get_edge(self) -> Edge:
+        return self._edge
+
+    def __str__(self) -> str:
+        text = "Model with ID: " + str(self._id)
+        text += " and Variant: " + str(self._variant) + ".\n"
+
+        return text + "\tRule: " + self._edge.to_text() + "\n\n"
+
+
+# ConfidenceRule wrapper
+class ConfidenceRule(IRule):
+    def __init__(self, id: int, name: str):
+        self._id = id
+        self._name = name
+
+        self._rule = None
+
+    def get_id(self) -> int:
+        return self._id
+
+    def get_name(self) -> str:
+        return self._name
+
+    def get_rule(self) -> IRule:
+        return self._rule
+
+    def set_rule(self, rule: IRule):
+        self._rule = rule
+
+    def to_text(self) -> str:
+        text = "Confidence Rule with ID: " + str(self._id)
+        text += " and Name: " + self._name + ".\n"
+
+        return text + "\t\tRule: " + self._rule.to_text() + "\n"
+
+    def to_rule(self) -> str:
+        return "confidence_rule(N," + str(self._id) + ") :- N = " + self._name + ", " + self._rule.to_rule()
+
+    def to_json(self) -> str:
+        text = "{'id': " + str(self._id) + ", 'name': '" + self._name + "', '"
+
+        return text + "text': '" + self.to_text() + "', 'rule': '" + self.to_rule() + "'}"
+
+
+# OutputArtery wrapper
+class OutputArtery:
+    def __init__(self, id: int, name: str):
+        self._id = id
+        self._name = name
+
+        self._confidence_rules = []
+
+    def get_id(self) -> int:
+        return self._id
+
+    def get_name(self) -> str:
+        return self._name
+
+    def get_confidence_rules(self) -> list:
+        return self._confidence_rules
+
+    def __str__(self) -> str:
+        text = "Artery with ID: " + str(self._id)
+        text += " and Name: " + self._name + ".\n"
+
+        for confidence_rule in self._confidence_rules:
+            text += "\t" + confidence_rule.to_text() + "\n"
+
+        return (text + "\n")
+
+
 # General rule text descriptions
 general_rule_dictionary = {
     "radius_small": "radius between 0 and 20 voxels",
@@ -215,6 +266,7 @@ general_rule_dictionary = {
     "semiquadrant_7": "angle between 270 and 315 degrees",
     "semiquadrant_8": "angle between 315 and 360 degrees"
 }
+
 
 artery_list = [
     "celiac_trunk", "left_gastric", "splenic", "common_hepatic", "proper_hepatic",
