@@ -1,3 +1,4 @@
+# Simple http server to handle requests from applications
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 import json
@@ -12,12 +13,15 @@ from models import (
 from utilities import save_confidence_rules
 
 
+# Server handler
 class _ServerHandler(BaseHTTPRequestHandler):
+    # Sets internal data
     def set_data(self, confidence_rules: list, database_file_name: str):
         self._confidence_rules = confidence_rules
 
         self._database_file_name = database_file_name
 
+    # Converts list of confidence rule to json
     def __confidence_rules_to_json(self) -> str:
         text = "["
 
@@ -29,39 +33,49 @@ class _ServerHandler(BaseHTTPRequestHandler):
 
         return text + "]"
 
+    # Generates next valid id for confidence rule name
     def __get_next_id(self, name: str) -> int:
+        # Filter for name
         iterator = filter((lambda cr: cr.get_name() == name),
                           self._confidence_rules)
+        # Gets max id o None
         confidence_rule = max(iterator, default=None,
                               key=(lambda cr: cr.get_id()))
 
+        # Next valid id
         return confidence_rule.get_id() + 1 if confidence_rule != None else 0
 
+    # Sets ok headers response
     def __send_ok_headers(self):
         self.send_response(200)
         self.send_header("Content-type", "application/json")
         self.end_headers()
 
+    # Sets ko headers response
     def __send_ko_headers(self):
         self.send_response(400)
         self.send_header("Content-type", "text/plain")
         self.end_headers()
 
+    # Sends ok response text
     def __send_ok_response(self, text: str):
         self.__send_ok_headers()
 
         self.wfile.write(text.encode("utf8"))
 
+    # Sends ko response text
     def __send_ko_response(self, text: str):
         self.__send_ko_headers()
 
         self.wfile.write(text.encode("utf8"))
 
+    # Internal log
     @staticmethod
     def __log(text: str):
         with open("server.log", "a+") as file:
             file.write(text + "\n")
 
+    # Action when confidence rule is successfully added
     def __handle_added_confidence_rule(self, confidence_rule: ConfidenceRule):
         self._confidence_rules.append(confidence_rule)
 
@@ -71,6 +85,7 @@ class _ServerHandler(BaseHTTPRequestHandler):
         self.__log("[INSERT]: " + confidence_rule.to_rule())
         save_confidence_rules(self._database_file_name, self._confidence_rules)
 
+    # Action when confidence rule is successfully removed
     def __handle_removed_confidence_rule(self, confidence_rule: ConfidenceRule):
         self._confidence_rules.remove(confidence_rule)
 
@@ -79,60 +94,82 @@ class _ServerHandler(BaseHTTPRequestHandler):
         self.__log("[DELETED]: " + confidence_rule.to_rule())
         save_confidence_rules(self._database_file_name, self._confidence_rules)
 
+    # Handles get requests
     def do_GET(self):
+        # Gets request parameters as dictionary
         query_path = urlparse(self.path).query
         query_components = parse_qs(query_path)
 
+        # Expected 'q=name'
         if "q" in query_components:
+            # Sends confidence rules
             if "confidence_rules" in query_components["q"]:
                 text = self.__confidence_rules_to_json()
                 self.__send_ok_response(text)
+            # Sends artery list
             elif "arteries" in query_components["q"]:
                 text = json.dumps(artery_list)
                 self.__send_ok_response(text)
+            # Sends general texts
             elif "general_texts" in query_components["q"]:
                 text = json.dumps(list(general_rule_dictionary.values()))
                 self.__send_ok_response(text)
+            # Sends comparator types
             elif "comparator_types" in query_components["q"]:
                 text = json.dumps([ctype.name for ctype in ComparatorType])
                 self.__send_ok_response(text)
+            # Sends comparator modes
             elif "comparator_modes" in query_components["q"]:
                 text = json.dumps([cmode.name for cmode in ComparatorMode])
                 self.__send_ok_response(text)
+            # Fallback query value
             else:
                 text = "Missing query value."
                 self.__send_ko_response(text)
+        # Fallback query parameter
         else:
             text = "Missing query parameter."
             self.__send_ko_response(text)
 
+    # Handles head requests
     def do_HEAD(self):
         self.__send_ok_headers()
 
+    # Handles post requests
     def do_POST(self):
+        # Gets request parameters as dictionary
         query_path = urlparse(self.path).query
         query_components = parse_qs(query_path)
 
+        # Reads posted data
         content_length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(content_length)
 
+        # Gets posted data parameters as dictionary
         post_fields = parse_qs(post_data.decode("utf8"), True)
 
+        # Expected 'action=name'
         if "action" in query_components:
+            # Handles insert
             if "insert" in query_components["action"]:
+                # Expected main parameters
                 if "main_artery" in post_fields and "rule_type" in post_fields:
                     main_artery = post_fields["main_artery"][0]
                     rule_type = post_fields["rule_type"][0]
 
                     id = self.__get_next_id(main_artery)
 
+                    # Expected valid edge rule data
                     if rule_type == "edge" and "artery" in post_fields and "is_transitive" in post_fields:
                         artery = post_fields["artery"][0]
-                        is_transitive = json.loads(
-                            post_fields["is_transitive"][0].lower())
+
+                        # Converts to bool
+                        is_transitive = post_fields["is_transitive"][0].lower()
+                        is_transitive = json.loads(is_transitive)
 
                         confidence_rule = ConfidenceRule(id, main_artery)
 
+                        # Handles aorta case
                         if artery == "aorta":
                             edge = Edge(artery, main_artery, is_transitive)
                             confidence_rule.set_rule(edge)
@@ -141,11 +178,14 @@ class _ServerHandler(BaseHTTPRequestHandler):
                             confidence_rule.set_rule(edge)
 
                         self.__handle_added_confidence_rule(confidence_rule)
+                    # Expected valid comparator rule data
                     elif rule_type == "comparator" and "type" in post_fields and "mode" in post_fields and \
                             "offset1" in post_fields and "artery" in post_fields and "offset2" in post_fields:
+                        # Gets the type
                         type = post_fields["type"][0]
                         type = ComparatorType[type]
 
+                        # Gets the mode
                         mode = post_fields["mode"][0]
                         mode = ComparatorMode[mode]
 
@@ -162,6 +202,7 @@ class _ServerHandler(BaseHTTPRequestHandler):
                         confidence_rule.set_rule(comparator)
 
                         self.__handle_added_confidence_rule(confidence_rule)
+                    # Expected valid general rule data
                     elif rule_type == "general" and "text" in post_fields:
                         text = post_fields["text"][0]
 
@@ -171,13 +212,17 @@ class _ServerHandler(BaseHTTPRequestHandler):
                         confidence_rule.set_rule(general)
 
                         self.__handle_added_confidence_rule(confidence_rule)
+                    # Fallback rule_type and value
                     else:
                         text = "Wrong rule_type and values."
                         self.__send_ko_response(text)
+                # Fallback main_artery or rule_type
                 else:
                     text = "Missing main_artery or rule_type."
                     self.__send_ko_response(text)
+            # Handles delete
             elif "delete" in query_components["action"]:
+                # Expected id and name
                 if "id" in post_fields and "name" in post_fields:
                     id = int(post_fields["id"][0])
                     name = post_fields["name"][0]
@@ -187,27 +232,34 @@ class _ServerHandler(BaseHTTPRequestHandler):
 
                     if confidence_rule != None:
                         self.__handle_removed_confidence_rule(confidence_rule)
+                    # Fallback not exists
                     else:
                         text = "Confidence rule does not exists."
                         self.__send_ko_response(text)
+                # Fallback id or name
                 else:
                     text = "Missing id or name."
                     self.__send_ko_response(text)
+            # Fallback query value
             else:
                 text = "Missing query value."
                 self.__send_ko_response(text)
+        # Fallback query parameter
         else:
             text = "Missing query parameter."
             self.__send_ko_response(text)
 
 
-class Server:
+# Simple http server
+class HttpServer:
     def __init__(self, ip: str, port: int, confidence_rules: list, database_file_name: str):
         self._http_server = HTTPServer((ip, port), _ServerHandler)
 
+        # Gets handler instance and sets internal data
         handler = self._http_server.RequestHandlerClass
         handler.set_data(handler, confidence_rules, database_file_name)
 
+    # Runs until Ctrl+C pressed
     def run(self):
         try:
             self._http_server.serve_forever()

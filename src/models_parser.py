@@ -1,9 +1,4 @@
-# This file parses the ASP output to natural language.
-#
-# Usage: python Parser.py in_arteries_classifier.lp
-# in_arteries_classified.lpout_arteries_parsed.txt
-# where: in_arteries_classifier.lp and in_arteries_classified.lp must be valid
-# ASP file.
+# This file parses the ASP output to its data structures
 import re
 from graphviz import Digraph
 
@@ -17,7 +12,13 @@ from models import (
 )
 
 
-# ParamsArtery is primary if it refers to confidence rule
+# To find integer numbers
+_integer_regex = re.compile(r"-?\d+")
+_offset_regex = re.compile(r"[+-]\d+")
+
+
+# Internal wrapper of ASP artery
+# ParamsArtery is primary if it refers to ASP confidence rule
 class _ParamsArtery:
     def __init__(self, is_primary: bool, name: str,
                  id: str = None, radius: str = None, density: str = None, quality: str = None,
@@ -82,10 +83,7 @@ class _ParamsArtery:
         return self._angle
 
 
-# To find integers number
-_integer_regex = re.compile(r"-?\d+")
-
-
+# Parses string to Model
 def parse_model(text: str) -> Model:
     # Cleanup
     text = text.replace("\n", "")
@@ -102,21 +100,24 @@ def parse_model(text: str) -> Model:
     return Model(id, variant, edge)
 
 
+# Parses string to ConfidenceRule
 def parse_confidence_rule(text: str) -> ConfidenceRule:
-    offset_regex = re.compile(r"[+-]\d+")
+    # Cleanup
+    text = text.replace("\n", "")
 
     # [0] = confidence rule info, [1...N] = rules
-    info = text.replace("\n", "").split(", ")
+    info = text.split(", ")
 
-    # Extract confidence rule id and name
+    # Extracts confidence rule id and name
     cr_text = info[0].split("= ")
 
+    # [0] = id, [1] = name
     id = int(_integer_regex.search(cr_text[0]).group(0))
     name = cr_text[1]
 
     confidence_rule = ConfidenceRule(id, name)
 
-    # List of temporary params artery
+    # List of temporary ParamsArtery
     arteries = []
 
     # Skip [0] because it's confidence rule info
@@ -127,10 +128,8 @@ def parse_confidence_rule(text: str) -> ConfidenceRule:
         # artery(ID,R,D,Q,X,Y,Z,PL,DE,H,A,N)
         if rule[0] == "artery":
             # If args are not equal to "_", they're valid
-            # If name is equal to "N", it refers to confidence rule
-            # principal artery
-            # If name is equal to "N", it refers to confidence rule
-            # name
+            # If name is equal to "N", it refers to confidence rule principal artery
+            # If name is equal to "N", it refers to confidence rule name
             id = rule[1] if rule[1] != "_" else None
             radius = rule[2] if rule[2] != "_" else None
             density = rule[3] if rule[3] != "_" else None
@@ -152,8 +151,7 @@ def parse_confidence_rule(text: str) -> ConfidenceRule:
                                    path_length, distance_from_extremes,
                                    heigth, angle)
             arteries.append(artery)
-
-        # edge(ID1,ID2) or edge(name,ID)
+        # edge(ID1,ID2) or edge(aorta,ID)
         elif rule[0] == "edge" or rule[0] == "edge_t":
             # Find arteries for ID
             artery1 = next((artery.get_name() for artery in arteries
@@ -165,15 +163,14 @@ def parse_confidence_rule(text: str) -> ConfidenceRule:
 
             edge = Edge(artery1, artery2, is_transitive)
             confidence_rule.set_rule(edge)
-
         # cog_x_greater/cog_x_less(X1+n,X2+m), with +n and +m optional
         elif rule[0] == "cog_x_greater" or rule[0] == "cog_x_less":
             comparator_mode = (ComparatorMode.Greater
                                if rule[0] == "cog_x_greater" else ComparatorMode.Less)
 
             # Check if there are X+n and X+m
-            offset_regex1 = offset_regex.search(rule[1])
-            offset_regex2 = offset_regex.search(rule[2])
+            offset_regex1 = _offset_regex.search(rule[1])
+            offset_regex2 = _offset_regex.search(rule[2])
 
             # If success, get the value
             offset1 = offset_regex1.group(0) if offset_regex1 != None else ""
@@ -195,15 +192,14 @@ def parse_confidence_rule(text: str) -> ConfidenceRule:
                                     artery1, offset1,
                                     artery2, offset2)
             confidence_rule.set_rule(comparator)
-
         # cog_z_greater/cog_z_less(Z1+n,Z2+m), with +n and +m optional
         elif rule[0] == "cog_z_greater" or rule[0] == "cog_z_less":
             comparator_mode = (ComparatorMode.Greater
                                if rule[0] == "cog_z_greater" else ComparatorMode.Less)
 
             # Check if there are Z+n and Z+m
-            offset_regex1 = offset_regex.search(rule[1])
-            offset_regex2 = offset_regex.search(rule[2])
+            offset_regex1 = _offset_regex.search(rule[1])
+            offset_regex2 = _offset_regex.search(rule[2])
 
             # If success, get the value
             offset1 = offset_regex1.group(0) if offset_regex1 != None else ""
@@ -225,16 +221,14 @@ def parse_confidence_rule(text: str) -> ConfidenceRule:
                                     artery1, offset1,
                                     artery2, offset2)
             confidence_rule.set_rule(comparator)
-
-        # height_greater/height_less(H1+n,H2+m), with +n and +m
-        # optional
+        # height_greater/height_less(H1+n,H2+m), with +n and +m optional
         elif rule[0] == "height_greater" or rule[0] == "height_less":
             comparator_mode = (ComparatorMode.Greater
                                if rule[0] == "height_greater" else ComparatorMode.Less)
 
             # Check if there are H+n and H+m
-            offset_regex1 = offset_regex.search(rule[1])
-            offset_regex2 = offset_regex.search(rule[2])
+            offset_regex1 = _offset_regex.search(rule[1])
+            offset_regex2 = _offset_regex.search(rule[2])
 
             # If success, get the value
             offset1 = offset_regex1.group(0) if offset_regex1 != None else ""
@@ -256,11 +250,9 @@ def parse_confidence_rule(text: str) -> ConfidenceRule:
                                     artery1, offset1,
                                     artery2, offset2)
             confidence_rule.set_rule(comparator)
-
         # It's a self meaning rule
         else:
-            # Check if it's a general rule contained in general rule
-            # dictionary
+            # Check if it's a general rule contained in general rule dictionary
             text = general_rule_dictionary.get(rule[0], None)
 
             if text != None:
@@ -271,7 +263,7 @@ def parse_confidence_rule(text: str) -> ConfidenceRule:
                 general = General(text, artery)
                 confidence_rule.set_rule(general)
             else:
-                # Parse as generic text rule
+                # Parses as generic text rule
                 info[0] = confidence_rule.get_name() + " has: "
                 text = " ".join(info)
 
@@ -285,17 +277,18 @@ def parse_confidence_rule(text: str) -> ConfidenceRule:
 
 # Parses in_arteries_classifier.lp file
 # and returns a list of all models and confidence rules found
-def parse_arteries_classifier(file_name: str):
+def parse_arteries_classifier(file_name: str) -> list:
     models = []
     confidence_rules = []
 
-    with open(file_name, "r") as in_file:
-        for line in in_file.readlines():
+    with open(file_name, "r") as file:
+        for line in file.readlines():
+            # Currently supports only base Model
             if line.startswith("model") and "ID" not in line:
                 model = parse_model(line)
 
                 models.append(model)
-
+            # Currently supports only base ConfidenceRule
             elif line.startswith("confidence_rule") and "anatomy" not in line:
                 confidence_rule = parse_confidence_rule(line)
 
@@ -311,12 +304,13 @@ def parse_arteries_classified(file_name: str, input_models: list, confidence_rul
     arteries = []
     dot = Digraph(comment='Arteries')
 
-    with open(file_name, "r") as in_file:
-        file_content = in_file.read()
+    with open(file_name, "r") as file:
+        file_content = file.read()
 
+    # Gets the answers
     answers = file_content.split("Answer: ")
 
-    # Support variable to find best answer
+    # Support variables to find best answer
     facts_text = ""
     optimization_value = 0
 
@@ -325,6 +319,7 @@ def parse_arteries_classified(file_name: str, input_models: list, confidence_rul
         # [0] = answer number (skip), [1] = facts, [2] = optimizazion_value
         answer = answers[i].splitlines()
 
+        # Gets optimizazion_value
         tmp_opt_value = _integer_regex.search(answer[2]).group(0)
         tmp_opt_value = int(tmp_opt_value)
 
@@ -333,7 +328,8 @@ def parse_arteries_classified(file_name: str, input_models: list, confidence_rul
             optimization_value = tmp_opt_value
             facts_text = answer[1]
 
-    # Can be: artery(id,name) or confidence_rule(name,id)
+    # Can be: model(id,variant), artery(id,name),
+    # confidence_rule(name,id), or edge(artery1, artery2)
     for facts in facts_text.split(' '):
         fact = facts.replace("(", ",").replace(")", "").split(",")
 
@@ -346,14 +342,12 @@ def parse_arteries_classified(file_name: str, input_models: list, confidence_rul
                          if model.get_id() == id and model.get_variant() == variant)
 
             output_models.append(model)
-
         elif fact[0] == "out_artery":
             id = int(fact[1])
             name = fact[2]
 
             artery = OutputArtery(id, name)
             arteries.append(artery)
-
         elif fact[0] == "cleaned_cr":
             id = int(fact[2])
             name = fact[1]
@@ -372,7 +366,7 @@ def parse_arteries_classified(file_name: str, input_models: list, confidence_rul
             artery1 = fact[1]
             artery2 = fact[2]
 
-            # Create tree structure
+            # Creates tree structure
             dot.edge(artery1, artery2)
 
     return output_models, arteries, dot

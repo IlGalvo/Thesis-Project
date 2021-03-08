@@ -1,6 +1,8 @@
+# General utilities
 import hashlib
 
 
+# Gets the md5 of file content
 def get_md5(file_name: str) -> str:
     with open(file_name, "r") as file:
         data = file.read().encode()
@@ -8,6 +10,7 @@ def get_md5(file_name: str) -> str:
         return hashlib.md5(data).hexdigest()
 
 
+# Saves confidence rules to file
 def save_confidence_rules(file_name: str, confidence_rules: list):
     with open(file_name, "w") as file:
         for i in range(0, len(confidence_rules)):

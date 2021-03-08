@@ -1,11 +1,14 @@
+# Data structures wrappers
 from enum import Enum
 
 
 # Common rule interface
 class IRule:
+    # To natural language
     def to_text() -> str:
         pass
 
+    # To ASP rule
     def to_rule() -> str:
         pass
 
@@ -33,8 +36,8 @@ class Edge(IRule):
             else:
                 return "artery(ID,_,_,_,_,_,_,_,_,_,_,N), edge(aorta,ID)."
 
-        text = "artery(ID1,_,_,_,_,_,_,_,_,_,_,N), artery(ID2,_,_,_,_,_,_,_,_,_,_," + \
-            self._artery2 + "), "
+        text = "artery(ID1,_,_,_,_,_,_,_,_,_,_,N), "
+        text += "artery(ID2,_,_,_,_,_,_,_,_,_,_," + self._artery2 + "), "
 
         if self._is_transitive:
             return text + "edge_t(ID1,ID2)."
@@ -78,46 +81,34 @@ class Comparator(IRule):
             comparator_type = " heigth"
 
         text = self._artery1 + comparator_type + self._offset1 + " is "
-
         text += "greater" if self._comparator_mode == ComparatorMode.Greater else "less"
 
         return text + " than " + self._artery2 + comparator_type + self._offset2 + "."
 
     def to_rule(self) -> str:
         if self._comparator_type == ComparatorType.Cog_X:
-            if self._comparator_mode == ComparatorMode.Greater:
-                text = "artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_," + \
-                    self._artery2 + "), "
+            text = "artery(_,_,_,_,X1,_,_,_,_,_,_,N), "
+            text += "artery(_,_,_,_,X2,_,_,_,_,_,_," + self._artery2 + "), "
 
+            if self._comparator_mode == ComparatorMode.Greater:
                 return text + "cog_x_greater(X1" + self._offset1 + ",X2" + self._offset2 + ")."
             else:
-                text = "artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_,_,_,_,X2,_,_,_,_,_,_," + \
-                    self._artery2 + "), "
-
                 return text + "cog_x_less(X1" + self._offset1 + ",X2" + self._offset2 + ")."
-
         elif self._comparator_type == ComparatorType.Cog_Z:
-            if self._comparator_mode == ComparatorMode.Greater:
-                text = "artery(_,_,_,_,_,_,Z1,_,_,_,_,N), artery(_,_,_,_,_,_,Z2,_,_,_,_," + \
-                    self._artery2 + "), "
+            text = "artery(_,_,_,_,_,_,Z1,_,_,_,_,N), "
+            text += "artery(_,_,_,_,_,_,Z2,_,_,_,_," + self._artery2 + "), "
 
+            if self._comparator_mode == ComparatorMode.Greater:
                 return text + "cog_z_greater(Z1" + self._offset1 + ",Z2" + self._offset2 + ")."
             else:
-                text = "artery(_,_,_,_,_,_,Z1,_,_,_,_,N), artery(_,_,_,_,_,_,Z2,_,_,_,_," + \
-                    self._artery2 + "), "
-
                 return text + "cog_z_less(Z1" + self._offset1 + ",Z2" + self._offset2 + ")."
-
         else:
-            if self._comparator_mode == ComparatorMode.Greater:
-                text = "artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_," + \
-                    self._artery2 + "), "
+            text = "artery(_,_,_,_,_,_,_,_,_,H1,_,N), "
+            text += "artery(_,_,_,_,_,_,_,_,_,H2,_," + self._artery2 + "), "
 
+            if self._comparator_mode == ComparatorMode.Greater:
                 return text + "height_greater(H1" + self._offset1 + ",H2" + self._offset2 + ")."
             else:
-                text = "artery(_,_,_,_,_,_,_,_,_,H1,_,N), artery(_,_,_,_,_,_,_,_,_,H2,_," + \
-                    self._artery2 + "), "
-
                 return text + "height_less(H1" + self._offset1 + ",H2" + self._offset2 + ")."
 
 
@@ -197,8 +188,11 @@ class ConfidenceRule(IRule):
         return text + "\t\tRule: " + self._rule.to_text() + "\n"
 
     def to_rule(self) -> str:
-        return "confidence_rule(N," + str(self._id) + ") :- N = " + self._name + ", " + self._rule.to_rule()
+        text = "confidence_rule(N," + str(self._id)
 
+        return text + ") :- N = " + self._name + ", " + self._rule.to_rule()
+
+    # Confidence rule to json
     def to_json(self) -> str:
         text = "{'id': " + str(self._id) + ", 'name': '" + self._name + "', '"
 
@@ -268,6 +262,7 @@ general_rule_dictionary = {
 }
 
 
+# Artery name list
 artery_list = [
     "celiac_trunk", "left_gastric", "splenic", "common_hepatic", "proper_hepatic",
     "dorsal_pancreatic", "left_renal", "right_renal", "accessory_left_renal",
