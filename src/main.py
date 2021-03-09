@@ -104,7 +104,7 @@ def main():
                 confidence_rules.append(confidence_rule)
 
     # Change as needed
-    ip = "localhost"
+    ip = "192.168.1.5"
     port = 8000
 
     # Starts server
