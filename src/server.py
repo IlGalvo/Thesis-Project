@@ -92,9 +92,7 @@ class _ServerHandler(BaseHTTPRequestHandler):
         self.__send_ok_response(text)
 
         self.__log("[INSERT]: " + confidence_rule.to_rule())
-
-        self._confidence_rules = save_confidence_rules(
-            self._database_file_name, self._confidence_rules)
+        save_confidence_rules(self._database_file_name, self._confidence_rules)
 
     # Action when confidence rule is successfully removed
     def __handle_removed(self, confidence_rule: ConfidenceRule):
@@ -103,9 +101,7 @@ class _ServerHandler(BaseHTTPRequestHandler):
         self.__send_ok_headers()
 
         self.__log("[DELETED]: " + confidence_rule.to_rule())
-
-        self._confidence_rules = save_confidence_rules(
-            self._database_file_name, self._confidence_rules)
+        save_confidence_rules(self._database_file_name, self._confidence_rules)
 
     # Handles get requests
     def do_GET(self):
