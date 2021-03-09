@@ -1,5 +1,5 @@
 # This file parses the ASP output to its data structures
-import re
+from re import compile
 from graphviz import Digraph
 
 from models import (
@@ -13,8 +13,8 @@ from models import (
 
 
 # To find integer numbers
-_integer_regex = re.compile(r"-?\d+")
-_offset_regex = re.compile(r"[+-]\d+")
+_integer_regex = compile(r"-?\d+")
+_offset_regex = compile(r"[+-]\d+")
 
 
 # Internal wrapper of ASP artery

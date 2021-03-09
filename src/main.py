@@ -5,8 +5,8 @@
 # in_arteries_classified.lpout_arteries_parsed.txt
 # where: in_arteries_classifier.lp and in_arteries_classified.lp
 # must be valid ASP files.
-import sys
 import os
+import sys
 
 from models_parser import (
     parse_confidence_rule,

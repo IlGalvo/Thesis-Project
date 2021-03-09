@@ -1,7 +1,14 @@
 # Simple http server to handle requests from applications
-from http.server import HTTPServer, BaseHTTPRequestHandler
-from urllib.parse import urlparse, parse_qs
-import json
+from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
+from threading import Lock
+from json import (
+    dumps,
+    loads
+)
+from urllib.parse import (
+    urlparse,
+    parse_qs
+)
 
 from models import (
     Edge,
@@ -16,10 +23,12 @@ from utilities import save_confidence_rules
 # Server handler
 class _ServerHandler(BaseHTTPRequestHandler):
     # Sets internal data
-    def set_data(self, confidence_rules: list, database_file_name: str):
+    def initialize(self, confidence_rules: list, database_file_name: str):
         self._confidence_rules = confidence_rules
-
         self._database_file_name = database_file_name
+
+        # To handle threadsafe operations
+        self._lock = Lock()
 
     # Converts list of confidence rule to json
     def __confidence_rules_to_json(self) -> str:
@@ -76,7 +85,7 @@ class _ServerHandler(BaseHTTPRequestHandler):
             file.write(text + "\n")
 
     # Action when confidence rule is successfully added
-    def __handle_added_confidence_rule(self, confidence_rule: ConfidenceRule):
+    def __handle_added(self, confidence_rule: ConfidenceRule):
         self._confidence_rules.append(confidence_rule)
 
         text = confidence_rule.to_json()
@@ -86,7 +95,7 @@ class _ServerHandler(BaseHTTPRequestHandler):
         save_confidence_rules(self._database_file_name, self._confidence_rules)
 
     # Action when confidence rule is successfully removed
-    def __handle_removed_confidence_rule(self, confidence_rule: ConfidenceRule):
+    def __handle_removed(self, confidence_rule: ConfidenceRule):
         self._confidence_rules.remove(confidence_rule)
 
         self.__send_ok_headers()
@@ -98,33 +107,35 @@ class _ServerHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         # Gets request parameters as dictionary
         query_path = urlparse(self.path).query
-        query_components = parse_qs(query_path)
+        query_components = parse_qs(query_path, True)
 
         # Expected 'q=name'
         if "q" in query_components:
             # Sends confidence rules
             if "confidence_rules" in query_components["q"]:
-                text = self.__confidence_rules_to_json()
-                self.__send_ok_response(text)
+                # Critical operations on confidence rules
+                with self._lock:
+                    text = self.__confidence_rules_to_json()
+                    self.__send_ok_response(text)
             # Sends artery list
             elif "arteries" in query_components["q"]:
-                text = json.dumps(artery_list)
+                text = dumps(artery_list)
                 self.__send_ok_response(text)
             # Sends general texts
             elif "general_texts" in query_components["q"]:
-                text = json.dumps(list(general_rule_dictionary.values()))
+                text = dumps(list(general_rule_dictionary.values()))
                 self.__send_ok_response(text)
             # Sends comparator types
             elif "comparator_types" in query_components["q"]:
-                text = json.dumps([ctype.name for ctype in ComparatorType])
+                text = dumps([ctype.name for ctype in ComparatorType])
                 self.__send_ok_response(text)
             # Sends comparator modes
             elif "comparator_modes" in query_components["q"]:
-                text = json.dumps([cmode.name for cmode in ComparatorMode])
+                text = dumps([cmode.name for cmode in ComparatorMode])
                 self.__send_ok_response(text)
             # Fallback query value
             else:
-                text = "Missing query value."
+                text = "Wrong query value."
                 self.__send_ko_response(text)
         # Fallback query parameter
         else:
@@ -139,7 +150,7 @@ class _ServerHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         # Gets request parameters as dictionary
         query_path = urlparse(self.path).query
-        query_components = parse_qs(query_path)
+        query_components = parse_qs(query_path, True)
 
         # Reads posted data
         content_length = int(self.headers['Content-Length'])
@@ -157,65 +168,67 @@ class _ServerHandler(BaseHTTPRequestHandler):
                     main_artery = post_fields["main_artery"][0]
                     rule_type = post_fields["rule_type"][0]
 
-                    id = self.__get_next_id(main_artery)
+                    # Critical operations on confidence rules
+                    with self._lock:
+                        id = self.__get_next_id(main_artery)
 
-                    # Expected valid edge rule data
-                    if rule_type == "edge" and "artery" in post_fields and "is_transitive" in post_fields:
-                        artery = post_fields["artery"][0]
+                        # Expected valid edge rule data
+                        if rule_type == "edge" and "artery" in post_fields and "is_transitive" in post_fields:
+                            artery = post_fields["artery"][0]
 
-                        # Converts to bool
-                        is_transitive = post_fields["is_transitive"][0].lower()
-                        is_transitive = json.loads(is_transitive)
+                            # Converts to bool
+                            is_transitive = post_fields["is_transitive"][0]
+                            is_transitive = loads(is_transitive.lower())
 
-                        confidence_rule = ConfidenceRule(id, main_artery)
+                            confidence_rule = ConfidenceRule(id, main_artery)
 
-                        # Handles aorta case
-                        if artery == "aorta":
-                            edge = Edge(artery, main_artery, is_transitive)
-                            confidence_rule.set_rule(edge)
+                            # Handles aorta case
+                            if artery == "aorta":
+                                edge = Edge(artery, main_artery, is_transitive)
+                                confidence_rule.set_rule(edge)
+                            else:
+                                edge = Edge(main_artery, artery, is_transitive)
+                                confidence_rule.set_rule(edge)
+
+                            self.__handle_added(confidence_rule)
+                        # Expected valid comparator rule data
+                        elif rule_type == "comparator" and "type" in post_fields and "mode" in post_fields and \
+                                "offset1" in post_fields and "artery" in post_fields and "offset2" in post_fields:
+                            # Gets the type
+                            type = post_fields["type"][0]
+                            type = ComparatorType[type]
+
+                            # Gets the mode
+                            mode = post_fields["mode"][0]
+                            mode = ComparatorMode[mode]
+
+                            offset1 = post_fields["offset1"][0]
+
+                            artery = post_fields["artery"][0]
+                            offset2 = post_fields["offset2"][0]
+
+                            confidence_rule = ConfidenceRule(id, main_artery)
+
+                            comparator = Comparator(type, mode,
+                                                    main_artery, offset1,
+                                                    artery, offset2)
+                            confidence_rule.set_rule(comparator)
+
+                            self.__handle_added(confidence_rule)
+                        # Expected valid general rule data
+                        elif rule_type == "general" and "text" in post_fields:
+                            text = post_fields["text"][0]
+
+                            confidence_rule = ConfidenceRule(id, main_artery)
+
+                            general = General(text, main_artery)
+                            confidence_rule.set_rule(general)
+
+                            self.__handle_added(confidence_rule)
+                        # Fallback rule_type and value
                         else:
-                            edge = Edge(main_artery, artery, is_transitive)
-                            confidence_rule.set_rule(edge)
-
-                        self.__handle_added_confidence_rule(confidence_rule)
-                    # Expected valid comparator rule data
-                    elif rule_type == "comparator" and "type" in post_fields and "mode" in post_fields and \
-                            "offset1" in post_fields and "artery" in post_fields and "offset2" in post_fields:
-                        # Gets the type
-                        type = post_fields["type"][0]
-                        type = ComparatorType[type]
-
-                        # Gets the mode
-                        mode = post_fields["mode"][0]
-                        mode = ComparatorMode[mode]
-
-                        offset1 = post_fields["offset1"][0]
-
-                        artery = post_fields["artery"][0]
-                        offset2 = post_fields["offset2"][0]
-
-                        confidence_rule = ConfidenceRule(id, main_artery)
-
-                        comparator = Comparator(type, mode,
-                                                main_artery, offset1,
-                                                artery, offset2)
-                        confidence_rule.set_rule(comparator)
-
-                        self.__handle_added_confidence_rule(confidence_rule)
-                    # Expected valid general rule data
-                    elif rule_type == "general" and "text" in post_fields:
-                        text = post_fields["text"][0]
-
-                        confidence_rule = ConfidenceRule(id, main_artery)
-
-                        general = General(text, main_artery)
-                        confidence_rule.set_rule(general)
-
-                        self.__handle_added_confidence_rule(confidence_rule)
-                    # Fallback rule_type and value
-                    else:
-                        text = "Wrong rule_type and values."
-                        self.__send_ko_response(text)
+                            text = "Wrong rule_type and values."
+                            self.__send_ko_response(text)
                 # Fallback main_artery or rule_type
                 else:
                     text = "Missing main_artery or rule_type."
@@ -227,22 +240,24 @@ class _ServerHandler(BaseHTTPRequestHandler):
                     id = int(post_fields["id"][0])
                     name = post_fields["name"][0]
 
-                    confidence_rule = next((cr for cr in self._confidence_rules
-                                            if cr.get_id() == id and cr.get_name() == name), None)
+                    # Critical operations on confidence rules
+                    with self._lock:
+                        confidence_rule = next((cr for cr in self._confidence_rules
+                                                if cr.get_id() == id and cr.get_name() == name), None)
 
-                    if confidence_rule != None:
-                        self.__handle_removed_confidence_rule(confidence_rule)
-                    # Fallback not exists
-                    else:
-                        text = "Confidence rule does not exists."
-                        self.__send_ko_response(text)
+                        if confidence_rule != None:
+                            self.__handle_removed(confidence_rule)
+                        # Fallback not exists
+                        else:
+                            text = "Confidence rule does not exists."
+                            self.__send_ko_response(text)
                 # Fallback id or name
                 else:
                     text = "Missing id or name."
                     self.__send_ko_response(text)
             # Fallback query value
             else:
-                text = "Missing query value."
+                text = "Wrong query value."
                 self.__send_ko_response(text)
         # Fallback query parameter
         else:
@@ -250,14 +265,14 @@ class _ServerHandler(BaseHTTPRequestHandler):
             self.__send_ko_response(text)
 
 
-# Simple http server
+# Simple multithreading http server
 class HttpServer:
     def __init__(self, ip: str, port: int, confidence_rules: list, database_file_name: str):
-        self._http_server = HTTPServer((ip, port), _ServerHandler)
+        self._http_server = ThreadingHTTPServer((ip, port), _ServerHandler)
 
-        # Gets handler instance and sets internal data
+        # Gets handler instance and initialization
         handler = self._http_server.RequestHandlerClass
-        handler.set_data(handler, confidence_rules, database_file_name)
+        handler.initialize(handler, confidence_rules, database_file_name)
 
     # Runs until Ctrl+C pressed
     def run(self):
