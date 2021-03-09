@@ -109,9 +109,9 @@ def main():
     port = 8000
 
     # Starts server
-    print("Starting httpd server")
+    print("Starting http server")
     HttpServer(ip, port, confidence_rules, database_file_name).run()
-    print("Sopped httpd server")
+    print("Sopped http server")
 
 
 if __name__ == "__main__":
