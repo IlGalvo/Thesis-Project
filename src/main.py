@@ -92,7 +92,8 @@ def main():
         _write_arteries_parsed(parsed_file_name, models, arteries, is_debug)
         dot.render(generated_file_name, view=is_debug)
 
-        save_confidence_rules(database_file_name, confidence_rules)
+        confidence_rules = save_confidence_rules(
+            database_file_name, confidence_rules)
     # Load from existing
     else:
         confidence_rules = []
