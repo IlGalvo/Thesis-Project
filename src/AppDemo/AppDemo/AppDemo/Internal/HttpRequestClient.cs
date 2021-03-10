@@ -1,5 +1,6 @@
 ﻿using AppDemo.Models;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -8,6 +9,19 @@ namespace AppDemo.Internal
 {
     public class HttpRequestClient
     {
+        private const string DefaultUrl = "http://192.168.1.5:8000";
+
+        private const string GetConfidenceRules = (DefaultUrl + "?q=confidence_rules");
+        private const string GetArteries = (DefaultUrl + "?q=arteries");
+        private const string GetComparatorTypes = (DefaultUrl + "?q=comparator_types");
+        private const string GetComparatorModes = (DefaultUrl + "?q=comparator_modes");
+        private const string GetGeneralTexts = (DefaultUrl + "?q=general_texts");
+
+        private const string PostInsert = (DefaultUrl + "?action=insert");
+        private const string PostDelete = (DefaultUrl + "?action=delete");
+
+        private const double DefaultTimeout = 5;
+
         private static HttpRequestClient instance;
         public static HttpRequestClient Instance { get { instance = (instance ?? new HttpRequestClient()); return instance; } }
 
@@ -15,12 +29,15 @@ namespace AppDemo.Internal
 
         private HttpRequestClient()
         {
-            httpClient = new HttpClient();
+            httpClient = new HttpClient
+            {
+                Timeout = TimeSpan.FromSeconds(DefaultTimeout)
+            };
         }
 
         private async Task<string> HandleResponseAsync(HttpResponseMessage httpResponseMessage)
         {
-            var text = await httpResponseMessage.Content.ReadAsStringAsync();
+            var text = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             if (!httpResponseMessage.IsSuccessStatusCode)
             {
@@ -32,40 +49,40 @@ namespace AppDemo.Internal
 
         public async Task<List<ConfidenceRule>> GetConfidenceRulesAsync()
         {
-            var httpResponseMessage = await httpClient.GetAsync("http://192.168.1.5:8000?q=confidence_rules");
-            var jsonText = await HandleResponseAsync(httpResponseMessage);
+            var httpResponseMessage = await httpClient.GetAsync(GetConfidenceRules).ConfigureAwait(false);
+            var jsonText = await HandleResponseAsync(httpResponseMessage).ConfigureAwait(false);
 
             return JsonConvert.DeserializeObject<List<ConfidenceRule>>(jsonText);
         }
 
         public async Task<List<string>> GetArteriesAsync()
         {
-            var httpResponseMessage = await httpClient.GetAsync("http://192.168.1.5:8000?q=arteries");
-            var jsonText = await HandleResponseAsync(httpResponseMessage);
+            var httpResponseMessage = await httpClient.GetAsync(GetArteries).ConfigureAwait(false);
+            var jsonText = await HandleResponseAsync(httpResponseMessage).ConfigureAwait(false);
 
             return JsonConvert.DeserializeObject<List<string>>(jsonText);
         }
 
         public async Task<List<string>> GetComparatorTypesAsync()
         {
-            var httpResponseMessage = await httpClient.GetAsync("http://192.168.1.5:8000?q=comparator_types");
-            var jsonText = await HandleResponseAsync(httpResponseMessage);
+            var httpResponseMessage = await httpClient.GetAsync(GetComparatorTypes).ConfigureAwait(false);
+            var jsonText = await HandleResponseAsync(httpResponseMessage).ConfigureAwait(false);
 
             return JsonConvert.DeserializeObject<List<string>>(jsonText);
         }
 
         public async Task<List<string>> GetComparatorModesAsync()
         {
-            var httpResponseMessage = await httpClient.GetAsync("http://192.168.1.5:8000?q=comparator_modes");
-            var jsonText = await HandleResponseAsync(httpResponseMessage);
+            var httpResponseMessage = await httpClient.GetAsync(GetComparatorModes).ConfigureAwait(false);
+            var jsonText = await HandleResponseAsync(httpResponseMessage).ConfigureAwait(false);
 
             return JsonConvert.DeserializeObject<List<string>>(jsonText);
         }
 
         public async Task<List<string>> GetGeneralTextsAsync()
         {
-            var httpResponseMessage = await httpClient.GetAsync("http://192.168.1.5:8000?q=general_texts");
-            var jsonText = await HandleResponseAsync(httpResponseMessage);
+            var httpResponseMessage = await httpClient.GetAsync(GetGeneralTexts).ConfigureAwait(false);
+            var jsonText = await HandleResponseAsync(httpResponseMessage).ConfigureAwait(false);
 
             return JsonConvert.DeserializeObject<List<string>>(jsonText);
         }
@@ -74,8 +91,8 @@ namespace AppDemo.Internal
         {
             using (var formUrlEncoded = new FormUrlEncodedContent(dictionary))
             {
-                var httpResponseMessage = await httpClient.PostAsync("http://192.168.1.5:8000?action=insert", formUrlEncoded);
-                var jsonText = await HandleResponseAsync(httpResponseMessage);
+                var httpResponseMessage = await httpClient.PostAsync(PostInsert, formUrlEncoded).ConfigureAwait(false);
+                var jsonText = await HandleResponseAsync(httpResponseMessage).ConfigureAwait(false);
 
                 return JsonConvert.DeserializeObject<ConfidenceRule>(jsonText);
             }
@@ -91,9 +108,9 @@ namespace AppDemo.Internal
 
             using (var formUrlEncoded = new FormUrlEncodedContent(dictionary))
             {
-                var httpResponseMessage = await httpClient.PostAsync("http://192.168.1.5:8000?action=delete", formUrlEncoded);
+                var httpResponseMessage = await httpClient.PostAsync(PostDelete, formUrlEncoded).ConfigureAwait(false);
 
-                await HandleResponseAsync(httpResponseMessage);
+                await HandleResponseAsync(httpResponseMessage).ConfigureAwait(false);
             }
         }
     }

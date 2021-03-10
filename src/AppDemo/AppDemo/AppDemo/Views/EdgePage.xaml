@@ -13,7 +13,7 @@
                      Margin="30">
 
             <Label Text="Add edge rule"
-                   TextColor="{StaticResource PrimaryColor}}"
+                   TextColor="{StaticResource PrimaryColor}"
                    HorizontalTextAlignment="Center"
                    FontSize="30"
                    VerticalOptions="StartAndExpand" />
@@ -45,7 +45,6 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-
 
                     <Label Text="Is transitive:"
                            TextColor="{StaticResource PrimaryColor}"

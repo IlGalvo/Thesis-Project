@@ -90,6 +90,7 @@ namespace AppDemo.ViewModels
             }
             catch (Exception exception)
             {
+                IsRefreshing = false;
                 CurrentPage.IsEnabled = false;
 
                 await CurrentPage.DisplayAlert("Error", exception.Message, "Close");

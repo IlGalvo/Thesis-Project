@@ -31,7 +31,7 @@
 
                     <internal:OptimizedSearchBar TextColor="{StaticResource PrimaryColor}"
                                                  HorizontalTextAlignment="Center"
-                                                 Placeholder="Cerca..."
+                                                 Placeholder="Cerca confidence rules..."
                                                  PlaceholderColor="{StaticResource PlaceholderColor}"
                                                  CancelButtonColor="{StaticResource PrimaryColor}"
                                                  BackgroundColor="{StaticResource TertiaryColor}"
@@ -58,32 +58,17 @@
                       RefreshCommand="{Binding RefreshCommand}"
                       IsRefreshing="{Binding IsRefreshing}">
 
-                <d:ListView.ItemsSource>
-                    <x:Array Type="{x:Type x:String}">
-                        <x:String>Item One</x:String>
-                        <x:String>Item Two</x:String>
-                        <x:String>Item Three</x:String>
-                    </x:Array>
-                </d:ListView.ItemsSource>
-
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Orientation="Vertical"
-                                         Padding="20">
+                            <StackLayout Orientation="Vertical">
 
-                                <Label TextColor="{StaticResource PrimaryColor}"
-                                       d:Text="{Binding}"
-                                       FontSize="Title"
-                                       VerticalTextAlignment="Center">
-
-                                    <Label.Text>
-                                        <MultiBinding StringFormat="{}Name: {0}, Id: {1}">
-                                            <Binding Path="Name" />
-                                            <Binding Path="Id" />
-                                        </MultiBinding>
-                                    </Label.Text>
-                                </Label>
+                                <Label Text="{Binding Name}"
+                                       TextColor="{StaticResource PrimaryColor}"
+                                       FontSize="Title"/>
+                                <Label Text="{Binding Id,StringFormat='Id: {0}'}"
+                                       TextColor="{StaticResource PrimaryColor}"
+                                       FontSize="Default"/>
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>
