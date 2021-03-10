@@ -15,8 +15,8 @@ namespace AppDemo.Models
             Id = id;
             Name = name;
 
-            Text = text;
-            Rule = rule;
+            Text = text.Trim();
+            Rule = rule.Trim();
         }
 
         #region BASE_METHODS

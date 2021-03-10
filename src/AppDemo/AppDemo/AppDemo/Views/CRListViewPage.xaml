@@ -61,7 +61,8 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Orientation="Vertical">
+                            <StackLayout Orientation="Vertical"
+                                         Margin="0, 10, 0, 20">
 
                                 <Label Text="{Binding Name}"
                                        TextColor="{StaticResource PrimaryColor}"

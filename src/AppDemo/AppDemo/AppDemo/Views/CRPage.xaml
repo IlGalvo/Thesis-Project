@@ -18,28 +18,36 @@
                    FontSize="30"
                    VerticalOptions="StartAndExpand" />
 
-            <StackLayout Spacing="30"
+            <StackLayout Spacing="50"
                          VerticalOptions="CenterAndExpand">
 
-                <Label Text="Text:"
-                       TextColor="{StaticResource PrimaryColor}"
-                       HorizontalTextAlignment="Start"
-                       FontSize="20" />
-                <Editor Text="{Binding ConfidenceRule.Text}"
-                        TextColor="{StaticResource PrimaryColor}"
-                        BackgroundColor="{StaticResource BackgroundColor}"
-                        AutoSize="TextChanges"
-                        IsReadOnly="True" />
+                <StackLayout Spacing="20">
+                    
+                    <Label Text="Rule Text:"
+                           TextColor="{StaticResource PrimaryColor}"
+                           HorizontalTextAlignment="Center"
+                           FontAttributes="Italic"
+                           FontSize="20" />
+                    <Editor Text="{Binding ConfidenceRule.Text}"
+                            TextColor="{StaticResource PrimaryColor}"
+                            BackgroundColor="{StaticResource BackgroundColor}"
+                            AutoSize="TextChanges"
+                            IsReadOnly="True" />
+                </StackLayout>
 
-                <Label Text="Rule:"
-                       TextColor="{StaticResource PrimaryColor}"
-                       HorizontalTextAlignment="Start"
-                       FontSize="20" />
-                <Editor Text="{Binding ConfidenceRule.Rule}"
-                        TextColor="{StaticResource PrimaryColor}"
-                        BackgroundColor="{StaticResource BackgroundColor}"
-                        AutoSize="TextChanges"
-                        IsReadOnly="True" />
+                <StackLayout Spacing="20">
+                    
+                    <Label Text="ASP Rule:"
+                           TextColor="{StaticResource PrimaryColor}"
+                           HorizontalTextAlignment="Center"
+                           FontAttributes="Italic"
+                           FontSize="20" />
+                    <Editor Text="{Binding ConfidenceRule.Rule}"
+                            TextColor="{StaticResource PrimaryColor}"
+                            BackgroundColor="{StaticResource BackgroundColor}"
+                            AutoSize="TextChanges"
+                            IsReadOnly="True" />
+                </StackLayout>
             </StackLayout>
 
             <Button Text="Delete"
