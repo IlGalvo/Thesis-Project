@@ -25,18 +25,16 @@ from server import HttpServer
 def _write_arteries_parsed(file_name: str, output_models: list, arteries: list, is_debug: bool):
     with open(file_name, "w") as out_file:
         for model in output_models:
-            out_file.write(str(model))
+            out_file.write(str(model) + "\n")
 
             if is_debug:
                 print(model)
 
-        out_file.write("\n")
-
         for artery in arteries:
-            out_file.write(str(artery))
+            out_file.write(str(artery) + "\n")
 
             if is_debug:
-                print(artery)
+                print(str(artery))
 
 
 # Main function
