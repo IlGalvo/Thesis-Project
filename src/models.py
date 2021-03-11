@@ -137,30 +137,6 @@ class General(IRule):
         return "artery(_,_,_,_,_,_,_,_,_,_,A,N), " + value + "(A)."
 
 
-# Model wrapper
-class Model:
-    def __init__(self, id: int, variant: int, edge: Edge):
-        self._id = id
-        self._variant = variant
-
-        self._edge = edge
-
-    def get_id(self) -> int:
-        return self._id
-
-    def get_variant(self) -> int:
-        return self._variant
-
-    def get_edge(self) -> Edge:
-        return self._edge
-
-    def __str__(self) -> str:
-        text = "Model with ID: " + str(self._id)
-        text += " and Variant: " + str(self._variant) + ".\n"
-
-        return text + "\tRule: " + self._edge.to_text() + "\n\n"
-
-
 # ConfidenceRule wrapper
 class ConfidenceRule(IRule):
     def __init__(self, id: int, name: str):
@@ -185,7 +161,7 @@ class ConfidenceRule(IRule):
         text = "Confidence Rule with ID: " + str(self._id)
         text += " and Name: " + self._name + ".\n"
 
-        return text + "\t\tRule: " + self._rule.to_text() + "\n"
+        return text + "\tRule text: " + self._rule.to_text()
 
     def to_rule(self) -> str:
         text = "confidence_rule(N," + str(self._id)
@@ -220,10 +196,37 @@ class OutputArtery:
         text = "Artery with ID: " + str(self._id)
         text += " and Name: " + self._name + ".\n"
 
-        for confidence_rule in self._confidence_rules:
-            text += "\t" + confidence_rule.to_text() + "\n"
+        for i in range(0, len(self._confidence_rules)):
+            text += "\t" + self._confidence_rules[i].to_text()
 
-        return (text + "\n")
+            if i != len(self._confidence_rules) - 1:
+                text += "\n\n"
+
+        return text + "\n"
+
+
+# Model wrapper
+class Model:
+    def __init__(self, id: int, variant: int, edge: Edge):
+        self._id = id
+        self._variant = variant
+
+        self._edge = edge
+
+    def get_id(self) -> int:
+        return self._id
+
+    def get_variant(self) -> int:
+        return self._variant
+
+    def get_edge(self) -> Edge:
+        return self._edge
+
+    def __str__(self) -> str:
+        text = "Model with ID: " + str(self._id)
+        text += " and Variant: " + str(self._variant) + ".\n"
+
+        return text + "\tRule text: " + self._edge.to_text() + "\n"
 
 
 # General rule text descriptions
