@@ -2,6 +2,6 @@
 <resources>
   <style name="MainTheme" parent="MainTheme.Base">
     <item name="windowActionModeOverlay">true</item>
-    <item name="android:colorActivatedHighlight">@color/mainColor</item>
+    <item name="android:colorActivatedHighlight">@color/colorAccent</item>
   </style>
 </resources>

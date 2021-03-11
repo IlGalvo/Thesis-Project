@@ -53,10 +53,29 @@
                            Grid.Row="0"
                            Grid.Column="0" />
                     <Switch IsToggled="{Binding IsTransitive}"
-                            OnColor="{StaticResource SecondaryColor}"
-                            ThumbColor="Red"
+                            OnColor="DarkGray"
                             Grid.Row="0"
-                            Grid.Column="1" />
+                            Grid.Column="1">
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+
+                                <VisualState x:Name="On">
+                                    <VisualState.Setters>
+                                        <Setter Property="ThumbColor"
+                                                Value="{StaticResource SecondaryColor}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+
+                                <VisualState x:Name="Off">
+                                    <VisualState.Setters>
+                                        <Setter Property="ThumbColor"
+                                                Value="Red" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Switch>
                 </Grid>
 
             </StackLayout>
