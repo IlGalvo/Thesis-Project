@@ -171,8 +171,9 @@ class ConfidenceRule(IRule):
     # Confidence rule to json
     def to_json(self) -> str:
         text = "{'id': " + str(self._id) + ", 'name': '" + self._name + "', '"
+        text += "text': '" + self.to_text().replace("\t", "")
 
-        return text + "text': '" + self.to_text().replace("\t", "") + "', 'rule': '" + self.to_rule() + "'}"
+        return text + "', 'rule': '" + self.to_rule() + "'}"
 
 
 # OutputArtery wrapper
