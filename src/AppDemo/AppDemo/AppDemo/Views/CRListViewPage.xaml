@@ -49,9 +49,10 @@
                 </Grid>
             </Frame>
 
+            <!-- Change CachingStrategy to RecycleElementAndDataTemplate (BUG) -->
             <ListView ItemsSource="{Binding ConfidenceRules}"
-                      SelectedItem="{Binding SelectedConfidenceRule, Mode=TwoWay}"
-                      CachingStrategy="RecycleElement"
+                      SelectedItem="{Binding SelectedConfidenceRule, Mode='TwoWay'}"
+                      CachingStrategy="RetainElement"
                       HasUnevenRows="True"
                       SeparatorColor="{StaticResource PrimaryColor}"
                       IsPullToRefreshEnabled="True"
@@ -66,10 +67,10 @@
 
                                 <Label Text="{Binding Name}"
                                        TextColor="{StaticResource PrimaryColor}"
-                                       FontSize="Title"/>
-                                <Label Text="{Binding Id,StringFormat='Id: {0}'}"
+                                       FontSize="Title" />
+                                <Label Text="{Binding Id, StringFormat='Id: {0}'}"
                                        TextColor="{StaticResource PrimaryColor}"
-                                       FontSize="Default"/>
+                                       FontSize="Default" />
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>
