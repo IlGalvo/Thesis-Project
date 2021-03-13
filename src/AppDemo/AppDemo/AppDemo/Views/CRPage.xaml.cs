@@ -19,19 +19,19 @@ namespace AppDemo.Views
             BindingContext = new CRPageViewModel(confidenceRule);
         }
 
+        protected override bool OnBackButtonPressed()
+        {
+            HandleBackButtonPressed();
+
+            return isPostInsert;
+        }
+
         private async void HandleBackButtonPressed()
         {
             if (isPostInsert)
             {
                 await Navigation.PopToRootAsync();
             }
-        }
-
-        protected override bool OnBackButtonPressed()
-        {
-            HandleBackButtonPressed();
-
-            return isPostInsert;
         }
     }
 }

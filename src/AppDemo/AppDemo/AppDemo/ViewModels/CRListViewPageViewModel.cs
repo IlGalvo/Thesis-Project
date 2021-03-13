@@ -44,7 +44,7 @@ namespace AppDemo.ViewModels
 
                 if (selectedConfidenceRule != null)
                 {
-                    ManageSelectedConfidenceRule();
+                    HandleSelectedConfidenceRule();
                 }
             }
         }
@@ -106,7 +106,7 @@ namespace AppDemo.ViewModels
             await CurrentPage.Navigation.PushAsync(new AddPage());
         }
 
-        private async void ManageSelectedConfidenceRule()
+        private async void HandleSelectedConfidenceRule()
         {
             await CurrentPage.Navigation.PushAsync(new CRPage(SelectedConfidenceRule));
 
