@@ -4,9 +4,9 @@ namespace AppDemo.Internal
 {
     public abstract class PageHelper
     {
-        public Page CurrentPage { get; private set; }
+        protected Page CurrentPage { get; private set; }
 
-        public PageHelper()
+        protected PageHelper()
         {
             Application.Current.PageAppearing += Current_PageAppearing;
         }
