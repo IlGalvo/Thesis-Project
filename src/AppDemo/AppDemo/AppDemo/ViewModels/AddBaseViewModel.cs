@@ -24,18 +24,18 @@ namespace AppDemo.ViewModels
             {
                 var confidenceRule = await HttpRequestClient.Instance.InsertAsync(dictionary);
 
-                if (await CurrentPage.DisplayAlert("Information", "Confidence rule added correctly, want to show?", "Yes", "No"))
+                if (await DisplayDialogAsync("Information", "Confidence rule added correctly, want to show?", "Yes", "No"))
                 {
-                    await CurrentPage.Navigation.PushAsync(new CRPage(confidenceRule, true));
+                    await Navigation.PushAsync(new CRPage(confidenceRule, true));
                 }
                 else
                 {
-                    await CurrentPage.Navigation.PopToRootAsync();
+                    await Navigation.PopToRootAsync();
                 }
             }
             catch (Exception exception)
             {
-                await CurrentPage.DisplayAlert("Error", exception.Message, "Close");
+                await DisplayDialogAsync("Error", exception.Message, "Close");
             }
         }
     }

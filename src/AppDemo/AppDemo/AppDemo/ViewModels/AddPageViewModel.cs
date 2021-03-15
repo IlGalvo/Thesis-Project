@@ -15,24 +15,24 @@ namespace AppDemo.ViewModels
                 switch (value.ToString())
                 {
                     case "Edge":
-                        await CurrentPage.Navigation.PushAsync(new EdgePage(arteries));
+                        await Navigation.PushAsync(new EdgePage(arteries));
                         break;
                     case "Comparator":
                         var types = await HttpRequestClient.Instance.GetComparatorTypesAsync();
                         var modes = await HttpRequestClient.Instance.GetComparatorModesAsync();
 
-                        await CurrentPage.Navigation.PushAsync(new ComparatorPage(arteries, types, modes));
+                        await Navigation.PushAsync(new ComparatorPage(arteries, types, modes));
                         break;
                     case "General":
                         var texts = await HttpRequestClient.Instance.GetGeneralTextsAsync();
 
-                        await CurrentPage.Navigation.PushAsync(new GeneralPage(arteries, texts));
+                        await Navigation.PushAsync(new GeneralPage(arteries, texts));
                         break;
                 }
             }
             catch (Exception exception)
             {
-                await CurrentPage.DisplayAlert("Error", exception.Message, "Close");
+                await DisplayDialogAsync("Error", exception.Message, "Close");
             }
         }
     }

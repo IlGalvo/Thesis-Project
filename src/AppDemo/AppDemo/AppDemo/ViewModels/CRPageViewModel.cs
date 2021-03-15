@@ -15,17 +15,17 @@ namespace AppDemo.ViewModels
 
         protected override async void Action(object value)
         {
-            if (await CurrentPage.DisplayAlert("Question", "Are you sure you want to delete this confidence rule?", "Yes", "No"))
+            if (await DisplayDialogAsync("Question", "Are you sure you want to delete this confidence rule?", "Yes", "No"))
             {
                 try
                 {
                     await HttpRequestClient.Instance.DeleteAsync(ConfidenceRule.Id, ConfidenceRule.Name);
 
-                    await CurrentPage.Navigation.PopToRootAsync();
+                    await Navigation.PopToRootAsync();
                 }
                 catch (Exception exception)
                 {
-                    await CurrentPage.DisplayAlert("Error", exception.Message, "Close");
+                    await DisplayDialogAsync("Error", exception.Message, "Close");
                 }
             }
         }

@@ -85,15 +85,12 @@ namespace AppDemo.ViewModels
                 {
                     ConfidenceRules = mainConfidenceRules = confidenceRules;
                 }
-
-                CurrentPage.IsEnabled = true;
             }
             catch (Exception exception)
             {
                 IsRefreshing = false;
-                CurrentPage.IsEnabled = false;
 
-                await CurrentPage.DisplayAlert("Error", exception.Message, "Close");
+                await DisplayDialogAsync("Error", exception.Message, "Close");
 
                 Refresh();
             }
@@ -103,12 +100,12 @@ namespace AppDemo.ViewModels
 
         protected override async void Action(object value)
         {
-            await CurrentPage.Navigation.PushAsync(new AddPage());
+            await Navigation.PushAsync(new AddPage());
         }
 
         private async void HandleSelectedConfidenceRule()
         {
-            await CurrentPage.Navigation.PushAsync(new CRPage(SelectedConfidenceRule));
+            await Navigation.PushAsync(new CRPage(SelectedConfidenceRule));
 
             SelectedConfidenceRule = null;
         }

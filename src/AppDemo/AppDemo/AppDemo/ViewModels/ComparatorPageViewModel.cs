@@ -71,12 +71,12 @@ namespace AppDemo.ViewModels
                 }
                 else
                 {
-                    await CurrentPage.DisplayAlert("Error", "Enter valid offsets (empty or non-zero whole number).", "Close");
+                    await DisplayDialogAsync("Error", "Enter valid offsets (empty or non-zero whole number).", "Close");
                 }
             }
             else
             {
-                await CurrentPage.DisplayAlert("Error", "Arteries cannot be equal.", "Close");
+                await DisplayDialogAsync("Error", "Arteries cannot be equal.", "Close");
             }
         }
     }

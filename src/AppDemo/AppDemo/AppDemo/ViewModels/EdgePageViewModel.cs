@@ -34,7 +34,7 @@ namespace AppDemo.ViewModels
             }
             else
             {
-                await CurrentPage.DisplayAlert("Error", "Arteries cannot be equal.", "Close");
+                await DisplayDialogAsync("Error", "Arteries cannot be equal.", "Close");
             }
         }
     }
