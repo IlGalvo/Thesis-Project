@@ -5,6 +5,7 @@ from json import (
     dumps,
     loads
 )
+from typing import List
 from urllib.parse import (
     urlparse,
     parse_qs
@@ -23,7 +24,7 @@ from utilities import save_confidence_rules
 # Server handler
 class _ServerHandler(BaseHTTPRequestHandler):
     # Sets internal data
-    def initialize(self, confidence_rules: list, database_file_name: str):
+    def initialize(self, confidence_rules: List[ConfidenceRule], database_file_name: str):
         self._confidence_rules = confidence_rules
         self._database_file_name = database_file_name
 
@@ -267,7 +268,7 @@ class _ServerHandler(BaseHTTPRequestHandler):
 
 # Simple multithreading http server
 class HttpServer:
-    def __init__(self, ip: str, port: int, confidence_rules: list, database_file_name: str):
+    def __init__(self, ip: str, port: int, confidence_rules: List[ConfidenceRule], database_file_name: str):
         self._http_server = ThreadingHTTPServer((ip, port), _ServerHandler)
 
         # Gets handler instance and initialization

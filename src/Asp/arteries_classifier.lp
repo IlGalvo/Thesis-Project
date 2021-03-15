@@ -295,8 +295,8 @@ confidence_rules(N,7) :- N = splenic, artery(_,_,_,_,X1,_,_,_,_,_,_,N), artery(_
 
 %% Parser is not yet able to handle this confidence rule
 %confidence_rules(N,8) :- N = splenic, artery(ID1,_,_,_,_,_,_,_,_,_,_,N), artery(ID2,_,_,_,X2,_,_,_,_,_,_,celiac_trunk), %%% almeno un vaso foglia della splenica e' a sinistra del celiac trunk di almeno 50mm
-		       	         edge_t(ID1,ID3), not edge(ID3,ID4), id(ID4),
-		       	         artery(ID3,_,_,_,X3,_,_,_,_,_,_), X3 > X2+50.
+		       	         %edge_t(ID1,ID3), not edge(ID3,ID4), id(ID4),
+		       	         %artery(ID3,_,_,_,X3,_,_,_,_,_,_), X3 > X2+50.
 
 %% HEPATIC
 %confidence_rules(N,0) :- N = common_hepatic, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_l(R).
@@ -391,7 +391,7 @@ confidence_rules(N,6) :- N = left_intercostal_2, artery(_,_,_,_,X1,_,_,_,_,_,_,N
 confidence_rules(N,7) :- N = left_intercostal_2, artery(_,_,_,_,_,_,Z1,_,_,_,_,N), artery(_,_,_,_,_,_,Z2,_,_,_,_,right_intercostal_2), cog_z_greater(Z1+5,Z2).
 confidence_rules(N,8) :- N = left_intercostal_2, artery(_,_,_,_,_,_,Z1,_,_,_,_,N), artery(_,_,_,_,_,_,Z2,_,_,_,_,right_intercostal_2), cog_z_greater(Z1-5,Z2).
 
-%% right intercostal 1
+%% right intercostal 2
 confidence_rules(N,0) :- N = right_intercostal_2, artery(_,_,_,_,_,_,_,_,_,_,A,N), quadrant_3(A).
 confidence_rules(N,1) :- N = right_intercostal_2, artery(_,R,_,_,_,_,_,_,_,_,_,N), radius_10_15(R).
 confidence_rules(N,2) :- N = right_intercostal_2, artery(ID,_,_,_,_,_,_,_,_,_,_,N), edge(aorta,ID).

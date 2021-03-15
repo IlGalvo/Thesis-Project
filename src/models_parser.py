@@ -1,5 +1,6 @@
 # This file parses the ASP output to its data structures
 from re import compile
+from typing import List, Tuple
 from graphviz import Digraph
 
 from models import (
@@ -102,6 +103,9 @@ def parse_model(text: str) -> Model:
 
 # Parses string to ConfidenceRule
 def parse_confidence_rule(text: str) -> ConfidenceRule:
+    # List of temporary ParamsArtery
+    arteries = List[_ParamsArtery]
+
     # Cleanup
     text = text.replace("\n", "")
 
@@ -116,9 +120,6 @@ def parse_confidence_rule(text: str) -> ConfidenceRule:
     name = cr_text[1]
 
     confidence_rule = ConfidenceRule(id, name)
-
-    # List of temporary ParamsArtery
-    arteries = []
 
     # Skip [0] because it's confidence rule info
     for i in range(1, len(info)):
@@ -277,9 +278,9 @@ def parse_confidence_rule(text: str) -> ConfidenceRule:
 
 # Parses in_arteries_classifier.lp file
 # and returns a list of all models and confidence rules found
-def parse_arteries_classifier(file_name: str) -> list:
-    models = []
-    confidence_rules = []
+def parse_arteries_classifier(file_name: str) -> Tuple[List[Model], List[ConfidenceRule]]:
+    models = List[Model]
+    confidence_rules = List[ConfidenceRule]
 
     with open(file_name, "r") as file:
         for line in file.readlines():
@@ -299,9 +300,11 @@ def parse_arteries_classifier(file_name: str) -> list:
 
 # Parses in_artery_classified.lp file with confidence rules
 # and returns a list of all models, arteries and edge tree structure found
-def parse_arteries_classified(file_name: str, input_models: list, confidence_rules: list) -> list:
-    output_models = []
-    arteries = []
+def parse_arteries_classified(file_name: str,
+                              input_models: List[Model],
+                              confidence_rules: List[ConfidenceRule]) -> Tuple[List[Model], List[OutputArtery], Digraph]:
+    output_models = List[Model]
+    arteries = List[OutputArtery]
     dot = Digraph(comment='Arteries')
 
     with open(file_name, "r") as file:

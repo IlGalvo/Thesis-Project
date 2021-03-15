@@ -1,5 +1,6 @@
 # Data structures wrappers
 from enum import Enum
+from typing import List
 
 
 # Common rule interface
@@ -182,7 +183,7 @@ class OutputArtery:
         self._id = id
         self._name = name
 
-        self._confidence_rules = []
+        self._confidence_rules = List[ConfidenceRule]
 
     def get_id(self) -> int:
         return self._id
@@ -190,7 +191,7 @@ class OutputArtery:
     def get_name(self) -> str:
         return self._name
 
-    def get_confidence_rules(self) -> list:
+    def get_confidence_rules(self) -> List[ConfidenceRule]:
         return self._confidence_rules
 
     def __str__(self) -> str:

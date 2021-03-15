@@ -7,7 +7,12 @@
 # must be valid ASP files.
 import os
 import sys
+from typing import List
 
+from models import (
+    ConfidenceRule, Model,
+    OutputArtery
+)
 from models_parser import (
     parse_confidence_rule,
     parse_arteries_classifier,
@@ -22,7 +27,9 @@ from server import HttpServer
 
 # Writes out_arteries_parsed.lp as text
 # and print on terminal if is debug
-def _write_arteries_parsed(file_name: str, output_models: list, arteries: list, is_debug: bool):
+def _write_arteries_parsed(file_name: str,
+                           output_models: List[Model], arteries: List[OutputArtery],
+                           is_debug: bool):
     with open(file_name, "w") as out_file:
         for model in output_models:
             out_file.write(str(model) + "\n")
@@ -49,7 +56,10 @@ def main():
         sys.argv.append("Asp/arteries_classified.lp")
         sys.argv.append("Asp/arteries_parsed.lp")
     elif len(sys.argv) < 3 or not os.path.isfile(sys.argv[1]) or not os.path.isfile(sys.argv[2]):
-        print("Usage: python parser.py in_arteries_classifier.lp in_arteries_classified.lp out_arteries_parsed.lp")
+        text = "Usage: python main.py [In]Asp/arteries_classifier.lp "
+        text += "[In]Asp/arteries_classified.lp [Out]Asp/arteries_parsed.lp"
+
+        print(text)
         exit()
 
     # Names constants
@@ -93,7 +103,7 @@ def main():
         save_confidence_rules(database_file_name, confidence_rules)
     # Load from existing
     else:
-        confidence_rules = []
+        confidence_rules = List[ConfidenceRule]
 
         with open(database_file_name, "r") as file:
             for line in file.readlines():
