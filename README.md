@@ -9,7 +9,7 @@ Base requirements: `gringo`, `python3`, `pip3` and `graphviz`.
 - Python3 & Pip3: https://www.python.org/ftp/python/3.9.2/python-3.9.2-amd64.exe (bundle).
 
 - Graphviz base: https://gitlab.com/graphviz/graphviz/-/package_files/7097345/download
-- Graphviz library: `pip3 install graphviz`.
+- Graphviz library: `pip3 install graphviz`
 
 ### Linux/Ubuntu ###
 ```
@@ -20,4 +20,4 @@ Base requirements: `gringo`, `python3`, `pip3` and `graphviz`.
 - Python3 & Pip3: Should already be installed.
 
 - Graphviz base: `sudo apt install graphviz -y`
-- Graphviz library: `pip3 install graphviz`.
+- Graphviz library: `pip3 install graphviz`
