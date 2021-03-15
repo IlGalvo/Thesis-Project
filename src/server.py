@@ -1,5 +1,6 @@
 # Simple http server to handle requests from applications
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
+import os
 from threading import Lock
 from json import (
     dumps,
@@ -27,6 +28,10 @@ class _ServerHandler(BaseHTTPRequestHandler):
     def initialize(self, confidence_rules: List[ConfidenceRule], database_file_name: str):
         self._confidence_rules = confidence_rules
         self._database_file_name = database_file_name
+
+        # Server directory must alredy exists!
+        self._log_file_name = os.path.dirname(database_file_name)
+        self._log_file_name += "/server.log"
 
         # To handle threadsafe operations
         self._lock = Lock()
@@ -80,9 +85,8 @@ class _ServerHandler(BaseHTTPRequestHandler):
         self.wfile.write(text.encode("utf8"))
 
     # Internal log
-    @staticmethod
-    def __log(text: str):
-        with open("server.log", "a+") as file:
+    def __log(self, text: str):
+        with open(self._log_file_name, "a+") as file:
             file.write(text + "\n")
 
     # Action when confidence rule is successfully added

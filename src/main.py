@@ -63,14 +63,18 @@ def main():
         exit()
 
     # Names constants
-    database_file_name = "ConfidenceRules.db"
-    generated_file_name = "Arteries.svg"
+    database_file_name = "Server/ConfidenceRules.db"
+    generated_file_name = "Generated/Arteries.svg"
     md5_extension = ".md5"
 
     # Names variables
     classifier_file_name = sys.argv[1]
     classified_file_name = sys.argv[2]
     parsed_file_name = sys.argv[3]
+
+    # Must exists from now!
+    if not os.path.isdir("Server"):
+        os.mkdir("Server")
 
     # Creates md5 file name from name passed as argument
     md5_file_name = os.path.splitext(classifier_file_name)[0]
