@@ -10,7 +10,7 @@ import sys
 from typing import List
 
 from models import (
-    ConfidenceRule, Model,
+    Model,
     OutputArtery
 )
 from models_parser import (
@@ -103,7 +103,7 @@ def main():
         save_confidence_rules(database_file_name, confidence_rules)
     # Load from existing
     else:
-        confidence_rules = List[ConfidenceRule]
+        confidence_rules = []
 
         with open(database_file_name, "r") as file:
             for line in file.readlines():

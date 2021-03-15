@@ -183,7 +183,7 @@ class OutputArtery:
         self._id = id
         self._name = name
 
-        self._confidence_rules = List[ConfidenceRule]
+        self._confidence_rules = []
 
     def get_id(self) -> int:
         return self._id

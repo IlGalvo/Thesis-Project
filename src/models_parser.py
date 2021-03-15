@@ -104,7 +104,7 @@ def parse_model(text: str) -> Model:
 # Parses string to ConfidenceRule
 def parse_confidence_rule(text: str) -> ConfidenceRule:
     # List of temporary ParamsArtery
-    arteries = List[_ParamsArtery]
+    arteries = []
 
     # Cleanup
     text = text.replace("\n", "")
@@ -279,8 +279,8 @@ def parse_confidence_rule(text: str) -> ConfidenceRule:
 # Parses in_arteries_classifier.lp file
 # and returns a list of all models and confidence rules found
 def parse_arteries_classifier(file_name: str) -> Tuple[List[Model], List[ConfidenceRule]]:
-    models = List[Model]
-    confidence_rules = List[ConfidenceRule]
+    models = []
+    confidence_rules = []
 
     with open(file_name, "r") as file:
         for line in file.readlines():
@@ -303,8 +303,8 @@ def parse_arteries_classifier(file_name: str) -> Tuple[List[Model], List[Confide
 def parse_arteries_classified(file_name: str,
                               input_models: List[Model],
                               confidence_rules: List[ConfidenceRule]) -> Tuple[List[Model], List[OutputArtery], Digraph]:
-    output_models = List[Model]
-    arteries = List[OutputArtery]
+    output_models = []
+    arteries = []
     dot = Digraph(comment='Arteries')
 
     with open(file_name, "r") as file:
