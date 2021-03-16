@@ -364,7 +364,6 @@ def parse_arteries_classified(file_name: str,
                           if artery.get_name() == name)
 
             artery.get_confidence_rules().append(confidence_rule)
-
         elif fact[0] == "edge_out":
             artery1 = fact[1]
             artery2 = fact[2]

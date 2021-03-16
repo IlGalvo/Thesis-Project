@@ -1,5 +1,8 @@
 # Simple http server to handle requests from applications
-from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
+from http.server import (
+    ThreadingHTTPServer,
+    BaseHTTPRequestHandler
+)
 import os
 from threading import Lock
 from json import (
