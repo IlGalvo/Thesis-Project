@@ -2,8 +2,8 @@
 This project was realized as an internship and thesis work for UniPR.
 
 ## Getting Started ##
-Back-end requirements: `gringo`, `python3`, `pip3` and `graphviz`.
-Front-end requirements: `visual studio`.
+  - Back-end requirements: `gringo`, `python3`, `pip3` and `graphviz`.  
+  - Front-end requirements: `visual studio`.
 
 ## Back-end ##
   - ### Windows (x64) ###
@@ -26,4 +26,5 @@ Front-end requirements: `visual studio`.
  
  ## Front-end ##
   - Download and install Visual Studio: https://visualstudio.microsoft.com/it/downloads/
-  - Install `Xamarin` and `UWP` workloads.
+  - From setup, install `Xamarin` and `UWP` workloads.
+  - Xamarin.Forms guide: https://docs.microsoft.com/it-it/xamarin/get-started/
